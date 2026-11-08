@@ -1,0 +1,6 @@
+hujan 500
+hujan 1000
+hujan 1500
+hujan 2000
+hujan 2500
+hujan selesai 2911 frame; deteksi agen 0.428 ; ganti hits 55 ; ganti avoids 105

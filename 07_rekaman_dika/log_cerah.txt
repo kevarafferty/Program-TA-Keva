@@ -1,0 +1,6 @@
+cerah 500
+cerah 1000
+cerah 1500
+cerah 2000
+cerah 2500
+cerah selesai 2883 frame; deteksi agen 0.53 ; ganti hits 177 ; ganti avoids 231

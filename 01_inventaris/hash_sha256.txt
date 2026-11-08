@@ -1,0 +1,15 @@
+# SHA-256 aset (dihitung 2026-11-07). Path relatif terhadap D:\ITB\Teknik Fisika\Tugas Akhir 102284tf\
+7b6b44f3a6204f21bc79a094907f4f037cc0853a1e0e69a6bc8fc0cda07347bb  TA_Dika Unlocked/Repository/YOLO-Model-main/YOLO-Model-main/best.pt
+4a5055b62dc0949f3c1ef7dee464ba87c1ba22a440792ce4274a6f95ced0d445  TA_Dika Unlocked/Repository/VS_Code/DQN_Akselerasi vertikal/model_best.h5
+2a98a25e94306840648dc0fd7a07e43550e517416a68ebc363bd1657b8585835  TA_Dika Unlocked/Repository/VS_Code/DQN_Akselerasi vertikal/model_episode_100.h5
+af188a139302c2ca8a908432ff4053842f336516b5fd563df209c424740abe48  TA_Dika Unlocked/Repository/VS_Code/DQN_Akselerasi vertikal/model_episode_200.h5
+aa1b652650448b282f67f931f28459505dbd8bdbdc604ed997ba10c104e31476  TA_Dika Unlocked/Repository/VS_Code/DQN_Akselerasi vertikal/model_episode_300.h5
+15be33df879648fe7df0c00394d77d39701673110529874d0aded6f2d1913371  TA_Dika Unlocked/Repository/VS_Code/DQN_Akselerasi vertikal/pothole_gt.json
+63e2c286013456f33cb44e05d8c117e2f0ca94fa27537ee48502946523b7cf9c  TA_Dika Unlocked/Repository/VS_Code/DQN_Akselerasi vertikal/environment/carla_env.py
+13c2e91c370de9985f4cefc69f58839aaf41b27719e8d9fb8e67863abfefe09d  TA_Dika Unlocked/Repository/VS_Code/Map/lurus.xodr
+# Ditambahkan siang 7 Nov (dihitung di laptop dengan sha256sum)
+7b6b44f3a6204f21bc79a094907f4f037cc0853a1e0e69a6bc8fc0cda07347bb  TA_Dika Unlocked/Repository/TA_Dika/VS_Code/DQN_Akselerasi vertikal/Yolo/best_pure.pt  (= best.pt)
+7b6b44f3a6204f21bc79a094907f4f037cc0853a1e0e69a6bc8fc0cda07347bb  TA_Dika Unlocked/Repository/TA_Dika/VS_Code/DQN_Akselerasi vertikal/Yolo/best_pure_backup.pt  (= best.pt)
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06  TA_Dika Unlocked/Repository/TA_Dika/VS_Code/Agen DRL/Yolo/best_pure.pt  (versi lama, BERBEDA)
+4a5055b62dc0949f3c1ef7dee464ba87c1ba22a440792ce4274a6f95ced0d445  TA_Dika Unlocked/Repository/TA_Dika/VS_Code/DQN_Akselerasi vertikal/model_best.h5  (= salinan VS_Code)
+78437fb5b81446890f3373c8f3d56566553a4ac12088c3dd66e688e07d5868f1  TA_Dika Unlocked/Repository/TA_Dika/VS_Code/yolo11n_150e_9k_gpu/weights/best.pt  (YOLO Retta)

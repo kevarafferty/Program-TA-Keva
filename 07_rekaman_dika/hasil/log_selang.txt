@@ -1,0 +1,115 @@
+{
+ "validasi_odometri": {
+  "cerah": {
+   "frame": 2883,
+   "sumber_jangkar": "overlay video, dicocokkan ke prediksi dari run cerah lain",
+   "jumlah_jangkar": 19,
+   "hits": 0,
+   "avoids": 19,
+   "jangkar_cocok_dengan_overlay": 19
+  },
+  "hujan": {
+   "frame": 2911,
+   "sumber_jangkar": "CSV run yang sama",
+   "jumlah_jangkar": 19,
+   "hits": 3,
+   "avoids": 16
+  },
+  "malam": {
+   "frame": 2711,
+   "sumber_jangkar": "CSV run yang sama",
+   "jumlah_jangkar": 19,
+   "hits": 10,
+   "avoids": 9
+  }
+ },
+ "per_kondisi": {
+  "cerah": {
+   "frame_uji": 933,
+   "deteksi_agen_saat_lubang_dalam_jangkauan": 0.587,
+   "deteksi_agen_saat_tidak_ada_lubang": 0.096,
+   "kesepakatan_deteksi_ulang_vs_agen": 0.406,
+   "kelas_deteksi_ulang": {
+    "Low": 107,
+    "Medium": 75,
+    "High": 1
+   },
+   "laju_alarm_pada_ambang_p95_ID": {
+    "jointenergy_citra": 0.106,
+    "mahalanobis": 0.062,
+    "knn": 0.018,
+    "kecerahan": 0.252
+   }
+  },
+  "hujan": {
+   "frame_uji": 933,
+   "deteksi_agen_saat_lubang_dalam_jangkauan": 0.499,
+   "deteksi_agen_saat_tidak_ada_lubang": 0.317,
+   "kesepakatan_deteksi_ulang_vs_agen": 0.459,
+   "kelas_deteksi_ulang": {
+    "Low": 263,
+    "Medium": 5,
+    "High": 0
+   },
+   "laju_alarm_pada_ambang_p95_ID": {
+    "jointenergy_citra": 0.13,
+    "mahalanobis": 1.0,
+    "knn": 0.235,
+    "kecerahan": 1.0
+   }
+  },
+  "malam": {
+   "frame_uji": 869,
+   "deteksi_agen_saat_lubang_dalam_jangkauan": 0.058,
+   "deteksi_agen_saat_tidak_ada_lubang": 0.04,
+   "kesepakatan_deteksi_ulang_vs_agen": 0.899,
+   "kelas_deteksi_ulang": {
+    "Low": 41,
+    "Medium": 2,
+    "High": 0
+   },
+   "laju_alarm_pada_ambang_p95_ID": {
+    "jointenergy_citra": 0.666,
+    "mahalanobis": 1.0,
+    "knn": 0.847,
+    "kecerahan": 1.0
+   }
+  }
+ }
+}
+{
+ "n": 2125,
+ "n_gagal": 1296,
+ "jointenergy_citra": {
+  "auroc": 0.483,
+  "ci": [
+   0.34,
+   0.61
+  ],
+  "fpr95": 0.983
+ },
+ "mahalanobis": {
+  "auroc": 0.694,
+  "ci": [
+   0.604,
+   0.773
+  ],
+  "fpr95": 0.924
+ },
+ "knn": {
+  "auroc": 0.695,
+  "ci": [
+   0.586,
+   0.787
+  ],
+  "fpr95": 0.912
+ },
+ "kecerahan": {
+  "auroc": 0.763,
+  "ci": [
+   0.679,
+   0.835
+  ],
+  "fpr95": 0.766
+ }
+}

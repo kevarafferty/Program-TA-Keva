@@ -1,0 +1,6 @@
+malam 500
+malam 1000
+malam 1500
+malam 2000
+malam 2500
+malam selesai 2711 frame; deteksi agen 0.16 ; ganti hits 31 ; ganti avoids 27

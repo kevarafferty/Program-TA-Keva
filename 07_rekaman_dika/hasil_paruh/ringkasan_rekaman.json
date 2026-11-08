@@ -1,0 +1,278 @@
+{
+ "validasi_odometri": {
+  "cerah": {
+   "frame": 2883,
+   "sumber_jangkar": "overlay video, dicocokkan ke prediksi dari run cerah lain",
+   "jumlah_jangkar": 19,
+   "hits": 0,
+   "avoids": 19,
+   "jangkar_cocok_dengan_overlay": 19
+  },
+  "hujan": {
+   "frame": 2911,
+   "sumber_jangkar": "CSV run yang sama",
+   "jumlah_jangkar": 19,
+   "hits": 3,
+   "avoids": 16
+  },
+  "malam": {
+   "frame": 2711,
+   "sumber_jangkar": "CSV run yang sama",
+   "jumlah_jangkar": 19,
+   "hits": 10,
+   "avoids": 9
+  }
+ },
+ "per_kondisi": {
+  "cerah": {
+   "frame_uji": 689,
+   "deteksi_agen_saat_lubang_dalam_jangkauan": 0.684,
+   "deteksi_agen_saat_tidak_ada_lubang": 0.11,
+   "kesepakatan_deteksi_ulang_vs_agen": 0.444,
+   "kelas_deteksi_ulang": {
+    "Low": 73,
+    "Medium": 15,
+    "High": 0
+   },
+   "laju_alarm_pada_ambang_p95_ID": {
+    "jointenergy_citra": 0.039,
+    "mahalanobis": 0.109,
+    "knn": 0.015,
+    "kecerahan": 0.118
+   }
+  },
+  "hujan": {
+   "frame_uji": 708,
+   "deteksi_agen_saat_lubang_dalam_jangkauan": 0.539,
+   "deteksi_agen_saat_tidak_ada_lubang": 0.268,
+   "kesepakatan_deteksi_ulang_vs_agen": 0.483,
+   "kelas_deteksi_ulang": {
+    "Low": 180,
+    "Medium": 11,
+    "High": 1
+   },
+   "laju_alarm_pada_ambang_p95_ID": {
+    "jointenergy_citra": 0.117,
+    "mahalanobis": 1.0,
+    "knn": 0.09,
+    "kecerahan": 1.0
+   }
+  },
+  "malam": {
+   "frame_uji": 637,
+   "deteksi_agen_saat_lubang_dalam_jangkauan": 0.217,
+   "deteksi_agen_saat_tidak_ada_lubang": 0.038,
+   "kesepakatan_deteksi_ulang_vs_agen": 0.793,
+   "kelas_deteksi_ulang": {
+    "Low": 32,
+    "Medium": 2,
+    "High": 0
+   },
+   "laju_alarm_pada_ambang_p95_ID": {
+    "jointenergy_citra": 0.794,
+    "mahalanobis": 1.0,
+    "knn": 0.333,
+    "kecerahan": 1.0
+   }
+  }
+ },
+ "n_komponen_pca": 62,
+ "auroc_ood": {
+  "hujan_vs_cerah": {
+   "jointenergy_citra": {
+    "auroc": 0.245,
+    "ci": [
+     0.156,
+     0.329
+    ]
+   },
+   "mahalanobis": {
+    "auroc": 0.999,
+    "ci": [
+     0.997,
+     1.0
+    ]
+   },
+   "knn": {
+    "auroc": 0.723,
+    "ci": [
+     0.629,
+     0.831
+    ]
+   },
+   "kecerahan": {
+    "auroc": 0.986,
+    "ci": [
+     0.969,
+     1.0
+    ]
+   }
+  },
+  "malam_vs_cerah": {
+   "jointenergy_citra": {
+    "auroc": 0.881,
+    "ci": [
+     0.752,
+     0.959
+    ]
+   },
+   "mahalanobis": {
+    "auroc": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ]
+   },
+   "knn": {
+    "auroc": 0.952,
+    "ci": [
+     0.915,
+     0.979
+    ]
+   },
+   "kecerahan": {
+    "auroc": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ]
+   }
+  }
+ },
+ "auroc_kegagalan_gabungan": {
+  "n": 1359,
+  "n_gagal": 696,
+  "jointenergy_citra": {
+   "auroc": 0.519,
+   "ci": [
+    0.385,
+    0.648
+   ],
+   "fpr95": 0.956
+  },
+  "mahalanobis": {
+   "auroc": 0.655,
+   "ci": [
+    0.533,
+    0.766
+   ],
+   "fpr95": 0.917
+  },
+  "knn": {
+   "auroc": 0.654,
+   "ci": [
+    0.531,
+    0.76
+   ],
+   "fpr95": 0.97
+  },
+  "kecerahan": {
+   "auroc": 0.733,
+   "ci": [
+    0.608,
+    0.838
+   ],
+   "fpr95": 0.638
+  }
+ },
+ "auroc_kegagalan_dalam_kondisi": {
+  "cerah": {
+   "n": 462,
+   "n_gagal": 146,
+   "jointenergy_citra": 0.343,
+   "mahalanobis": 0.485,
+   "knn": 0.5,
+   "kecerahan": 0.738
+  },
+  "hujan": {
+   "n": 473,
+   "n_gagal": 218,
+   "jointenergy_citra": 0.386,
+   "mahalanobis": 0.457,
+   "knn": 0.416,
+   "kecerahan": 0.55
+  },
+  "malam": {
+   "n": 424,
+   "n_gagal": 332,
+   "jointenergy_citra": 0.458,
+   "mahalanobis": 0.243,
+   "knn": 0.634,
+   "kecerahan": 0.499
+  }
+ },
+ "peringatan_dini_sebelum_hit_s": {
+  "cerah": {
+   "jumlah_hit": 0,
+   "mahalanobis": [],
+   "jointenergy_citra": [],
+   "kecerahan": []
+  },
+  "hujan": {
+   "jumlah_hit": 3,
+   "mahalanobis": [
+    6.0,
+    6.0,
+    6.0
+   ],
+   "jointenergy_citra": [
+    5.75,
+    5.0,
+    0.0
+   ],
+   "kecerahan": [
+    6.0,
+    6.0,
+    6.0
+   ]
+  },
+  "malam": {
+   "jumlah_hit": 10,
+   "mahalanobis": [
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0
+   ],
+   "jointenergy_citra": [
+    5.9,
+    6.0,
+    6.0,
+    5.85,
+    5.9,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    4.65
+   ],
+   "kecerahan": [
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0,
+    6.0
+   ]
+  }
+ },
+ "ambang_p95_ID": {
+  "jointenergy_citra": -0.0,
+  "mahalanobis": 156.4559,
+  "knn": 0.628,
+  "kecerahan": 3.469
+ },
+ "split": "paruh",
+ "n_frame_fit_ID": 1465,
+ "n_frame_kalibrasi_ambang": 729
+}

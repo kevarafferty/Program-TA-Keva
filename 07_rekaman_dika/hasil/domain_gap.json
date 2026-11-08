@@ -1,0 +1,20 @@
+{
+ "n_citra_nyata": 91,
+ "n_fit": 59,
+ "n_kalibrasi": 32,
+ "n_komponen_pca": 20,
+ "ambang_p95": 15.94,
+ "median_skor_nyata_kalibrasi": 8.42,
+ "cerah": {
+  "median_skor": 58.2,
+  "laju_alarm": 1.0
+ },
+ "hujan": {
+  "median_skor": 91.7,
+  "laju_alarm": 1.0
+ },
+ "malam": {
+  "median_skor": 66.7,
+  "laju_alarm": 1.0
+ }
+}

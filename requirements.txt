@@ -1,0 +1,15 @@
+# Paket untuk menjalankan skrip di folder ini (BUKAN environment CARLA Dika).
+# Diuji oleh Claude pada 7 Nov 2026 dengan Python 3.13, CPU saja:
+#   torch 2.15.0, ultralytics 8.4.204, numpy 2.5.3, opencv 5.0.0, scikit-learn 1.9.1,
+#   matplotlib 3.11.2, h5py 3.14.0, tensorflow 2.21.0
+# Di Windows, cukup: pip install -r requirements.txt  (versi tidak dikunci agar mudah dipasang)
+numpy
+opencv-python
+torch
+ultralytics
+scikit-learn
+matplotlib
+h5py
+pytest
+# opsional, hanya untuk jalur Keras di 03_cek_dqn (jalur NumPy tetap jalan tanpa ini)
+tensorflow
