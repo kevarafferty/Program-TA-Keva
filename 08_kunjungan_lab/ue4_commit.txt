@@ -1,0 +1,5 @@
+commit e22f1e24769303a898b68e574f9856acfc78afeb
+Author: Marcel Pi <169088301+MarcelPiNacy-CVC@users.noreply.github.com>
+Date:   Wed Dec 10 13:28:18 2025 +0100
+
+    Fix build issues with VS22.

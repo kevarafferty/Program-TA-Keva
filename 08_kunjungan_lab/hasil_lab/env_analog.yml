@@ -1,0 +1,4 @@
+name: analog
+channels:
+  - defaults
+prefix: C:\Users\Ryzen_PC\.conda\envs\analog

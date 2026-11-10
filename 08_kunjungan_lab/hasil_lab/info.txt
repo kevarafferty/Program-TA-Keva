@@ -1,0 +1,201 @@
+Info PC lab, dibuat 10/11/2026 14:43:46,43 
+ 
+===== 1. Ruang disk ===== 
+
+Name Bebas_GB Terpakai_GB
+---- -------- -----------
+C         4.2       248.2
+D         3.8       208.6
+E       232.2         1.2
+F       232.3         0.1
+G       442.2        34.7
+
+
+ 
+===== 2. GPU ===== 
+Tue Nov 10 14:43:47 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.88                 KMD Version: 610.88        CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                  Driver-Model | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 3060      WDDM  |   00000000:23:00.0  On |                  N/A |
+|  0%   36C    P8             12W /  170W |     802MiB /  12288MiB |     19%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1816    C+G   ...ot\Application\copilotapp.exe      N/A      |
+|    0   N/A  N/A            4600    C+G   ...ntrolPanel\SystemSettings.exe      N/A      |
+|    0   N/A  N/A            6020    C+G   ...Toys\PowerToys.FancyZones.exe      N/A      |
+|    0   N/A  N/A            6952    C+G   ...em32\ApplicationFrameHost.exe      N/A      |
+|    0   N/A  N/A            8308    C+G   C:\Windows\explorer.exe               N/A      |
+|    0   N/A  N/A            8456    C+G   ...indows\System32\ShellHost.exe      N/A      |
+|    0   N/A  N/A            8712    C+G   ...xyewy\ShellExperienceHost.exe      N/A      |
+|    0   N/A  N/A            8752    C+G   ...2txyewy\CrossDeviceResume.exe      N/A      |
+|    0   N/A  N/A            9484    C+G   ..._cw5n1h2txyewy\SearchHost.exe      N/A      |
+|    0   N/A  N/A            9508    C+G   ...y\StartMenuExperienceHost.exe      N/A      |
+|    0   N/A  N/A           11576    C+G   ....0.4341.42\msedgewebview2.exe      N/A      |
+|    0   N/A  N/A           12020    C+G   ...s\PowerToys.ColorPickerUI.exe      N/A      |
+|    0   N/A  N/A           12464    C+G   ...Local\PowerToys\PowerToys.exe      N/A      |
+|    0   N/A  N/A           12564    C+G   ...yb3d8bbwe\WindowsTerminal.exe      N/A      |
+|    0   N/A  N/A           12792    C+G   ...pps\PowerToys.QuickAccess.exe      N/A      |
+|    0   N/A  N/A           12908    C+G   ...8bbwe\PhoneExperienceHost.exe      N/A      |
+|    0   N/A  N/A           13052    C+G   ...8bbwe\Microsoft.CmdPal.UI.exe      N/A      |
+|    0   N/A  N/A           13940    C+G   ...5n1h2txyewy\TextInputHost.exe      N/A      |
+|    0   N/A  N/A           14440    C+G   ...UI3Apps\PowerToys.Peek.UI.exe      N/A      |
+|    0   N/A  N/A           14936    C+G   ...s\PowerToys.PowerLauncher.exe      N/A      |
+|    0   N/A  N/A           15576    C+G   ....0.4341.42\msedgewebview2.exe      N/A      |
+|    0   N/A  N/A           16772    C+G   ...1g1gvanyjgm\WhatsApp.Root.exe      N/A      |
+|    0   N/A  N/A           17400    C+G   ...t\Edge\Application\msedge.exe      N/A      |
+|    0   N/A  N/A           18660    C+G   ...t\Edge\Application\msedge.exe      N/A      |
+|    0   N/A  N/A           18828    C+G   ...\cef.win64\steamwebhelper.exe      N/A      |
+|    0   N/A  N/A           20144    C+G   ...x64__egrzcvs15399j\ShareX.exe      N/A      |
+|    0   N/A  N/A           20920    C+G   ...ed_copilot\copilotapphost.exe      N/A      |
+|    0   N/A  N/A           21980    C+G   ....0.4341.42\msedgewebview2.exe      N/A      |
+|    0   N/A  N/A           23408    C+G   ...lare WARP\Cloudflare WARP.exe      N/A      |
++-----------------------------------------------------------------------------------------+
+ 
+===== 3. Unreal Engine (UE4_ROOT) ===== 
+UE4_ROOT=D:\UnrealEngine\ 
+ 
+===== 4. CARLA source build di D:\carla ===== 
+D:\carla ADA 
+## CARLA 0.9.15
+
+  * Added Digital Twins feature version 0.1. Now you can create your own map based on OpenStreetMaps
+  * Added compatibility with SymReady Assets, using NVIDIA Omniverse
+  * Added new maps: Town13 (is a large map) and Town15
+0.9.15-dirty
+-- Isi Content\ (paket peta) -- 
+Carla
+Collections
+Developers
+Pothole_Test_01.umap
+-- Wheel/egg Python API -- 
+-- Hasil package yang sudah pernah dibuat -- 
+ 
+===== 5. Lokasi peta train_fix dan CarlaUE4.exe ===== 
+D:\carla\Unreal\CarlaUE4\Content\Carla\Maps\train_fix.umap
+C:\Users\Ryzen_PC\Documents\train_fix.umap
+D:\carla\Unreal\CarlaUE4\Binaries\Win64\CarlaUE4.exe
+ 
+===== 6. Hash berkas Dika di PC lab (bandingkan dengan CEKLIS_LAB.md) ===== 
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\Agen DRL\environment\carla_env.py 
+fe32f93697d1815fcf8940f75f195a793a5a7baaff3374fedc81311f23a787fb
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\DQN_Akselerasi vertikal\environment\carla_env.py 
+63e2c286013456f33cb44e05d8c117e2f0ca94fa27537ee48502946523b7cf9c
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\progress\DQN_groundtruth_\DQN_groundtruth\environment\carla_env.py 
+0acb10ad05c3daa9be3a86ad1148392e7e1ae180ce70e997a4f09d2fdf327aa6
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\progress\DQN_rev4_Train06_backup\environment\carla_env.py 
+609185b4fdde2d19fc58854df1653c02b5ef12e29a2e75c49871b80a862a4932
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\progress\DQN_S1\environment\carla_env.py 
+200b3be36090be35aaf42f7b05398968344aae94cef81c57e2dbcdfeed5466e8
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\progress\DQN_S1 - Copy\environment\carla_env.py 
+cc9d23fb36223ec34af3537382fb7a413faf252dbb83b34767ea7ce5af982a23
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\Agen DRL\environment\carla_env.py 
+fe32f93697d1815fcf8940f75f195a793a5a7baaff3374fedc81311f23a787fb
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\DQN_Akselerasi vertikal\environment\carla_env.py 
+63e2c286013456f33cb44e05d8c117e2f0ca94fa27537ee48502946523b7cf9c
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\progress\DQN_groundtruth_\DQN_groundtruth\environment\carla_env.py 
+0acb10ad05c3daa9be3a86ad1148392e7e1ae180ce70e997a4f09d2fdf327aa6
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\progress\DQN_rev4_Train06_backup\environment\carla_env.py 
+609185b4fdde2d19fc58854df1653c02b5ef12e29a2e75c49871b80a862a4932
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\progress\DQN_S1\environment\carla_env.py 
+200b3be36090be35aaf42f7b05398968344aae94cef81c57e2dbcdfeed5466e8
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\progress\DQN_S1 - Copy\environment\carla_env.py 
+cc9d23fb36223ec34af3537382fb7a413faf252dbb83b34767ea7ce5af982a23
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\Agen DRL\cleanTest.py 
+3a0e5c76b178ff63ebd372c6fb168c3a620edff48c6efd34285ca34a028fae4a
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\DQN_Akselerasi vertikal\cleanTest.py 
+5a198eaa191e6a0400c1095ab42e2349b07b4ed5acfc677853b599c7d1546aaa
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\Agen DRL\cleanTest.py 
+3a0e5c76b178ff63ebd372c6fb168c3a620edff48c6efd34285ca34a028fae4a
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\DQN_Akselerasi vertikal\cleanTest.py 
+5a198eaa191e6a0400c1095ab42e2349b07b4ed5acfc677853b599c7d1546aaa
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\Agen DRL\model_best.h5 
+6ac0f80a4a35fd9b3ad416a70e6fe4c64435878dbb3e2740d9e61178c74c7011
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\Agen DRL\Model\train 1200\model_best.h5 
+0fc36fb475eb560d99bb14f411dce498d7dd08bb4452a2c32caf57406b4ec1b0
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\DQN_Akselerasi vertikal\model_best.h5 
+4a5055b62dc0949f3c1ef7dee464ba87c1ba22a440792ce4274a6f95ced0d445
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\DQN_Akselerasi vertikal\Model\model_best.h5 
+6ac0f80a4a35fd9b3ad416a70e6fe4c64435878dbb3e2740d9e61178c74c7011
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\Agen DRL\model_best.h5 
+6ac0f80a4a35fd9b3ad416a70e6fe4c64435878dbb3e2740d9e61178c74c7011
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\Agen DRL\Model\train 1200\model_best.h5 
+0fc36fb475eb560d99bb14f411dce498d7dd08bb4452a2c32caf57406b4ec1b0
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\DQN_Akselerasi vertikal\model_best.h5 
+4a5055b62dc0949f3c1ef7dee464ba87c1ba22a440792ce4274a6f95ced0d445
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\DQN_Akselerasi vertikal\Model\model_best.h5 
+6ac0f80a4a35fd9b3ad416a70e6fe4c64435878dbb3e2740d9e61178c74c7011
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\DQN_Akselerasi vertikal\pothole_gt.json 
+15be33df879648fe7df0c00394d77d39701673110529874d0aded6f2d1913371
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\DQN_Akselerasi vertikal\pothole_gt.json 
+15be33df879648fe7df0c00394d77d39701673110529874d0aded6f2d1913371
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\Agen DRL\Yolo\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\DQN_Akselerasi vertikal\Yolo\best_pure.pt 
+7b6b44f3a6204f21bc79a094907f4f037cc0853a1e0e69a6bc8fc0cda07347bb
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\progress\DQN_rev4_Train06_backup\Yolo\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\progress\DQN_S1\Yolo\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\progress\DQN_S1 - Copy\Yolo\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\Retta\TA_Dika\VS_Code\Riil - Copy\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\Agen DRL\Yolo\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\DQN_Akselerasi vertikal\Yolo\best_pure.pt 
+7b6b44f3a6204f21bc79a094907f4f037cc0853a1e0e69a6bc8fc0cda07347bb
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\progress\DQN_rev4_Train06_backup\Yolo\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\progress\DQN_S1\Yolo\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\progress\DQN_S1 - Copy\Yolo\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+C:\Users\Ryzen_PC\Documents\TA_Dika\VS_Code\Riil - Copy\best_pure.pt 
+3bb64fb3576f3a5f1189e2d9d7facaa544c0b45b394e0c3429d9f64f11212a06
+ 
+===== 7. Environment conda ===== 
+
+# conda environments:
+#
+# * -> active
+# + -> frozen
+base                 *   C:\ProgramData\anaconda3
+analog                   C:\Users\Ryzen_PC\.conda\envs\analog
+carla37                  C:\Users\Ryzen_PC\.conda\envs\carla37
+carla915                 C:\Users\Ryzen_PC\.conda\envs\carla915
+carla915_py37            C:\Users\Ryzen_PC\.conda\envs\carla915_py37
+carla_env                C:\Users\Ryzen_PC\.conda\envs\carla_env
+carla_py37               C:\Users\Ryzen_PC\.conda\envs\carla_py37
+yolo310                  C:\Users\Ryzen_PC\.conda\envs\yolo310
+yolo_cuda310             C:\Users\Ryzen_PC\.conda\envs\yolo_cuda310
+                         D:\conda-envs\analog
+
+Python 3.13.9
+
+Python 3.14.2
+
+Python 3.7.16
+
+Python 3.7.16
+
+Python 3.7.16
+
+Python 3.8.20
+
+Python 3.7.16
+
+Python 3.10.19
+
+Python 3.10.19
+

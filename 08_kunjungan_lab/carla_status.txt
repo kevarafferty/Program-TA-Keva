@@ -1,0 +1,15 @@
+Not currently on any branch.
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   Unreal/CarlaUE4/CarlaUE4.uproject
+	modified:   Unreal/CarlaUE4/Config/DefaultEngine.ini
+	modified:   Update.bat
+	modified:   Util/InstallersWin/install_boost.bat
+	modified:   Util/InstallersWin/install_zlib.bat
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	PythonAPI/examples/main_lidar_only_pothole_v1_1.py
+
+no changes added to commit (use "git add" and/or "git commit -a")

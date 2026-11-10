@@ -1,0 +1,6 @@
+carla @ file:///C:/Users/Ryzen_PC/Downloads/CARLA_0.9.15/WindowsNoEditor/PythonAPI/carla/dist/carla-0.9.15-cp37-cp37m-win_amd64.whl
+certifi @ file:///C:/b/abs_85o_6fm0se/croot/certifi_1671487778835/work/certifi
+numpy==1.21.6
+pygame==2.6.1
+wincertstore==0.2
+

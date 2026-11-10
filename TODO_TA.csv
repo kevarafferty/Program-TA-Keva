@@ -1,0 +1,45 @@
+id,fase,tugas,mulai,selesai,durasi_hari,bergantung,milestone,critical_path,selesai_jika
+1,0 Beres-beres,Commit hasil lab 10 Nov ke git,2026-11-10,2026-11-10,1,,tidak,tidak,git log menampilkan commit baru
+2,0 Beres-beres,Pindahkan asset_lab dan run_malam_lab dari SSD ke 08_kunjungan_lab,2026-11-10,2026-11-10,1,,tidak,tidak,Kedua folder ada di laptop
+3,0 Beres-beres,"Kirim pesan ke Dika (video tertimpa, lubang med_samping, label severity GT) dan Retta",2026-11-11,2026-11-11,1,,tidak,tidak,Pesan terkirim
+4,0 Dosbing,Tulis dokumen 1 halaman: 5 keputusan untuk dosbing,2026-11-11,2026-11-12,2,,tidak,tidak,Dokumen jadi dan permintaan jadwal terkirim
+5,0 Dosbing,Bimbingan dosbing: 5 keputusan + jadwal Gate 1 baru,2026-11-13,2026-11-13,1,4,ya,tidak,Kelima keputusan tercatat di LOG_KERJA
+6,0 Dosbing,Revisi proposal sesuai 25 butir PERBEDAAN_PROPOSAL,2026-11-14,2026-11-17,4,5,tidak,tidak,Proposal revisi dikirim ke dosbing
+7,1A CARLA laptop,Kosongkan disk laptop minimal 170 GB,2026-11-11,2026-11-11,1,,tidak,ya,This PC menunjukkan sisa >=170 GB
+8,1A CARLA laptop,"Pasang prasyarat build (VS2019, CMake, Git, Python, Make)",2026-11-11,2026-11-12,2,7,tidak,ya,x64 Native Tools Command Prompt for VS 2019 bisa dibuka
+9,1A CARLA laptop,Build UE4 fork commit e22f1e2,2026-11-12,2026-11-13,2,8,tidak,ya,UE4Editor terbuka tanpa error
+10,1A CARLA laptop,"Build CARLA 0.9.15 + 4 perbaikan URL dari carla_diff.txt (make PythonAPI, make launch)",2026-11-14,2026-11-15,2,9,tidak,ya,make launch membuka editor CARLA
+11,1A CARLA laptop,Buat env Python di laptop dari ekspor carla_env,2026-11-12,2026-11-12,1,,tidak,tidak,"import carla, tensorflow, ultralytics berhasil"
+12,1A CARLA laptop,"Masukkan train_fix + Aset_Lubang + OpenDrive ke Content, buka dan tekan Play",2026-11-16,2026-11-16,1,10,tidak,ya,Lubang tampil bertekstur di train_fix
+13,1A CARLA laptop,make package lalu uji train_fix muncul di daftar peta,2026-11-17,2026-11-18,2,12,tidak,ya,CarlaUE4.exe memuat train_fix dari script
+14,1A CARLA laptop,MILESTONE: CARLA paket jalan di laptop,2026-11-18,2026-11-18,0,13,ya,ya,-
+15,1B GT dan label,"Pelabel roda: geometri terukur (jejak depan 1,19 m, belakang 0,72 m) + jalankan ulang uji dan T5/T6",2026-11-11,2026-11-12,2,,tidak,tidak,"Uji lulus, angka mobil lurus baru tercatat"
+16,1B GT dan label,Cek material tiap objek lubang di editor (Low / highh / med),2026-11-16,2026-11-16,1,12,tidak,ya,Tabel nama objek vs material
+17,1B GT dan label,"Ukur ulang semua lubang (tambah kata kunci med, samping, detect) dan bangun GT baru",2026-11-19,2026-11-19,1,14;16,tidak,ya,GT baru berisi semua lubang di peta beserta keparahan
+18,1B GT dan label,Hitung ulang baseline mobil lurus dengan GT baru,2026-11-19,2026-11-19,1,15;17,tidak,ya,Angka mobil lurus per kondisi
+19,1C Gate 1,"Siapkan runner: 127.0.0.1, log posisi x-y, offset awal acak, tanpa time.sleep, jalan di folder salinan",2026-11-20,2026-11-20,1,17,tidak,ya,1 episode menghasilkan CSV dengan posisi
+20,1C Gate 1,Ukur waktu per episode (5 episode) lalu putuskan laptop atau cloud,2026-11-20,2026-11-20,1,19,tidak,ya,Detik per episode tercatat
+21,1C Gate 1,Baseline pi_Dika 30 episode x cerah / hujan / malam,2026-11-21,2026-11-23,3,20,tidak,ya,90 episode selesai dan ter-log
+22,1C Gate 1,Analisis baseline: rata-rata + CI 95% vs Dika dan vs mobil lurus,2026-11-24,2026-11-24,1,21,tidak,ya,Tabel baseline + kesimpulan
+23,1C Gate 1,MILESTONE: Gate 1,2026-11-24,2026-11-24,0,22,ya,ya,-
+24,1D Lingkungan,Generator tata letak lubang prosedural (spawn API atau grid on/off),2026-11-25,2026-11-28,4,23,tidak,ya,Tata letak acak muncul dari seed
+25,1D Lingkungan,Runner skenario off-nominal + transisi di tengah episode + logger fitur/logit/Q,2026-11-29,2026-12-02,4,24,tidak,ya,Semua kondisi bisa dibangkitkan dari seed
+26,1D Lingkungan,Latih ulang DQN ensemble K=5 x 3 seed (semalaman),2026-12-01,2026-12-06,6,24,tidak,ya,Kinerja ID >= pi_Dika
+27,1D Lingkungan,MILESTONE: Gate 2,2026-12-06,2026-12-06,0,26,ya,ya,-
+28,2 Monitor,"Kumpulkan data monitor ID dan OOD (semalaman, minggu UAS)",2026-12-07,2026-12-13,7,25;27,tidak,ya,Jumlah data sesuai S1
+29,2 Monitor,"Monitor persepsi: JointEnergy + Mahalanobis + pembanding MSP dan kecerahan, label per lintasan lubang",2026-12-14,2026-12-19,6,28,tidak,ya,Tabel AUROC/FPR95 vs pembanding
+30,2 Monitor,Monitor keputusan: energi-Q + ketidaksepakatan ensemble + kepala risiko,2026-12-14,2026-12-21,8,28,tidak,ya,Skor U_D + AUROC
+31,2 Monitor,Uji H1-H3 dan tulis kesimpulannya,2026-12-22,2026-12-24,3,29;30,tidak,ya,H1-H3 diterima atau ditolak dengan angka
+32,2 Monitor,Buffer akhir tahun,2026-12-25,2026-12-27,3,31,tidak,tidak,-
+33,2 Monitor,Tulis Bab II Dasar Teori,2026-12-01,2026-12-27,27,,tidak,tidak,Draf Bab II dikirim ke dosbing
+34,3 Uji coba,Arbiter + kalibrasi ambang + histeresis + MRM,2026-12-28,2027-01-03,7,31,tidak,ya,Closed-loop stabil tanpa osilasi mode
+35,3 Uji coba,Eksperimen closed-loop inti: A1 A2 A3 C1 C2 x 5 konfigurasi,2027-01-04,2027-01-17,14,34,tidak,ya,Matriks inti selesai
+36,3 Uji coba,Ablasi + kurva trade-off keselamatan-ketersediaan,2027-01-18,2027-01-24,7,35,tidak,ya,Kurva dan tabel ablasi
+37,3 Uji coba,MILESTONE: Gate 3 (hasil dibekukan),2027-01-24,2027-01-24,0,36,ya,ya,-
+38,4 Menulis,Tulis Bab III Metodologi,2027-01-11,2027-01-31,21,,tidak,tidak,Draf Bab III
+39,4 Menulis,Tulis Bab IV Hasil dan Analisis,2027-01-25,2027-02-07,14,37,tidak,ya,Draf Bab IV
+40,4 Menulis,Tulis Bab I + Bab V + abstrak,2027-02-08,2027-02-10,3,39,tidak,ya,Laporan lengkap
+41,4 Menulis,Draf makalah ICA 2027 (6 halaman IEEE),2027-02-01,2027-02-14,14,37,tidak,tidak,Draf siap dikirim
+42,4 Menulis,Revisi pembimbing,2027-02-11,2027-02-21,11,40,tidak,ya,Laporan disetujui
+43,4 Menulis,Persiapan seminar/sidang + administrasi,2027-02-22,2027-02-28,7,42,tidak,ya,Slide jadi dan sidang terjadwal
+44,4 Menulis,MILESTONE: TA selesai,2027-02-28,2027-02-28,0,43,ya,ya,-

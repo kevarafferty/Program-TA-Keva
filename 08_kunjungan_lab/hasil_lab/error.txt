@@ -1,0 +1,9 @@
+File Not Found
+File Not Found
+File Not Found
+INFO: Could not find files for the given pattern(s).
+WARNING: No metadata found in c:\users\ryzen_pc\.conda\envs\yolo310\lib\site-packages
+
+
+CondaValueError: Environment names cannot contain path separators
+

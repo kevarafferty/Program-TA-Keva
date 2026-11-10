@@ -1,0 +1,85 @@
+diff --git a/Unreal/CarlaUE4/CarlaUE4.uproject b/Unreal/CarlaUE4/CarlaUE4.uproject
+index 9ee881b7c..d45f25d56 100644
+--- a/Unreal/CarlaUE4/CarlaUE4.uproject
++++ b/Unreal/CarlaUE4/CarlaUE4.uproject
+@@ -1,6 +1,6 @@
+ {
+ 	"FileVersion": 3,
+-	"EngineAssociation": "4.26",
++	"EngineAssociation": "{AC021DC3-4754-67FB-2AFF-60BD10C00F32}",
+ 	"Category": "",
+ 	"Description": "",
+ 	"Modules": [
+@@ -124,6 +124,18 @@
+ 		{
+ 			"Name": "HairStrands",
+ 			"Enabled": true
++		},
++		{
++			"Name": "StreetMap",
++			"Enabled": true
++		},
++		{
++			"Name": "HoudiniEngine",
++			"Enabled": true
++		},
++		{
++			"Name": "ModelingToolsEditorMode",
++			"Enabled": true
+ 		}
+ 	]
+-}
++}
+\ No newline at end of file
+diff --git a/Unreal/CarlaUE4/Config/DefaultEngine.ini b/Unreal/CarlaUE4/Config/DefaultEngine.ini
+index 617c825f6..3e564fe19 100644
+--- a/Unreal/CarlaUE4/Config/DefaultEngine.ini
++++ b/Unreal/CarlaUE4/Config/DefaultEngine.ini
+@@ -9,7 +9,7 @@ DefaultGraphicsPerformance=Maximum
+ AppliedDefaultGraphicsPerformance=Maximum
+ 
+ [/Script/EngineSettings.GameMapsSettings]
+-EditorStartupMap=/Game/Carla/Maps/Town10HD_Opt.Town10HD_Opt
++EditorStartupMap=/Engine/Maps/Entry
+ GameDefaultMap=/Game/Carla/Maps/Town10HD_Opt.Town10HD_Opt
+ ServerDefaultMap=/Game/Carla/Maps/Town10HD_Opt.Town10HD_Opt
+ GlobalDefaultGameMode=/Game/Carla/Blueprints/Game/CarlaGameMode.CarlaGameMode_C
+diff --git a/Update.bat b/Update.bat
+index 36e8f15a8..9554933c0 100644
+--- a/Update.bat
++++ b/Update.bat
+@@ -19,7 +19,7 @@ for /F "delims=" %%a in (%CONTENT_VERSIONS%) do (
+    set "lastLine=%%a"
+ )
+ set CONTENT_ID=%lastLine:~-16,16%
+-set CONTENT_LINK=http://carla-assets.s3.amazonaws.com/%CONTENT_ID%.tar.gz
++set CONTENT_LINK=https://carla-assets.s3.us-east-005.backblazeb2.com/%CONTENT_ID%.tar.gz
+ if "%CONTENT_ID:~0,2%"=="20" (
+   set CONTENT_FILE=%CONTENT_FOLDER%/%CONTENT_ID%.tar.gz
+   set CONTENT_FILE_TAR=%CONTENT_FOLDER%/%CONTENT_ID%.tar
+diff --git a/Util/InstallersWin/install_boost.bat b/Util/InstallersWin/install_boost.bat
+index bcefaa72d..e14fd825f 100644
+--- a/Util/InstallersWin/install_boost.bat
++++ b/Util/InstallersWin/install_boost.bat
+@@ -71,7 +71,7 @@ set BOOST_TEMP_FOLDER=boost_%BOOST_VERSION:.=_%
+ set BOOST_TEMP_FILE=%BOOST_TEMP_FOLDER%.zip
+ set BOOST_TEMP_FILE_DIR=%BUILD_DIR%%BOOST_TEMP_FILE%
+ 
+-set BOOST_REPO=https://boostorg.jfrog.io/artifactory/main/release/%BOOST_VERSION%/source/%BOOST_TEMP_FILE%
++set BOOST_REPO=https://archives.boost.io/release/%BOOST_VERSION%/source/%BOOST_TEMP_FILE%
+ set BOOST_SRC_DIR=%BUILD_DIR%%BOOST_BASENAME%-source\
+ set BOOST_INSTALL_DIR=%BUILD_DIR%%BOOST_BASENAME%-install\
+ set BOOST_LIB_DIR=%BOOST_INSTALL_DIR%lib\
+diff --git a/Util/InstallersWin/install_zlib.bat b/Util/InstallersWin/install_zlib.bat
+index f418293d3..98da863e6 100644
+--- a/Util/InstallersWin/install_zlib.bat
++++ b/Util/InstallersWin/install_zlib.bat
+@@ -54,7 +54,7 @@ set ZLIB_TEMP_FOLDER=%ZLIB_BASENAME%-%ZLIB_VERSION%
+ set ZLIB_TEMP_FILE=%ZLIB_TEMP_FOLDER%.zip
+ set ZLIB_TEMP_FILE_DIR=%BUILD_DIR%%ZLIB_TEMP_FILE%
+ 
+-set ZLIB_REPO=https://www.zlib.net/zlib%ZLIB_VERSION:.=%.zip
++set ZLIB_REPO=https://github.com/madler/zlib/releases/download/v%ZLIB_VERSION%/zlib%ZLIB_VERSION:.=%.zip
+ set ZLIB_BACKUP_REPO=https://carla-releases.s3.eu-west-3.amazonaws.com/Backup/zlib%ZLIB_VERSION:.=%.zip
+ set ZLIB_SRC_DIR=%BUILD_DIR%%ZLIB_BASENAME%-source\
+ set ZLIB_INSTALL_DIR=%BUILD_DIR%%ZLIB_BASENAME%-install\
