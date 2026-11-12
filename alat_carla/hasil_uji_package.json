@@ -1,0 +1,28 @@
+{
+  "waktu": "2026-11-12 14:30:15",
+  "lulus": true,
+  "versi_server": "0.9.15-dirty",
+  "versi_client": "0.9.15",
+  "jumlah_peta": 2,
+  "peta_tersedia": [
+    "/Game/Carla/Maps/Town10HD_Opt",
+    "/Game/Carla/Maps/train_fix"
+  ],
+  "peta_aktif": "Carla/Maps/train_fix",
+  "jumlah_waypoint_2m": 12958,
+  "jumlah_objek_lubang_dari_nama": 40,
+  "contoh_nama": [
+    "hole_low10_SM_0",
+    "hole_low11_SM_0",
+    "hole_low13_SM_0",
+    "hole_low14_SM_0",
+    "hole_low16_SM_0",
+    "hole_low18_SM_0",
+    "hole_low19_SM_0",
+    "hole_low20_SM_0",
+    "hole_low21_SM_0",
+    "hole_low22_SM_0"
+  ],
+  "lubang_editor_ditemukan_di_package": "18/18",
+  "pesan": "LULUS langkah 1-3. Bandingkan 'lubang_editor_ditemukan_di_package' (harus 18/18), lalu lihat jendela CARLA: lubang harus tampak sebagai tekstur retak, bukan kotak abu-abu/kotak-kotak."
+}

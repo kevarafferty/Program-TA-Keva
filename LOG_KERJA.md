@@ -232,3 +232,40 @@ ceklis memuat uji `get_available_maps()` untuk memastikannya. Lama package (2–
 - Gate 1 dijadwalkan ulang ke 24 Nov (dari 15 Nov); Gate 2 tetap ±6 Des; Gate 3 tetap 24 Jan. **Belum disetujui dosbing.**
 - **Belum dikerjakan:** memasukkan tugas ke aplikasi tugas Keva (dikerjakan Keva).
 - 18:3x: dibuat `09_carla_laptop/PANDUAN_BUILD.md` (source build CARLA 0.9.15 + UE4 e22f1e2 di laptop). Temuan: env `carla_env` Dika = Python 3.8 + `carla==0.9.15` dari pip, jadi `make PythonAPI` tidak diperlukan. Bagian `.uproject` dari diff lab sengaja tidak diterapkan (plugin Houdini/StreetMap). **Belum:** build dijalankan Keva.
+
+---
+
+## 2026-11-11 (Rabu) malam: TODO #11 env Python laptop (Claude)
+
+- Dibuat `alat_carla/env_laptop/`: `README.md` (langkah), `requirements_carla_env.txt` (pip freeze lab tanpa torch), `cek_env.py` (cek import, versi, GPU, koneksi server).
+- Temuan: env lab berisi cuDNN 9.10, padahal TF 2.10 butuh cuDNN 8.1 → TF di PC lab kemungkinan jalan di CPU (**Dugaan**, belum dicek di PC lab). Torch membawa CUDA sendiri, jadi YOLO tetap GPU.
+- `SETUP_ENV.md` diberi catatan usang (asumsi Python 3.7/dua env sudah tidak berlaku).
+- **Belum:** Keva menjalankan langkah README di laptop dan mencatat hasil `cek_env.py` di sini. Putuskan TF GPU (cuDNN 8.1) atau CPU.
+
+## 11 Nov 2026 malam: env carla_env di laptop (tugas #11)
+- Selesai: conda env `carla_env` (Python 3.8) + `carla==0.9.15` (pip, tanpa make PythonAPI) + paket dari `pip_carla_env.txt`. Uji impor: carla OK, TF 2.10.0, ultralytics 8.4.13, torch 2.4.1+cu118.
+- Belum: `torch.cuda.is_available()` = False (YOLO jalan di CPU). Cek driver lewat `nvidia-smi`. Uji koneksi server menunggu build CARLA.
+- 23.37: **CARLA source build jalan di laptop.** `get_server_version()` dari `carla_env` ke 127.0.0.1:2000 = `0.9.15-dirty` (dirty = 3 perbaikan URL, sama dengan PC lab). Tugas #8–#10 selesai.
+- Berikutnya: #12 masukkan `train_fix` + `Aset_Lubang` + OpenDrive lalu Play; #16 cek material lubang (E6) sebelum bimbingan Jumat. CUDA torch masih False.
+- 23.45: Koreksi: diff lab berisi 3 perbaikan URL (Update.bat, install_boost.bat, install_zlib.bat) + DefaultEngine.ini (opsional) + .uproject (jangan). Label "4 perbaikan URL" di TODO_TA.csv dan PERBEDAAN_PROPOSAL.md diganti "3". Keva perlu cek `git status` di D:\carla.
+- 23.50: CUDA torch sekarang True (CUDA 11.8, 1 GPU) -> YOLO bisa pakai GPU. git status D:\carla = tepat 3 berkas URL (terverifikasi). Arsip 20231108_c5101a5.tar.gz (21 GB) masih di Content\Carla; pindahkan/hapus sebelum make package (#13).
+- 23.53: **#12 selesai.** train_fix terbuka di editor laptop dan bisa Play (3.299 actor; lubang tampak sebagai tekstur datar, konsisten T17). Peringatan "Reflection captures need to be rebuilt" tidak berpengaruh. Berikutnya: #16 cek material lubang (E6), lalu #13 make package.
+- 23.57: train_fix.xodr disalin ke D:\carla\...\Maps\OpenDrive\ (sebelumnya get_map() gagal "unable to parse the OpenDRIVE XML string"). Sekarang get_map().name = Carla/Maps/train_fix. Peringatan "Version mismatch 0.9.15 vs 0.9.15-dirty" aman diabaikan.
+- 00.05 (12 Nov): Cek material (#16, sebagian): 10 hole_low* di GT = High (GT benar, E6 gugur untuk ini); 8 hole_low16-24 di luar GT = Low. GT = 10 hole_low + 9 med_samping. Belum: material med_samping detect*. Ditulis di PERBEDAAN_PROPOSAL.md.
+
+## 2026-11-12 (Kamis) dini hari: persiapan TODO #13 make package (Claude)
+
+- Dibaca dari laptop: `D:\carla\Util\BuildTools\Windows.mk`, `Package.bat`, `BuildPythonAPI.bat`, `Unreal\CarlaUE4\Config\DefaultGame.ini`, `DefaultEngine.ini`.
+- Temuan 1: `train_fix` **tidak** ada di `+MapsToCook` DefaultGame.ini. Tanpa ditambah, `make package` tidak memasukkan train_fix (paket hanya berisi Town01–10 dkk.). Lubang (Aset_Lubang) ikut otomatis sebagai dependensi peta.
+- Temuan 2: `make package` bergantung pada target `PythonAPI` (`py -3 setup.py bdist_egg bdist_wheel`). Tidak dibutuhkan karena client dari pip. Usulan: jalankan `BuildCarlaUE4.bat --at-least-write-optionalmodules` + `Package.bat --ue-version 4.26 --no-zip` langsung (isi sama dengan langkah kedua `make package`).
+- Temuan 3: OpenDRIVE ikut terbawa otomatis (`DirectoriesToAlwaysStageAsUFS=Carla/Maps/OpenDrive`), asal `train_fix.xodr` ada di folder itu (sudah, 11 Nov 23.57).
+- Temuan 4: default/transition map = `Town10HD_Opt`, jadi peta itu wajib tetap di-cook kalau daftar dipangkas.
+- Dibuat `alat_carla/uji_package_train_fix.py`: cek daftar peta, load_world, OpenDRIVE, posisi 18 lubang vs `geometri_terukur.json`, lalu arahkan kamera ke lubang. Hasil ke `alat_carla/hasil_uji_package.json`. **Belum diuji** (butuh hasil package).
+- **Belum (dikerjakan Keva):** pindahkan arsip 21 GB, edit DefaultGame.ini, jalankan package, jalankan uji, cek visual tekstur, catat hasil di sini.
+- 00.15: Percobaan package pertama gagal (`DirectoryNotFoundException ... D:\UnrealEngine\Engine\Source\Unreal\CarlaUE4`). Penyebab: **kesalahan instruksi Claude**. `Package.bat`/`BuildCarlaUE4.bat` butuh variabel `ROOT_PATH` dan `INSTALLATION_DIR` yang biasanya di-export oleh `make` (Windows.mk). Dipanggil langsung, variabelnya kosong sehingga path .uproject jadi relatif. Perbaikan: `set ROOT_PATH=D:/carla/` dan `set INSTALLATION_DIR=D:/carla/Build/` sebelum kedua .bat.
+- Efek samping run gagal: plugin Houdini di-clone ke `D:\carla\Unreal\CarlaUE4\Plugins\HoudiniEngine` (perilaku standar BuildCarlaUE4.bat, sama dengan `make package`); OptionalModules.ini tidak tertulis ulang (tidak masalah, akan ditulis ulang).
+- DefaultGame.ini diperbaiki Claude: tanda `;` untuk 11 baris Town01–05 + Town10HD tertulis di **akhir** baris (tidak berlaku sebagai komentar). Dipindah ke awal baris. Yang di-cook sekarang: Town10HD_Opt, OpenDriveMap, EmptyMap, train_fix.
+- 14.28 (12 Nov): CarlaUE4.exe hasil package terbuka dan menampilkan Town10HD_Opt (peta awal bawaan, sesuai GameDefaultMap di DefaultEngine.ini; bukan tanda gagal). Belum: jalankan uji_package_train_fix.py untuk memuat train_fix.
+- 14.30: **Uji package LULUS** (`alat_carla/hasil_uji_package.json`): `train_fix` ada di daftar peta, `load_world` berhasil, OpenDRIVE terbaca (12.958 waypoint per 2 m), **18/18 lubang hasil ukur editor ada di posisi yang sama** di build Shipping. Nama objek di package sama dengan editor (mis. `hole_low10_SM_0`).
+- Catatan: kata kunci baru (hole, med, samping, detect, ...) menangkap 40 objek. Belum dipilah mana yang lubang (bahan #17). Daftar peta hanya berisi Town10HD_Opt + train_fix; OpenDriveMap/EmptyMap kemungkinan disaring oleh `get_available_maps`, **belum dicek** (baru perlu kalau jalur cadangan lurus.xodr dipakai).
+- Belum: cek visual tekstur lubang di jendela CARLA (syarat terakhir #13). Lalu #14 milestone.

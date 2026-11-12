@@ -77,7 +77,7 @@ Ringkasan: 25 butir (19 lama + 6 baru). Butir #13 dan #15 selesai. Butir #1, #3,
 
 | # | Bagian | Tertulis di proposal | Kenyataan | Usulan perubahan |
 |---|---|---|---|---|
-| E1 | Tabel 1.1, R2 | Dika memakai CARLA 0.9.14; risiko beda versi | Build lab = **0.9.15** (UE4 fork `e22f1e2`). "dirty" hanya 4 perbaikan URL unduhan | Koreksi Tabel 1.1; hapus R2 |
+| E1 | Tabel 1.1, R2 | Dika memakai CARLA 0.9.14; risiko beda versi | Build lab = **0.9.15** (UE4 fork `e22f1e2`). "dirty" hanya 3 perbaikan URL unduhan | Koreksi Tabel 1.1; hapus R2 |
 | E2 | Batasan 1, Tabel 2.8, R3, Tabel 2.12 | CARLA 0.9.15 paket Windows | `train_fix` hanya ada di source build; `make package` di lab gagal (disk D: 3,8 GB, C: 4,2 GB) | Tulis: source build sekali → package → eksperimen di versi paket. Tambah kebutuhan disk ke R3 |
 | E3 | §2.1.1, Gate 1 | Tereproduksi jika selisih ≤ ±10 poin | Run malam di lab: **7/19 (36,8%)** vs Dika 9/19 (47,4%), selisih 10,5 poin dari **1 episode**, kode dan model identik (hash sama) | Kriteria baru berbasis ≥ 30 episode per kondisi + selang kepercayaan 95% |
 | E4 | Abstrak, §1.1 | 47% malam = kinerja agen | 7/19 < 9/19 mobil lurus tanpa menghindar. Agen bisa **lebih buruk** daripada tidak bereaksi | Pakai hanya setelah dikonfirmasi 30 episode **dan** pelabel roda memakai geometri terukur (E7) |
@@ -87,3 +87,11 @@ Ringkasan: 25 butir (19 lama + 6 baru). Butir #13 dan #15 selesai. Butir #1, #3,
 ### Bukan perubahan teks proposal, tetapi mengubah angka
 
 - E7. Geometri Microlino terukur: jejak roda depan 1,19 m, belakang **0,72 m** (estimasi lama 1,20 m untuk keduanya); sumbu depan +0,684 m, belakang −0,841 m; jari-jari ban 0,25 m. Angka T5 (9/19 mobil lurus) dan T6 (rentang 1,84–2,16 m) harus dihitung ulang.
+
+### Pembaruan E6, 12 Nov 2026 00.05 (cek material di editor laptop)
+
+- `hole_low`, `hole_low2`–`6`, `10`, `11`, `13`, `14` (10 objek, x −285 s.d. −61, **semuanya ada di GT**) memakai material **High**. Label GT "High" untuk lubang-lubang ini **benar**; nama `hole_low*` saja yang menyesatkan.
+- `hole_low16`, `18`–`24` (8 objek, x −7 s.d. +117, **di luar GT**) memakai material **Low**.
+- Koreksi angka E5: GT = 10 `hole_low*` + 9 `med_samping detect*` (bukan 11 + 8).
+- Kesimpulan: dugaan E6 ("GT keliru") **gugur** untuk 10 lubang `hole_low*`. Butir #3 dan #6 kembali ke bentuk awal: YOLO memang memberi Low pada lubang ber-material High (*domain gap*). Material 9 `med_samping detect*` **belum dicek**.
+- Peluang: 8 lubang ber-material Low di x −7 s.d. +117 bisa dipakai menguji kelas keparahan (High vs Low) di peta yang sama.

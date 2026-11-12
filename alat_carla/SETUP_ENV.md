@@ -1,5 +1,8 @@
 # Menyiapkan environment Python untuk CARLA + YOLO + DQN
 
+> **Pembaruan 11 Nov 2026:** ekspor PC lab menunjukkan env Dika (`carla_env`) memakai **satu env Python 3.8.20** dengan `carla==0.9.15` dari PyPI. Panduan di bawah sudah usang; pakai `env_laptop/README.md`.
+
+
 Disusun 7 Nov 2026 dari catatan Retta (`Retta Paper\Source Code\Retta\LIDAR CARLA\aktifin yolo.txt`,
 `README_SETUP.md`, `requirements.txt`) dan metadata bobot Dika. **Belum dicoba di laptopmu.**
 Catat setiap perintah yang berhasil atau gagal di `LOG_KERJA.md`.
