@@ -46,15 +46,20 @@ dan dampaknya ke proposal. Status: **Terbukti** = diperiksa langsung dari berkas
 - Bukti: `02_pelabel_roda/hasil/ringkasan_perbandingan.json`. Mobil yang melaju lurus di lajur spawn
   (y = 250,5) melewati 19 lubang Dika dengan **9/19 terhindar = 47,4%**, baik menurut label roda maupun
   logika Dika. Log `malam.csv`: STRAIGHT 2.422 dari 2.711 langkah (89%), deteksi YOLO hanya 16% frame.
+- Pembaruan 12 Nov (TODO #15): dihitung ulang dengan geometri Microlino terukur → tetap **9/19 = 47,4%**
+  (lajur kiri tetap 10/19). Masih memakai `pothole_gt.json` Dika; angka final menunggu GT baru (#17–#18).
 - Dampak: mendukung H2 dan narasi Bab 1.1. Pada malam hari agen praktis tidak bereaksi, dan sistem
   tidak memberi tanda apa pun. Ini contoh *silent failure* yang menjadi alasan monitor persepsi.
 
-### T6. Bug ambang lateral Dika terbukti dengan angka (Terbukti, geometri roda masih estimasi)
-- Bukti: `02_pelabel_roda/test_kontak_roda.py` (14 uji lulus) dan `hasil/sapuan_offset_lateral.png`.
+### T6. Bug ambang lateral Dika terbukti dengan angka (Terbukti, geometri roda terukur kecuali lebar ban)
+- Bukti: `02_pelabel_roda/test_kontak_roda.py` (15 uji lulus, geometri terukur 12 Nov) dan `hasil/sapuan_offset_lateral.png`.
   Logika Dika mencatat "terhindar" untuk offset lateral 1,84–2,16 m, padahal ban kiri masuk lubang.
   Arah sebaliknya juga ada: lubang sempit yang dikangkangi (ban lewat di kiri-kanannya) dicatat HIT oleh Dika.
-- Dampak: mendukung pelabel berbasis kontak roda di Subbab 2.1.3. Angka 1,84–2,16 m akan bergeser
-  setelah geometri Microlino diukur dengan `alat_carla/ukur_geometri.py`.
+  **Batas baru (12 Nov):** arah sebaliknya hanya berlaku untuk lubang lebih sempit dari **0,57 m**, karena jejak
+  belakang Microlino hanya 0,722 m. Lubang 0,6 m di tengah lajur mengenai kedua ban belakang
+  (`test_lubang_0_6m_kena_ban_belakang_karena_jejak_belakang_sempit`).
+- Dampak: mendukung pelabel berbasis kontak roda di Subbab 2.1.3. Dengan geometri terukur, rentang 1,84–2,16 m
+  **tidak berubah** (batas kontak 2,175 → 2,171 m). Sisa ketidakpastian: setengah lebar ban r_w (estimasi 0,075 m).
 
 ### T7. Bug cooldown sudah berpengaruh mulai 11 km/jam, masih di dalam rentang reward Dika (Terbukti)
 - Bukti: `02_pelabel_roda/hasil/sapuan_cooldown.png`. Untuk dua lubang selajur berjarak 13 m, kontak kedua

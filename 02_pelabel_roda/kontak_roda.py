@@ -11,7 +11,7 @@ Konvensi koordinat = CARLA (Unreal, tangan kiri, tampak dari atas):
 
 Isi modul
 ---------
-GeometriKendaraan   posisi 4 titik kontak ban relatif terhadap titik asal aktor
+GeometriKendaraan   posisi 4 titik kontak ban (jejak depan/belakang terpisah) relatif terhadap titik asal aktor
 Lubang              persegi panjang berotasi (pusat, extent = setengah ukuran, yaw)
 jarak_bertanda()    signed distance titik -> lubang (negatif = di dalam lubang)
 kontak_per_langkah  apakah ada roda yang menyentuh lubang Medium/High pada tiap langkah
@@ -20,8 +20,11 @@ energi_pelanggaran  E_V (persamaan 7) untuk satu lintasan prediksi
 rollout_sepeda()    lintasan prediksi model kinematik sepeda untuk sebuah aksi
 logika_dika()       tiruan setia penghitung HIT/AVOID di carla_env.py Dika (untuk pembanding)
 
-PERINGATAN: angka geometri bawaan Microlino di bawah adalah ESTIMASI. Ukur nilai
-sebenarnya dengan alat_carla/ukur_geometri.py sebelum label dipakai untuk hasil TA.
+Geometri bawaan (MICROLINO) TERUKUR dari CARLA 0.9.15 lewat alat_carla/ukur_geometri.py
+(alat_carla/geometri_terukur.json, Nov 2026), KECUALI setengah lebar ban r_w = 0,075 m yang
+masih estimasi karena API tidak memberikannya. Jejak depan (1,192 m) dan belakang (0,722 m)
+Microlino berbeda; jangan pakai rata-ratanya. MICROLINO_ESTIMASI menyimpan tebakan lama
+agar hasil sebelum 12 Nov 2026 bisa diulang.
 """
 from __future__ import annotations
 
@@ -38,27 +41,30 @@ SEV_BOBOT = {"Low": 0.3, "Medium": 0.6, "High": 0.9}
 # ---------------------------------------------------------------------------
 @dataclass
 class GeometriKendaraan:
-    """Semua dalam meter, relatif terhadap titik asal aktor CARLA (x maju, y kanan)."""
-    jarak_sumbu_depan: float = 0.75     # ESTIMASI: titik asal -> poros depan
-    jarak_sumbu_belakang: float = 0.72  # ESTIMASI: titik asal -> poros belakang
-    lebar_jejak: float = 1.20           # ESTIMASI: jarak antar pusat ban kiri-kanan (track)
-    setengah_lebar_ban: float = 0.075   # ESTIMASI: r_w pada persamaan 7 (ban ~150 mm)
-    setengah_lebar_bodi: float = 0.74   # dipakai Dika (VEHICLE_HALF_WIDTH)
-    setengah_panjang_bodi: float = 1.10 # dipakai Dika (VEHICLE_HALF_LEN)
-    sumber: str = "estimasi; belum diukur di CARLA"
+    """Meter, relatif terhadap titik asal aktor CARLA (x maju, y kanan)."""
+    jarak_sumbu_depan: float = 0.684     # terukur, geometri_terukur.json
+    jarak_sumbu_belakang: float = 0.841  # terukur
+    jejak_depan: float = 1.192           # terukur: pusat ban kiri-kanan depan
+    jejak_belakang: float = 0.722        # terukur: pusat ban kiri-kanan belakang
+    setengah_lebar_ban: float = 0.075    # MASIH ESTIMASI: API tidak memberi lebar ban
+    setengah_lebar_bodi: float = 0.740   # terukur (bbox)
+    setengah_panjang_bodi: float = 1.104 # terukur (bbox)
+    sumber: str = "CARLA 0.9.15, train_fix, ukur_geometri.py (Nov 2026); r_w estimasi"
 
     @property
     def wheelbase(self) -> float:
         return self.jarak_sumbu_depan + self.jarak_sumbu_belakang
 
     def roda_lokal(self) -> np.ndarray:
-        """(4,2) urutan: depan-kiri, depan-kanan, belakang-kiri, belakang-kanan."""
-        t = self.lebar_jejak / 2
+        """(4,2): depan-kiri, depan-kanan, belakang-kiri, belakang-kanan."""
+        td, tb = self.jejak_depan / 2, self.jejak_belakang / 2
         a, b = self.jarak_sumbu_depan, -self.jarak_sumbu_belakang
-        return np.array([[a, -t], [a, t], [b, -t], [b, t]], dtype=float)
+        return np.array([[a, -td], [a, td], [b, -tb], [b, tb]], dtype=float)
 
 
-MICROLINO_ESTIMASI = GeometriKendaraan()
+MICROLINO = GeometriKendaraan()
+MICROLINO_ESTIMASI = GeometriKendaraan(0.75, 0.72, 1.20, 1.20, 0.075, 0.74, 1.10,
+                                       sumber="estimasi lama (sebelum 12 Nov 2026)")
 
 
 @dataclass
@@ -102,7 +108,7 @@ def jarak_bertanda(px, py, lub: Lubang) -> np.ndarray:
 # ---------------------------------------------------------------------------
 # Label
 # ---------------------------------------------------------------------------
-def kontak_per_langkah(xs, ys, yaws, lubang: list[Lubang], geo: GeometriKendaraan = MICROLINO_ESTIMASI,
+def kontak_per_langkah(xs, ys, yaws, lubang: list[Lubang], geo: GeometriKendaraan = MICROLINO,
                        sev_min=("Medium", "High")) -> dict:
     """
     Untuk lintasan tercatat (T langkah) kembalikan:
@@ -149,7 +155,7 @@ def label_horizon(kontak: np.ndarray, H: int = int(2.0 / DT)) -> np.ndarray:
     return (c[hi + 1] - c[t + 1]) > 0
 
 
-def energi_pelanggaran(xs, ys, yaws, lubang: list[Lubang], geo: GeometriKendaraan = MICROLINO_ESTIMASI,
+def energi_pelanggaran(xs, ys, yaws, lubang: list[Lubang], geo: GeometriKendaraan = MICROLINO,
                        sev_min=("Medium", "High")) -> float:
     """
     Persamaan 7 proposal:
@@ -167,7 +173,7 @@ def energi_pelanggaran(xs, ys, yaws, lubang: list[Lubang], geo: GeometriKendaraa
     return float(phi.sum() / W.shape[0])
 
 
-def rollout_sepeda(x, y, yaw_deg, v, sudut_setir_deg, geo: GeometriKendaraan = MICROLINO_ESTIMASI,
+def rollout_sepeda(x, y, yaw_deg, v, sudut_setir_deg, geo: GeometriKendaraan = MICROLINO,
                    H: int = int(2.0 / DT), dt: float = DT):
     """
     Model kinematik sepeda dengan titik referensi = titik asal aktor (dianggap pusat

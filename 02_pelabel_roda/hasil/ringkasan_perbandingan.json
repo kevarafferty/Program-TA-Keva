@@ -1,12 +1,13 @@
 {
  "geometri": {
-  "jarak_sumbu_depan": 0.75,
-  "jarak_sumbu_belakang": 0.72,
-  "lebar_jejak": 1.2,
+  "jarak_sumbu_depan": 0.684,
+  "jarak_sumbu_belakang": 0.841,
+  "jejak_depan": 1.192,
+  "jejak_belakang": 0.722,
   "setengah_lebar_ban": 0.075,
   "setengah_lebar_bodi": 0.74,
-  "setengah_panjang_bodi": 1.1,
-  "sumber": "estimasi; belum diukur di CARLA"
+  "setengah_panjang_bodi": 1.104,
+  "sumber": "CARLA 0.9.15, train_fix, ukur_geometri.py (Nov 2026); r_w estimasi"
  },
  "sapuan_offset": {
   "rentang_beda_m": [
@@ -15,7 +16,7 @@
   ],
   "titik_beda": 17,
   "ambang_dika": 1.84,
-  "batas_roda": 2.175
+  "batas_roda": 2.171
  },
  "sapuan_cooldown": {
   "sel_kontak_hilang": 652,

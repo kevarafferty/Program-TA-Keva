@@ -269,3 +269,14 @@ ceklis memuat uji `get_available_maps()` untuk memastikannya. Lama package (2–
 - 14.30: **Uji package LULUS** (`alat_carla/hasil_uji_package.json`): `train_fix` ada di daftar peta, `load_world` berhasil, OpenDRIVE terbaca (12.958 waypoint per 2 m), **18/18 lubang hasil ukur editor ada di posisi yang sama** di build Shipping. Nama objek di package sama dengan editor (mis. `hole_low10_SM_0`).
 - Catatan: kata kunci baru (hole, med, samping, detect, ...) menangkap 40 objek. Belum dipilah mana yang lubang (bahan #17). Daftar peta hanya berisi Town10HD_Opt + train_fix; OpenDriveMap/EmptyMap kemungkinan disaring oleh `get_available_maps`, **belum dicek** (baru perlu kalau jalur cadangan lurus.xodr dipakai).
 - Belum: cek visual tekstur lubang di jendela CARLA (syarat terakhir #13). Lalu #14 milestone.
+
+## 2026-11-12 (Kamis) sore: TODO #15 pelabel roda dengan geometri terukur (Claude + Keva)
+
+- Kode diubah (Claude): `GeometriKendaraan` kini punya `jejak_depan` 1,192 m dan `jejak_belakang` 0,722 m terpisah; poros depan +0,684 m, belakang -0,841 m; bodi 0,740 / 1,104 m. Default fungsi = `MICROLINO` (terukur). `MICROLINO_ESTIMASI` dipertahankan untuk mengulang hasil lama. `logika_dika()` tidak diubah. Angka 2,175 yang tertulis langsung di `bandingkan_dengan_dika.py` diganti nilai hitungan.
+- Uji: 2 uji diperbarui (posisi roda; uji mengangkangi kini lubang 0,4 m), 1 uji baru (lubang 0,6 m kena kedua ban belakang). Dijalankan Keva di laptop: **15/15 lulus** (15.36).
+- Hasil (`02_pelabel_roda/hasil/ringkasan_perbandingan.json`): rentang salah hitung Dika tetap 1,84–2,16 m (batas kontak 2,175 → 2,171 m); cooldown tetap mulai 11 km/jam pada 13 m; mobil lurus lajur spawn tetap 9/19 = 47,4%, lajur kiri 10/19.
+- **Temuan baru:** jejak belakang sempit → lubang yang bisa dikangkangi tanpa kontak hanya < 0,57 m (estimasi lama: 1,05 m). T5, T6 di `TEMUAN.md` dan `02_pelabel_roda/HASIL.md` diperbarui.
+- Keputusan: `lebar_jejak` 0,957 m di `geometri_terukur.json` (rata-rata) **tidak dipakai**.
+- Cadangan: `02_pelabel_roda/cadangan_estimasi/` (berkas `kontak_roda` di sana sudah berisi edit Keva 15.25, bukan versi asli) dan berkas `hasil/*_estimasi.*`.
+- **Belum:** `TODO_TA.csv` belum ditandai selesai (berkas terkunci, kemungkinan terbuka di Excel). r_w (setengah lebar ban) masih estimasi 0,075 m. Angka T5 masih memakai `pothole_gt.json` lama → dihitung ulang di #18 setelah GT baru (#17).
+- 13 Nov 01.10: Dibuat `Bimbingan_5_Butir_TA_Keva.pptx` (9 slide, design system Gallery, urutan 3-1-4-5-2, butir 4 berisi dua pilihan: kamera saja / lubang 3D + LiDAR-IMU). Belum: cek material med_samping, arsip 21 GB, make package (#13).

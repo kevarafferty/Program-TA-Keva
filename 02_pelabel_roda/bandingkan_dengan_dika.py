@@ -47,13 +47,15 @@ def sapuan_offset(out):
     ax2.set_ylabel("$E_V$")
     ax.set_xlabel("offset lateral pusat mobil ke pusat lubang (m)"); ax.set_yticks([])
     ax.axvline(1.84, ls=":", c="#a2560b"); ax.text(1.85, 0.9, "ambang Dika 1,84 m", fontsize=8, color="#a2560b")
-    ax.axvline(2.175, ls=":", c="#0f6e74"); ax.text(2.19, 0.75, "batas kontak roda 2,175 m", fontsize=8, color="#0f6e74")
+    batas = 1.5 + GEO.jejak_depan / 2 + GEO.setengah_lebar_ban      # ban depan = ban terluar
+    ax.axvline(batas, ls=":", c="#0f6e74")
+    ax.text(batas + 0.015, 0.75, f"batas kontak roda {batas:.3f} m".replace(".", ","), fontsize=8, color="#0f6e74")
     h1, l1 = ax.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()
     ax.legend(h1 + h2, l1 + l2, loc="upper right", fontsize=8, frameon=False, bbox_to_anchor=(1.0, 0.62))
     ax.set_title("Lubang 2 m x 3 m (High, ukuran Dika), Microlino 7 km/jam", fontsize=10)
     fig.tight_layout(); fig.savefig(os.path.join(out, "sapuan_offset_lateral.png"), dpi=150); plt.close(fig)
     return dict(rentang_beda_m=[float(beda.min()), float(beda.max())] if len(beda) else None,
-                titik_beda=int(len(beda)), ambang_dika=1.84, batas_roda=2.175)
+                titik_beda=int(len(beda)), ambang_dika=1.84, batas_roda=round(batas, 3))
 
 
 def sapuan_cooldown(out):

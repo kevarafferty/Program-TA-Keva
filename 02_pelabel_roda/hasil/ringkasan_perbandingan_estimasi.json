@@ -1,0 +1,48 @@
+{
+ "geometri": {
+  "jarak_sumbu_depan": 0.75,
+  "jarak_sumbu_belakang": 0.72,
+  "lebar_jejak": 1.2,
+  "setengah_lebar_ban": 0.075,
+  "setengah_lebar_bodi": 0.74,
+  "setengah_panjang_bodi": 1.1,
+  "sumber": "estimasi; belum diukur di CARLA"
+ },
+ "sapuan_offset": {
+  "rentang_beda_m": [
+   1.84,
+   2.16
+  ],
+  "titik_beda": 17,
+  "ambang_dika": 1.84,
+  "batas_roda": 2.175
+ },
+ "sapuan_cooldown": {
+  "sel_kontak_hilang": 652,
+  "total_sel": 754,
+  "kecepatan_min_bermasalah_pada_13m": 11
+ },
+ "lintasan_dika": {
+  "lurus_lajur_spawn_y250.5": {
+   "kontak_roda": 10,
+   "hit_dika": 10,
+   "avoid_dika": 9,
+   "penghindaran_dika_pct": 47.4,
+   "penghindaran_roda_pct": 47.4
+  },
+  "menenun_halus": {
+   "kontak_roda": 0,
+   "hit_dika": 0,
+   "avoid_dika": 19,
+   "penghindaran_dika_pct": 100.0,
+   "penghindaran_roda_pct": 100.0
+  },
+  "lurus_lajur_kiri_y247.2": {
+   "kontak_roda": 9,
+   "hit_dika": 9,
+   "avoid_dika": 10,
+   "penghindaran_dika_pct": 52.6,
+   "penghindaran_roda_pct": 52.6
+  }
+ }
+}

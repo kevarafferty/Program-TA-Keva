@@ -2,9 +2,10 @@
 Uji unit pelabel kontak roda–lubang.  Jalankan:  python -m pytest -q test_kontak_roda.py
 
 Setiap uji memakai kasus yang jawabannya bisa dihitung dengan tangan. Geometri
-memakai estimasi Microlino (lebar jejak 1,20 m, setengah lebar ban 0,075 m),
-sehingga roda terdekat menyentuh lubang ber-setengah-lebar 1,5 m selama
-|offset lateral| < 1,5 + 0,6 + 0,075 = 2,175 m.
+= Microlino TERUKUR di CARLA (jejak depan 1,192 m, jejak belakang 0,722 m, poros
+depan +0,684 m, poros belakang -0,841 m) dengan setengah lebar ban 0,075 m (estimasi).
+Ban depan (terluar) menyentuh lubang ber-setengah-lebar 1,5 m selama
+|offset lateral| < 1,5 + 0,596 + 0,075 = 2,171 m; ban belakang selama < 1,936 m.
 """
 import numpy as np
 import pytest
@@ -39,9 +40,10 @@ def test_jarak_bertanda_lubang_berotasi():
 
 def test_posisi_roda_yaw_0_dan_90():
     w0 = roda_dunia(0, 0, 0, GEO)[0]
-    assert w0[0] == pytest.approx([0.75, -0.6])                # depan-kiri: x maju, y negatif = kiri
+    assert w0[0] == pytest.approx([0.684, -0.596])             # depan-kiri: x maju, y negatif = kiri
+    assert w0[2] == pytest.approx([-0.841, -0.361])            # belakang-kiri: jejak belakang lebih sempit
     w90 = roda_dunia(0, 0, 90, GEO)[0]
-    assert w90[0] == pytest.approx([0.6, 0.75], abs=1e-9)      # setelah putar 90°, kiri = +x
+    assert w90[0] == pytest.approx([0.596, 0.684], abs=1e-9)   # setelah putar 90°, kiri = +x
 
 
 # --------------------------------------------------------------- kasus kunci
@@ -54,7 +56,8 @@ def test_lewat_tepat_di_tengah_kena_di_kedua_metode():
 
 
 def test_offset_1_9m_bug_ambang_lateral_dika():
-    """Pusat mobil 1,9 m dari pusat lubang. Roda kiri di 1,3 m < 1,5 m -> roda masuk lubang.
+    """Pusat mobil 1,9 m dari pusat lubang. Ban depan-kiri di 1,304 m < 1,5 m -> masuk lubang;
+    ban belakang-kiri di 1,539 m, tepi dalamnya 1,464 m < 1,5 m -> ikut menyentuh.
     Dika: 1,9 > extent_x(1,0) + 0,74 + 0,10 = 1,84 -> dicatat TERHINDAR."""
     l = Lubang("p", 0, 0, **LUB_DIKA)
     xs, ys, yw = lintasan_lurus(1.9, 7)
@@ -74,11 +77,25 @@ def test_offset_2_3m_aman_di_kedua_metode():
 
 
 def test_mengangkangi_lubang_sempit_dika_hit_padahal_ban_tidak_kena():
-    """Lubang Medium sempit (setengah lebar 0,3 m) tepat di tengah. Ban ada di ±0,6 m,
-    tepi dalam ban di ±0,525 m -> tidak ada ban yang masuk. Dika: lateral 0 -> HIT."""
-    l = Lubang("p", 0, 0, ex=0.5, ey=0.3, severity="Medium")
+    """Lubang Medium sempit (setengah lebar 0,2 m) tepat di tengah. Tepi dalam ban depan di
+    ±0,521 m, ban belakang di ±0,286 m -> tidak ada ban yang masuk. Dika: lateral 0 -> HIT."""
+    l = Lubang("p", 0, 0, ex=0.5, ey=0.2, severity="Medium")
     xs, ys, yw = lintasan_lurus(0.0, 7)
     assert not kontak_per_langkah(xs, ys, yw, [l], GEO)["kontak"].any()
+    assert len(logika_dika(xs, ys, yw, [l]).hit) == 1
+
+
+def test_lubang_0_6m_kena_ban_belakang_karena_jejak_belakang_sempit():
+    """Temuan geometri terukur: lubang selebar 0,6 m (setengah lebar 0,3 m) TIDAK bisa
+    dikangkangi Microlino. Tepi dalam ban belakang di ±0,286 m < 0,3 m -> kedua ban belakang
+    menyentuh; ban depan (tepi dalam ±0,521 m) tidak. Batas lebar lubang yang bisa dikangkangi
+    = 2 x 0,286 = 0,57 m."""
+    l = Lubang("p", 0, 0, ex=0.5, ey=0.3, severity="Medium")
+    xs, ys, yw = lintasan_lurus(0.0, 7)
+    k = kontak_per_langkah(xs, ys, yw, [l], GEO)
+    assert k["kontak"].any()
+    roda = set().union(*[set(e["roda"]) for e in k["kejadian"]])
+    assert roda == {"BKi", "BKa"}
     assert len(logika_dika(xs, ys, yw, [l]).hit) == 1
 
 
