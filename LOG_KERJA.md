@@ -317,3 +317,28 @@ ceklis memuat uji `get_available_maps()` untuk memastikannya. Lama package (2–
 - Menentukan angka `severity` untuk Low di GT baru (konvensi GT Dika: High = 0,9; `carla_env.py`: urutan lain, lihat T3).
 - Tanya Dika: apakah segmen x −7 s.d. +130 dipakai untuk training atau evaluasi.
 - Hitung ulang T5/T6 dengan GT baru (#18). Tandai #16 selesai di `TODO_TA.csv`.
+
+## 2026-11-17 (Selasa) sore — instruksi TODO #17–#20 (Claude)
+
+### Yang dikerjakan
+| No | Pekerjaan | Hasil | Lokasi |
+|---|---|---|---|
+| 1 | Instruksi langkah demi langkah #17–#20 | Ditulis | `INSTRUKSI_17-20.md` |
+| 2 | Skrip pencocokan hasil ukur paket vs GT editor, menulis GT v2 lengkap (40) + segmen Dika (19) | Dites dengan `geometri_terukur.json` lama (18 objek): pencocokan posisi berjalan; hasil wajar BELUM SELESAI karena data lama tidak memuat `med_samping` | `alat_carla/cocokkan_gt.py` |
+| 3 | Skrip baseline mobil lurus GT v2 + sapuan offset lateral | Dites dengan GT editor segmen Dika: lajur spawn 9/19 (47,4%), lajur kiri 10/19 (52,6%), offset ±0,5 m tetap 47,4% | `02_pelabel_roda/baseline_lurus_v2.py` |
+
+### Keputusan dan asumsi (perlu Keva setujui)
+- Severity angka Low = 0,3 (default `--sev_low`). Low tidak dihitung pelabel roda (hanya Medium/High).
+- Baseline Gate 1 memakai segmen Dika saja (x −299,5 s.d. −27, 19 lubang).
+- Offset awal acak runner: lateral ±0,5 m, longitudinal ±2 m, seed = nomor episode.
+- `time.sleep` hanya boleh dihapus jika `synchronous_mode = True`; perlu cek frame kamera = frame dunia.
+
+### Belum (dikerjakan Keva)
+- Menjalankan #17–#20 di laptop sesuai `INSTRUKSI_17-20.md`.
+
+## 2026-11-17 (Selasa) 18.10 — #17 selesai, #18 selesai
+
+- #17 (Keva menjalankan, Claude memeriksa): `geometri_terukur_v2.json` dari CARLA paket = 40 objek. `cocokkan_gt.py`: **40/40 cocok**, jarak maks 0,6 mm, ukuran sama, tidak ada objek lebih/kurang. GT v2: `alat_carla/pothole_gt_v2_lengkap.json` (40: 32 High + 8 Low, severity Low = 0,3) dan `pothole_gt_v2_segmen_dika.json` (19 High). Sudah di-commit Keva (`9ef848b`).
+- #18 (dijalankan Claude di laptop): `02_pelabel_roda/hasil_gt_v2/baseline_lurus_v2.json`. Mobil lurus lajur spawn y 250,5: **9/19 = 47,4%** (pelabel roda dan logika Dika sama). Lajur kiri y 247,2: 10/19 = 52,6%. Offset acak ±0,5 m: tetap 47,4%. Sama untuk cerah, hujan, malam. Angka lama T5 terkonfirmasi dengan GT terukur + geometri terukur.
+- Dampak: run malam lab 7/19 (36,8%) tetap di bawah mobil lurus (E4), masih 1 episode → tunggu 30 episode (#21).
+- Belum: commit hasil #18; lanjut #19.
