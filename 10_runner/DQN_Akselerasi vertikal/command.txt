@@ -1,0 +1,8 @@
+python train.py --new
+python train.py --episodes 150
+python train.py --new --episodes 750
+
+
+Cuaca 
+carla.WeatherParameters.ClearSunset
+carla.WeatherParameters.ClearNoon
