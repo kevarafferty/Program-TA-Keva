@@ -95,3 +95,12 @@ Ringkasan: 25 butir (19 lama + 6 baru). Butir #13 dan #15 selesai. Butir #1, #3,
 - Koreksi angka E5: GT = 10 `hole_low*` + 9 `med_samping detect*` (bukan 11 + 8).
 - Kesimpulan: dugaan E6 ("GT keliru") **gugur** untuk 10 lubang `hole_low*`. Butir #3 dan #6 kembali ke bentuk awal: YOLO memang memberi Low pada lubang ber-material High (*domain gap*). Material 9 `med_samping detect*` **belum dicek**.
 - Peluang: 8 lubang ber-material Low di x −7 s.d. +117 bisa dipakai menguji kelas keparahan (High vs Low) di peta yang sama.
+
+### Pembaruan E5/E6, 17 Nov 2026 (skrip `alat_carla/cek_material_lubang.py`, CSV di folder yang sama)
+
+- Peta berisi **40 objek lubang**: 18 `hole_low*` + 22 `med_samping detect*`. Semuanya `Plane` di z = 0,039 m.
+- **E6 gugur sepenuhnya.** Ke-19 lubang GT (10 `hole_low*` + 9 `med_samping detect*`) memakai material `highh`, yang teksturnya `high-removebg-preview.png`. Label GT "High" benar. Butir #3 dan #6: YOLO memang memberi Low pada lubang High (*domain gap*).
+- **E5 / T14 dikoreksi.** Posisi GT Dika cocok dengan editor (selisih ≤ 0,0004 m), dan ukurannya juga cocok (2 × 3 m). `pothole_gt.json` bukan estimasi untuk 19 lubang ini. Label "Medium" di `pothole_gt_backup_lengkap.json` tidak cocok dengan peta, jadi berkas itu jangan dipakai.
+- Di luar GT (x −7 s.d. +130) ada 21 objek: 13 `med_samping detect*` ber-material `highh` (High, 2 × 3 m) dan 8 `hole_low*` ber-material `Low`. Tekstur `Low` adalah `T_DecRodCrack_1_op.TGA`, decal **retakan** bawaan CARLA, berukuran 2 × 7 m atau 2 × 9 m. Ini sesuai Tabel 3.1 Dika (Low = retakan).
+- Material `meds` (`CRACK-removebg-preview.png`) tidak dipakai di peta. Peta **tidak punya objek Medium**.
+- Draf GT baru (40 objek): `alat_carla/pothole_gt_editor.json`. Nilai `severity` untuk Low dibiarkan `null` karena konvensi angkanya belum diputuskan (lihat T3).

@@ -280,3 +280,40 @@ ceklis memuat uji `get_available_maps()` untuk memastikannya. Lama package (2–
 - Cadangan: `02_pelabel_roda/cadangan_estimasi/` (berkas `kontak_roda` di sana sudah berisi edit Keva 15.25, bukan versi asli) dan berkas `hasil/*_estimasi.*`.
 - **Belum:** `TODO_TA.csv` belum ditandai selesai (berkas terkunci, kemungkinan terbuka di Excel). r_w (setengah lebar ban) masih estimasi 0,075 m. Angka T5 masih memakai `pothole_gt.json` lama → dihitung ulang di #18 setelah GT baru (#17).
 - 13 Nov 01.10: Dibuat `Bimbingan_5_Butir_TA_Keva.pptx` (9 slide, design system Gallery, urutan 3-1-4-5-2, butir 4 berisi dua pilihan: kamera saja / lubang 3D + LiDAR-IMU). Belum: cek material med_samping, arsip 21 GB, make package (#13).
+
+---
+
+## 2026-11-16 (Senin) — Butir TODO #16: cek material lubang (persiapan oleh Claude)
+
+### Yang dikerjakan
+| No | Pekerjaan | Hasil | Lokasi |
+|---|---|---|---|
+| 1 | Membaca string biner aset `Aset_Lubang` dan `train_fix.uasset` (tanpa editor) | Lihat temuan awal di bawah | `train_fix_migrate/Content/Carla/Maps/` |
+| 2 | Menulis skrip Python untuk Unreal Editor yang mengekspor nama aktor, posisi, ukuran, material, tekstur, dan label GT Dika | Ditulis, **belum diuji** (butuh editor) | `alat_carla/cek_material_lubang.py` |
+
+### Temuan awal (Dugaan kuat, perlu konfirmasi di editor)
+- `High.uasset`, `Med.uasset`, `highs.uasset` adalah **ObjectRedirector**, bukan material. Rantai: `High` → `Med` → `highh`; `highs` → `meds`. Nama material tidak bisa dipercaya.
+- Material asli: `highh` → tekstur `hiigh` (sumber `high-removebg-preview.png`); `Low` → tekstur `Lows` (sumber `T_DecRodCrack_1_op.TGA`, decal retakan bawaan CARLA); `meds` → tekstur `medd` (sumber `CRACK-removebg-preview.png`).
+- Peta `train_fix.uasset` hanya mereferensikan dua material: `Low` dan `highh`. Ada 18 nama `hole_low*` dan 21 nama `med_samping detect*` (total 39 = jumlah entri `pothole_gt_backup_lengkap.json`).
+- Jika `hole_low*` memakai `Low` (retakan), YOLO yang memberi Low benar dan GT "High" yang keliru (E6). Pemetaan per aktor belum bisa dibaca dari biner.
+
+### Belum dikerjakan (menunggu Keva)
+- Menjalankan `cek_material_lubang.py` di editor source build dan mengirim CSV-nya.
+- Mencocokkan hasil dengan GT, lalu memperbarui E6, T4, H1, dan butir #3 di PERBEDAAN_PROPOSAL.md.
+
+## 2026-11-17 (Selasa) — Butir #16 selesai, draf GT baru (#17)
+
+### Yang dikerjakan
+| No | Pekerjaan | Hasil | Lokasi |
+|---|---|---|---|
+| 1 | Keva menjalankan `cek_material_lubang.py` di editor | 40 objek, CSV lengkap | `alat_carla/cek_material_lubang.csv` |
+| 2 | Claude mencocokkan CSV dengan GT Dika | 19/19 GT benar (High, posisi ≤ 0,4 mm, ukuran cocok) | PERBEDAAN_PROPOSAL.md, pembaruan 17 Nov |
+| 3 | Claude membangun draf GT dari CSV | 32 High + 8 Low (retakan) | `alat_carla/pothole_gt_editor.json` |
+
+### Koreksi atas entri 16 Nov
+- Dugaan "hole_low* memakai material Low, jadi GT keliru" **salah** untuk lubang di area GT. Pembaruan 12 Nov di PERBEDAAN_PROPOSAL.md sebenarnya sudah menunjukkannya, tapi belum Claude baca saat itu.
+
+### Belum
+- Menentukan angka `severity` untuk Low di GT baru (konvensi GT Dika: High = 0,9; `carla_env.py`: urutan lain, lihat T3).
+- Tanya Dika: apakah segmen x −7 s.d. +130 dipakai untuk training atau evaluasi.
+- Hitung ulang T5/T6 dengan GT baru (#18). Tandai #16 selesai di `TODO_TA.csv`.
