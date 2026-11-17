@@ -342,3 +342,40 @@ ceklis memuat uji `get_available_maps()` untuk memastikannya. Lama package (2–
 - #18 (dijalankan Claude di laptop): `02_pelabel_roda/hasil_gt_v2/baseline_lurus_v2.json`. Mobil lurus lajur spawn y 250,5: **9/19 = 47,4%** (pelabel roda dan logika Dika sama). Lajur kiri y 247,2: 10/19 = 52,6%. Offset acak ±0,5 m: tetap 47,4%. Sama untuk cerah, hujan, malam. Angka lama T5 terkonfirmasi dengan GT terukur + geometri terukur.
 - Dampak: run malam lab 7/19 (36,8%) tetap di bawah mobil lurus (E4), masih 1 episode → tunggu 30 episode (#21).
 - Belum: commit hasil #18; lanjut #19.
+
+## 2026-11-17 (Selasa) 18.30 — #19 runner diedit (Claude), belum diuji di CARLA
+
+Lokasi: `10_runner/DQN_Akselerasi vertikal/` (salinan; asli di-commit `9ae5bd2`, lihat `git diff`). Semua edit ditandai `# [#19]`.
+- Dicek dulu: `carla_env.py` memakai `synchronous_mode = True`, `fixed_delta_seconds = 0.05` → `sleep` aman diganti.
+- `carla_env.py`: host `127.0.0.1`; `time.sleep` di `reset()` dan `step()` diganti `_tunggu_kamera(frame)` (tunggu sampai `image.frame` = frame tick, batas 2 s, hitung `kamera_telat`). Alasan: tanpa sleep, YOLO bisa membaca gambar langkah sebelumnya. Offset spawn acak `random.Random(seed)`; seed None = perilaku asli Dika.
+- `cleanTest.py`: argumen `--cuaca --episodes --seed_awal --offset_x 2.0 --offset_y 0.5 --tampil --video`. Keluaran ke `log_runner/<waktu>_<cuaca>/`: `posisi_epXX_seedN.csv` (step, t_sim, frame_dunia, frame_kamera, x, y, yaw, v_kmh, aksi, deteksi, hits, avoids), `ringkasan_episode.csv` (detik, faktor real-time, kamera_telat), `sensor_log_all_episodes.csv` (format Dika). Video default mati (D: pernah penuh).
+- Tidak diubah: reward/logika hit-avoid Dika, `pothole_gt.json` lama (posisinya identik dengan GT v2), model, YOLO.
+- Belum: uji 1 episode (Keva).
+
+## 2026-11-17 (Selasa) 18.45 — uji 1 episode runner #19 (Keva menjalankan, Claude menganalisis)
+
+- Run `log_runner/20261117_183510_ClearNoon/`: 2.637 langkah, 125,7 s, faktor real-time 1,05, kamera telat 0. Offset seed 0: x +1,378, y +0,258.
+- Mekanik runner **lulus**: frame_kamera = frame_dunia di 2.637/2.637 baris, frame naik tepat 1 per langkah, x −298,1 → −27,0.
+- **Episode TIDAK VALID sebagai baseline:** `Yolo/best_pure.pt` tidak ada di salinan (`YOLO model error`, kode Dika hanya mencetak peringatan lalu lanjut). Deteksi = 0 di semua langkah → agen buta (STRAIGHT 96%). y melayang ke 248,07 (zona antar-lajur).
+- Temuan sampingan (agen buta, 1 episode): logika Dika 12 HIT / 7 AVOID, pelabel roda **17 kena / 2 terhindar**. Selisih 5 lubang = bug ambang lateral (T6) pada lintasan nyata.
+- Perbaikan Claude: `carla_env.py` kini `raise RuntimeError` jika YOLO tidak termuat ([#19]).
+- Belum: salin `best_pure.pt` (SHA-256 7b6b44f3…, BUKAN versi Agen DRL 3bb64fb3…) ke `10_runner/.../Yolo/`, ulangi 1 episode. Hapus folder kosong `log_runner/20261117_183234_*` dan `_183420_*` (hanya berisi `video/` kosong).
+
+## 2026-11-17 (Selasa) 18.50 — #19 SELESAI: uji ulang dengan YOLO (Keva menjalankan, Claude menganalisis)
+
+- Run `log_runner/20261117_184625_ClearNoon/`, seed 0: YOLO termuat di CUDA. 2.910 langkah, 170,4 s, faktor real-time 0,85 (dengan jendela cv2), kamera telat 0.
+- Mekanik: frame_kamera = frame_dunia 2.910/2.910, x −298,1 → −27,0, y 247,4–251,3. Deteksi aktif di 92% langkah; aksi STRAIGHT 76%, LEFT 12%, RIGHT 11%.
+- Hasil: **18/19 terhindar (94,7%)**. Logika Dika dan pelabel roda sepakat: satu-satunya kontak ph_0010 (ban kanan depan + belakang). Dika melaporkan 100% cerah. Baru 1 episode.
+- YOLO menambah ±45 s/episode dibanding run buta (125,7 s).
+- Berikutnya #20: 5 episode `--tampil 0`.
+
+## 2026-11-17 (Selasa) 19.15 — #20 SELESAI: waktu per episode dan keputusan laptop (Keva menjalankan, Claude menganalisis)
+
+- Run `log_runner/20261117_185215_ClearNoon/`, 5 episode, seed 0–4, `--tampil 0`.
+- **t = 137,3 s/episode rata-rata** (135,4–138,8), faktor real-time 1,06, kamera telat 0 di semua episode. Jendela cv2 menambah ±33 s (170,4 s di run sebelumnya).
+- **Keputusan: laptop.** Gate 1 (90 ep) ≈ 3,4 jam = 1 malam. Fase 3 (±3.600 ep) ≈ 137 jam ≈ 14 malam × 10 jam. Masuk baris "≤ 150 s" di tabel INSTRUKSI. Cloud tidak dibutuhkan; PC lab sebagai cadangan.
+- VRAM dan suhu GPU **tidak tercatat**. Rekam otomatis saat run Gate 1 dengan `nvidia-smi ... -l 10` (lihat bawah).
+- Hasil lubang: kelima episode 18/19, dan **selalu ph_0010 yang kena** (pelabel roda dan logika Dika sepakat). Ini sistematis, bukan acak. Dika melaporkan 19/19 cerah. Dugaan (belum dicek): agen belok kanan menghindari ph_0009 (x −160,7, lajur kiri) lalu tidak sempat kembali sebelum ph_0010 (x −146,1, lajur kanan, 14,6 m kemudian).
+- Episode 4: berhenti di x −32,07 karena **tabrakan** (reward −300, done) setelah semua lubang dilewati, sehingga bonus finis +800 hilang (total 980 vs ±2.085). Metrik lubang tidak terpengaruh. Objek yang ditabrak belum diketahui; `collision_history` tidak mencatat `other_actor`.
+- Nondeterminisme terkonfirmasi lagi: seed 0 memberi 2.910 langkah (run 18.46) vs 2.897 langkah (run ini).
+- Belum: catat `other_actor` tabrakan di runner; cek video/lintasan ph_0009–ph_0010; lanjut #21 (30 ep × 3 kondisi).

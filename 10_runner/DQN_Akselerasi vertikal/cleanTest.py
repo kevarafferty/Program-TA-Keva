@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import time
 import carla
+import argparse, math   # [#19]
 
 from environment.carla_env import CarlaEnv
 from agent.dqn_agent import DQNAgent
@@ -11,15 +12,30 @@ from agent.dqn_agent import DQNAgent
 # =====================================================================
 # KONFIGURASI TESTING
 # =====================================================================
+# [#19] konfigurasi lewat argumen; folder keluaran baru supaya data Dika tidak tertimpa
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--cuaca", default="ClearNoon", help="nama carla.WeatherParameters, mis. ClearNoon, HardRainNoon, ClearNight")
+_ap.add_argument("--episodes", type=int, default=1)
+_ap.add_argument("--seed_awal", type=int, default=0, help="seed episode ke-k = seed_awal + k - 1")
+_ap.add_argument("--offset_x", type=float, default=2.0, help="offset spawn longitudinal maks (m)")
+_ap.add_argument("--offset_y", type=float, default=0.5, help="offset spawn lateral maks (m); jangan > 1,0")
+_ap.add_argument("--tampil", type=int, default=1, help="1 = jendela cv2, 0 = tanpa jendela (lebih cepat)")
+_ap.add_argument("--video", type=int, default=0, help="1 = rekam mp4 (makan disk)")
+ARGS = _ap.parse_args()
+
 MODEL_PATH   = "model_best.h5"
-NUM_EPISODES = 1
+NUM_EPISODES = ARGS.episodes
 MAX_STEPS    = 10000
 
-TEST_WEATHER = carla.WeatherParameters.ClearNight
+CUACA        = ARGS.cuaca
+TEST_WEATHER = getattr(carla.WeatherParameters, CUACA)
 
-RECORD_VIDEO = True
-VIDEO_DIR    = "recordings"
-DATA_DIR     = "sensor_data"
+RECORD_VIDEO = bool(ARGS.video)
+TAMPIL       = bool(ARGS.tampil)
+STAMP        = time.strftime("%Y%m%d_%H%M%S")
+RUN_DIR      = os.path.join("log_runner", f"{STAMP}_{CUACA}")
+VIDEO_DIR    = os.path.join(RUN_DIR, "video")
+DATA_DIR     = RUN_DIR
 
 ACTION_LABELS = {
     0: "STRAIGHT", 1: "LEFT", 2: "RIGHT", 3: "FASTER",
@@ -282,23 +298,42 @@ def main():
 
     agent.epsilon = 0.0
 
+    env.offset_maks_x, env.offset_maks_y = ARGS.offset_x, ARGS.offset_y   # [#19]
+    env.episode_seed = ARGS.seed_awal
     state = env.reset()
     sensor_mgr = SensorManager(env=env)
 
     csv_path = os.path.join(DATA_DIR, "sensor_log_all_episodes.csv")
     data_logger = DataLogger(csv_path)
 
+    # [#19] ringkasan per episode (untuk #20: detik/episode)
+    f_ring = open(os.path.join(RUN_DIR, "ringkasan_episode.csv"), "w", newline="")
+    w_ring = csv.writer(f_ring)
+    w_ring.writerow(["episode", "seed", "offset_x", "offset_y", "langkah", "detik", "faktor_realtime",
+                     "hits", "avoids", "reward", "kamera_telat", "x_akhir"])
+
     try:
         for episode in range(1, NUM_EPISODES + 1):
             print(f"\n▶️  Memulai Episode {episode}")
 
+            seed = ARGS.seed_awal + episode - 1          # [#19]
             if episode > 1:
+                env.episode_seed = seed
                 state = env.reset()
                 sensor_mgr.reattach()
 
             done = False
             step = 0
             cumulative_reward = 0.0
+
+            # [#19] log posisi per langkah
+            f_pos = open(os.path.join(RUN_DIR, f"posisi_ep{episode:02d}_seed{seed}.csv"), "w", newline="")
+            w_pos = csv.writer(f_pos)
+            w_pos.writerow(["step", "t_sim", "frame_dunia", "frame_kamera", "x", "y", "yaw",
+                            "v_kmh", "aksi", "deteksi", "hits", "avoids"])
+            env.kamera_telat = 0
+            info = {}
+            t0 = time.perf_counter()
 
             video_writer = None
             if RECORD_VIDEO:
@@ -312,6 +347,15 @@ def main():
                 next_state, reward, done, info = env.step(action)
                 cumulative_reward += reward
                 step += 1
+
+                # [#19] posisi setelah tick
+                snap = env.world.get_snapshot()
+                tf = env.vehicle.get_transform(); v = env.vehicle.get_velocity()
+                w_pos.writerow([step, round(snap.timestamp.elapsed_seconds, 3), env.world_frame, env.camera_frame,
+                                round(tf.location.x, 4), round(tf.location.y, 4), round(tf.rotation.yaw, 3),
+                                round(3.6 * math.hypot(v.x, v.y), 3), ACTION_LABELS.get(action, action),
+                                int(next_state.get('pothole_detected', 0)) if isinstance(next_state, dict) else '',
+                                info.get('hits', 0), info.get('avoids', 0)])
 
                 # Ambil pothole_data dari vehicle_state[:5]
                 # Format: [cx_norm, cy_norm, bw_norm, bh_norm, severity]
@@ -330,7 +374,7 @@ def main():
                     info=info
                 )
 
-                if env.current_image is not None:
+                if TAMPIL and env.current_image is not None:   # [#19] jendela opsional
                     frame_bgr = cv2.cvtColor(env.current_image, cv2.COLOR_RGB2BGR)
                     display_frame = draw_overlay(
                         frame_bgr, state, info, action, reward,
@@ -344,12 +388,23 @@ def main():
 
                 state = next_state
 
-                if cv2.waitKey(1) & 0xFF == ord('q'):
+                if TAMPIL and cv2.waitKey(1) & 0xFF == ord('q'):
                     print("\n⏹️  Dibatalkan oleh user (Tombol Q).")
                     done = True
 
             if video_writer is not None:
                 video_writer.release()
+
+            # [#19] ringkasan episode
+            detik = time.perf_counter() - t0
+            f_pos.close()
+            w_ring.writerow([episode, seed, round(env.spawn_offset[0], 3), round(env.spawn_offset[1], 3), step,
+                             round(detik, 1), round(step * 0.05 / detik, 2), info.get('hits', 0),
+                             info.get('avoids', 0), round(cumulative_reward, 2), env.kamera_telat,
+                             round(env.vehicle.get_location().x, 2)])
+            f_ring.flush()
+            print(f"EPISODE {episode}: {step} langkah, {detik:.1f} s, faktor real-time {step * 0.05 / detik:.2f}, "
+                  f"kamera telat {env.kamera_telat}")
 
             print(
                 f"📊 Ep {episode} | Steps: {step} | "
@@ -364,6 +419,7 @@ def main():
         print("\n🧹 Membersihkan environment...")
         sensor_mgr.destroy()
         data_logger.close()
+        f_ring.close()
         env.close()
         cv2.destroyAllWindows()
         print("✅ Testing Selesai.")

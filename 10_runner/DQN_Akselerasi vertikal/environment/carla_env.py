@@ -5,6 +5,7 @@ import time
 import math
 import json
 import os
+import random   # [#19] offset spawn acak
 
 # Optional: YOLO integration
 try:
@@ -150,7 +151,7 @@ class CarlaEnv:
     ):
         print("Inisialisasi CARLA Environment...")
 
-        self.client = carla.Client('localhost', 2000)
+        self.client = carla.Client('127.0.0.1', 2000)   # [#19] bukan localhost (WARP)
         self.client.set_timeout(15.0)
 
         print(f"Loading map: {town} ...")
@@ -170,6 +171,15 @@ class CarlaEnv:
         )
         self.spawn_index = spawn_index
 
+        # [#19] seed + offset spawn acak, sinkronisasi frame kamera
+        self.episode_seed      = None
+        self.offset_maks_x     = 0.0
+        self.offset_maks_y     = 0.0
+        self.spawn_offset      = (0.0, 0.0)
+        self.camera_frame      = -1
+        self.world_frame       = -1
+        self.kamera_telat      = 0
+
         # ── YOLO ──────────────────────────────────────────────────
         self.yolo_model = None
         if YOLO_AVAILABLE:
@@ -184,6 +194,9 @@ class CarlaEnv:
                 print(f"✅ YOLO loaded on {device.upper()}")
             except Exception as e:
                 print(f"⚠️  YOLO model error: {e}")
+        # [#19] berhenti kalau YOLO tidak termuat: tanpa YOLO agen buta dan hasil episode tidak valid
+        if self.yolo_model is None:
+            raise RuntimeError(f"YOLO tidak termuat dari '{yolo_model_path}'. Salin best_pure.pt (SHA-256 7b6b44f3...) ke folder Yolo/.")
 
         # ── Ground Truth Pothole ───────────────────────────────────
         self.gt = PotholeGroundTruth(gt_json_path)
@@ -289,8 +302,8 @@ class CarlaEnv:
 
         print("Menunggu sensors ready...")
         for _ in range(20):
-            self.world.tick()
-            time.sleep(0.05)
+            frame = self.world.tick()          # [#19] tanpa sleep
+            self._tunggu_kamera(frame)
             if self.current_image is not None and self.imu_data is not None:
                 break
 
@@ -323,8 +336,8 @@ class CarlaEnv:
     def step(self, action):
         """Eksekusi satu langkah simulasi."""
         self._apply_action(action)
-        self.world.tick()
-        time.sleep(self.dt)
+        self.world_frame = self.world.tick()     # [#19] tanpa sleep
+        self._tunggu_kamera(self.world_frame)
 
         self._update_vehicle_state()
         self.current_step += 1
@@ -370,9 +383,16 @@ class CarlaEnv:
         print(f"🚗 Blueprint: {car_bp.id}")
 
         sp = self.custom_spawn_transform
+        # [#19] offset acak dengan seed (seed None = tanpa offset, perilaku asli Dika)
+        if self.episode_seed is not None:
+            rng = random.Random(self.episode_seed)
+            self.spawn_offset = (rng.uniform(-self.offset_maks_x, self.offset_maks_x),
+                                 rng.uniform(-self.offset_maks_y, self.offset_maks_y))
+        else:
+            self.spawn_offset = (0.0, 0.0)
         safe_sp = carla.Transform(
-            carla.Location(x=sp.location.x,
-                           y=sp.location.y,
+            carla.Location(x=sp.location.x + self.spawn_offset[0],
+                           y=sp.location.y + self.spawn_offset[1],
                            z=sp.location.z + 0.5),
             sp.rotation
         )
@@ -406,6 +426,7 @@ class CarlaEnv:
             carla.Rotation(pitch=-15)
         )
         self.camera = self.world.spawn_actor(cam_bp, tf, attach_to=self.vehicle)
+        self.camera_frame = -1                    # [#19]
         self.camera.listen(lambda img: self._process_camera(img))
         print("✅ Camera setup")
 
@@ -413,6 +434,16 @@ class CarlaEnv:
         arr = np.frombuffer(image.raw_data, dtype=np.uint8)
         arr = arr.reshape((image.height, image.width, 4))
         self.current_image = arr[:, :, :3]
+        self.camera_frame = image.frame           # [#19]
+
+    def _tunggu_kamera(self, frame, timeout=2.0):
+        """[#19] Pengganti time.sleep: tunggu sampai gambar kamera untuk frame ini tiba."""
+        t0 = time.perf_counter()
+        while self.camera_frame < frame:
+            if time.perf_counter() - t0 > timeout:
+                self.kamera_telat += 1
+                break
+            time.sleep(0.0005)
 
     def _setup_collision_sensor(self):
         bp = self.world.get_blueprint_library().find('sensor.other.collision')
