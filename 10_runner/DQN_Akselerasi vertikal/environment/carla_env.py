@@ -179,6 +179,7 @@ class CarlaEnv:
         self.camera_frame      = -1
         self.world_frame       = -1
         self.kamera_telat      = 0
+        self.tabrakan_log      = []   # [#21]
 
         # ── YOLO ──────────────────────────────────────────────────
         self.yolo_model = None
@@ -308,6 +309,7 @@ class CarlaEnv:
                 break
 
         self.collision_history  = []
+        self.tabrakan_log       = []   # [#21]
         self.previous_location  = self.vehicle.get_location()
         self.start_location     = self.vehicle.get_location()
         self.previous_speed     = 0.0
@@ -436,6 +438,15 @@ class CarlaEnv:
         self.current_image = arr[:, :, :3]
         self.camera_frame = image.frame           # [#19]
 
+    def _catat_tabrakan(self, e):
+        """[#21] Simpan objek yang ditabrak (Dika tidak mencatatnya)."""
+        try:
+            nama = e.other_actor.type_id if e.other_actor is not None else "?"
+        except Exception:
+            nama = "?"
+        self.tabrakan_log.append((self.current_step, nama,
+                                  round(self.vehicle.get_location().x, 2) if self.vehicle else None))
+
     def _tunggu_kamera(self, frame, timeout=2.0):
         """[#19] Pengganti time.sleep: tunggu sampai gambar kamera untuk frame ini tiba."""
         t0 = time.perf_counter()
@@ -450,7 +461,7 @@ class CarlaEnv:
         self.collision_sensor = self.world.spawn_actor(
             bp, carla.Transform(), attach_to=self.vehicle)
         self.collision_sensor.listen(
-            lambda e: self.collision_history.append(e))
+            lambda e: (self.collision_history.append(e), self._catat_tabrakan(e)))   # [#21]
         print("✅ Collision sensor setup")
 
     def _setup_imu_sensor(self):

@@ -310,7 +310,7 @@ def main():
     f_ring = open(os.path.join(RUN_DIR, "ringkasan_episode.csv"), "w", newline="")
     w_ring = csv.writer(f_ring)
     w_ring.writerow(["episode", "seed", "offset_x", "offset_y", "langkah", "detik", "faktor_realtime",
-                     "hits", "avoids", "reward", "kamera_telat", "x_akhir"])
+                     "hits", "avoids", "reward", "kamera_telat", "x_akhir", "tabrakan"])
 
     try:
         for episode in range(1, NUM_EPISODES + 1):
@@ -401,7 +401,8 @@ def main():
             w_ring.writerow([episode, seed, round(env.spawn_offset[0], 3), round(env.spawn_offset[1], 3), step,
                              round(detik, 1), round(step * 0.05 / detik, 2), info.get('hits', 0),
                              info.get('avoids', 0), round(cumulative_reward, 2), env.kamera_telat,
-                             round(env.vehicle.get_location().x, 2)])
+                             round(env.vehicle.get_location().x, 2),
+                             ";".join(f"{n}@x{x}" for _, n, x in env.tabrakan_log)])   # [#21]
             f_ring.flush()
             print(f"EPISODE {episode}: {step} langkah, {detik:.1f} s, faktor real-time {step * 0.05 / detik:.2f}, "
                   f"kamera telat {env.kamera_telat}")

@@ -379,3 +379,12 @@ Lokasi: `10_runner/DQN_Akselerasi vertikal/` (salinan; asli di-commit `9ae5bd2`,
 - Episode 4: berhenti di x −32,07 karena **tabrakan** (reward −300, done) setelah semua lubang dilewati, sehingga bonus finis +800 hilang (total 980 vs ±2.085). Metrik lubang tidak terpengaruh. Objek yang ditabrak belum diketahui; `collision_history` tidak mencatat `other_actor`.
 - Nondeterminisme terkonfirmasi lagi: seed 0 memberi 2.910 langkah (run 18.46) vs 2.897 langkah (run ini).
 - Belum: catat `other_actor` tabrakan di runner; cek video/lintasan ph_0009–ph_0010; lanjut #21 (30 ep × 3 kondisi).
+
+## 2026-11-18 (Rabu) 18.10 — persiapan #21 (Claude)
+
+- `INSTRUKSI_21.md` ditulis.
+- `10_runner/.../jalankan_baseline.bat`: ClearNoon → SoftRainNoon → ClearNight, 30 ep, seed 0–29, `--tampil 0`; mode lanjut setelah crash.
+- `10_runner/.../analisis_baseline.py`: penghindaran per episode (pelabel roda + logika Dika, GT v2 segmen Dika), rata-rata, CI 95% bootstrap, lubang tersering kena, tabrakan, finis. Dites pada run 5 ep 17 Nov: 94,7% (keduanya), ph_0010 5/5, 1 tabrakan.
+- Runner: callback tabrakan kini mencatat `other_actor.type_id` + x ke kolom `tabrakan` di `ringkasan_episode.csv` ([#21]).
+- Asumsi: hujan = `SoftRainNoon` (dari `cleanTest copy.py`; laporan Dika tidak menyebut preset) → tanya Dika. Malam tanpa lampu kendaraan (kode Dika tidak menyalakan lampu).
+- Belum: Keva menjalankan run (±3,5–4,5 jam).
