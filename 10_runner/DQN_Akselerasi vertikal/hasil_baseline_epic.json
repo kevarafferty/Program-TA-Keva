@@ -1,0 +1,93 @@
+{
+ "ClearNoon_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 94.7,
+  "roda_ci95": [
+   94.7,
+   94.7
+  ],
+  "dika_pct_rata2": 99.5,
+  "dika_ci95": [
+   98.8,
+   100.0
+  ],
+  "angka_dika_laporan": 100.0,
+  "mobil_lurus_pct": 47.4,
+  "lubang_sering_kena": [
+   [
+    "ph_0010",
+    30
+   ]
+  ],
+  "episode_tabrakan": 2,
+  "episode_finis": 28,
+  "detik_rata2": 135.8
+ },
+ "SoftRainNoon_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 94.7,
+  "roda_ci95": [
+   94.7,
+   94.7
+  ],
+  "dika_pct_rata2": 100.0,
+  "dika_ci95": [
+   100.0,
+   100.0
+  ],
+  "angka_dika_laporan": 84.2,
+  "mobil_lurus_pct": 47.4,
+  "lubang_sering_kena": [
+   [
+    "ph_0010",
+    30
+   ]
+  ],
+  "episode_tabrakan": 0,
+  "episode_finis": 30,
+  "detik_rata2": 136.7
+ },
+ "ClearNight_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 17.0,
+  "roda_ci95": [
+   14.9,
+   19.1
+  ],
+  "dika_pct_rata2": 36.3,
+  "dika_ci95": [
+   33.3,
+   39.5
+  ],
+  "angka_dika_laporan": 47.4,
+  "mobil_lurus_pct": 47.4,
+  "lubang_sering_kena": [
+   [
+    "ph_0006",
+    30
+   ],
+   [
+    "ph_0010",
+    30
+   ],
+   [
+    "ph_0002",
+    30
+   ],
+   [
+    "ph_0004",
+    30
+   ],
+   [
+    "ph_0015",
+    30
+   ]
+  ],
+  "episode_tabrakan": 0,
+  "episode_finis": 30,
+  "detik_rata2": 133.9
+ }
+}

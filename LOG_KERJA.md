@@ -465,3 +465,10 @@ Run: `10_runner/.../log_runner/20261118_180956_ClearNoon`, `_193811_SoftRainNoon
 - Anti time-out di `carla_env.py` (60 s + 3× coba ulang `apply_settings`, dipasang 18 Nov 22.10) tetap berlaku.
 - `INSTRUKSI_21_EPIC.md` ditulis.
 - Belum: Keva menjalankan run Epic.
+
+## 2026-11-19 (Kamis) 18.00 — #21 dan #22 SELESAI (Epic)
+- Run Epic 14.28–17.54 tanpa time-out (3× SELESAI 30/30 di `jalankan_baseline.log`).
+- Hasil + kesimpulan: `HASIL_BASELINE.md`, `10_runner/.../hasil_baseline_epic.json`. Cerah tereproduksi (logika Dika 99,5% [98,8–100]); hujan 100% (preset ≠ Dika?); malam logika Dika 36,3%, pelabel roda 17,0% vs mobil lurus 47,4%.
+- Tabrakan cerah seed 2 & 8: `static.wall` x ≈ −37.
+- `analisis_baseline.py`: perbaikan pencarian angka Dika untuk folder berlabel `_Epic`.
+- Belum: #23 Gate 1 (butuh keputusan dosbing atas kriteria); tanya Dika preset hujan; tandai #21–#22 di `TODO_TA.csv`.

@@ -53,13 +53,13 @@ for c, D in data.items():
     hasil[c] = dict(episode=n, seed_ganda=dup,
                     roda_pct_rata2=round(float(np.mean(D["roda"])), 1), roda_ci95=ci(D["roda"]),
                     dika_pct_rata2=round(float(np.mean(D["dika"])), 1), dika_ci95=ci(D["dika"]),
-                    angka_dika_laporan=DIKA.get(c), mobil_lurus_pct=47.4,
+                    angka_dika_laporan=DIKA.get(c.split("_")[0]), mobil_lurus_pct=47.4,
                     lubang_sering_kena=D["kena"].most_common(5),
                     episode_tabrakan=D["tabrakan"], episode_finis=D["selesai"],
                     detik_rata2=round(float(np.mean(D["detik"])), 1))
     print(f"\n== {c}: {n} episode" + (f"  (PERINGATAN: {dup} seed ganda)" if dup else ""))
     print(f"   pelabel roda : {hasil[c]['roda_pct_rata2']}%  CI95 {hasil[c]['roda_ci95']}")
-    print(f"   logika Dika  : {hasil[c]['dika_pct_rata2']}%  CI95 {hasil[c]['dika_ci95']}  | laporan Dika {DIKA.get(c)}% | mobil lurus 47,4%")
+    print(f"   logika Dika  : {hasil[c]['dika_pct_rata2']}%  CI95 {hasil[c]['dika_ci95']}  | laporan Dika {DIKA.get(c.split('_')[0])}% | mobil lurus 47,4%")
     print(f"   sering kena  : {D['kena'].most_common(5)}")
     print(f"   tabrakan {D['tabrakan']} ep, finis {D['selesai']} ep, {hasil[c]['detik_rata2']} s/ep")
 json.dump(hasil, open(a.out, "w"), indent=1)

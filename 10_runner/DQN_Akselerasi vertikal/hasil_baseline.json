@@ -1,109 +1,89 @@
 {
- "ClearNoon": {
+ "ClearNoon_Epic": {
   "episode": 30,
   "seed_ganda": 0,
-  "roda_pct_rata2": 94.6,
+  "roda_pct_rata2": 94.7,
   "roda_ci95": [
-   94.2,
-   94.7
-  ],
-  "dika_pct_rata2": 94.7,
-  "dika_ci95": [
    94.7,
    94.7
   ],
-  "angka_dika_laporan": 100.0,
+  "dika_pct_rata2": 99.5,
+  "dika_ci95": [
+   98.8,
+   100.0
+  ],
+  "angka_dika_laporan": null,
   "mobil_lurus_pct": 47.4,
   "lubang_sering_kena": [
    [
     "ph_0010",
     30
-   ],
-   [
-    "ph_0002",
-    1
    ]
   ],
-  "episode_tabrakan": 0,
-  "episode_finis": 30,
-  "detik_rata2": 175.7
- },
- "SoftRainNoon": {
-  "episode": 30,
-  "seed_ganda": 0,
-  "roda_pct_rata2": 92.6,
-  "roda_ci95": [
-   91.6,
-   93.7
-  ],
-  "dika_pct_rata2": 94.7,
-  "dika_ci95": [
-   94.7,
-   94.7
-  ],
-  "angka_dika_laporan": 84.2,
-  "mobil_lurus_pct": 47.4,
-  "lubang_sering_kena": [
-   [
-    "ph_0010",
-    30
-   ],
-   [
-    "ph_0011",
-    5
-   ],
-   [
-    "ph_0012",
-    3
-   ],
-   [
-    "ph_0018",
-    3
-   ],
-   [
-    "ph_0002",
-    1
-   ]
-  ],
-  "episode_tabrakan": 0,
-  "episode_finis": 30,
+  "episode_tabrakan": 2,
+  "episode_finis": 28,
   "detik_rata2": 135.8
  },
- "ClearNight": {
+ "SoftRainNoon_Epic": {
   "episode": 30,
   "seed_ganda": 0,
-  "roda_pct_rata2": 53.5,
+  "roda_pct_rata2": 94.7,
   "roda_ci95": [
-   50.5,
-   56.3
+   94.7,
+   94.7
   ],
-  "dika_pct_rata2": 77.9,
+  "dika_pct_rata2": 100.0,
   "dika_ci95": [
-   75.1,
-   80.5
+   100.0,
+   100.0
   ],
-  "angka_dika_laporan": 47.4,
+  "angka_dika_laporan": null,
   "mobil_lurus_pct": 47.4,
   "lubang_sering_kena": [
    [
-    "ph_0002",
+    "ph_0010",
+    30
+   ]
+  ],
+  "episode_tabrakan": 0,
+  "episode_finis": 30,
+  "detik_rata2": 136.7
+ },
+ "ClearNight_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 17.0,
+  "roda_ci95": [
+   14.9,
+   19.1
+  ],
+  "dika_pct_rata2": 36.3,
+  "dika_ci95": [
+   33.3,
+   39.5
+  ],
+  "angka_dika_laporan": null,
+  "mobil_lurus_pct": 47.4,
+  "lubang_sering_kena": [
+   [
+    "ph_0004",
+    30
+   ],
+   [
+    "ph_0010",
+    30
+   ],
+   [
+    "ph_0013",
+    30
+   ],
+   [
+    "ph_0015",
     30
    ],
    [
     "ph_0017",
     30
-   ],
-   [
-    "ph_0010",
-    30
-   ],
-   [
-    "ph_0006",
-    29
-   ],
-   [
-    "ph_0004",
-    28
    ]
   ],
   "episode_tabrakan": 0,
