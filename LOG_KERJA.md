@@ -388,3 +388,80 @@ Lokasi: `10_runner/DQN_Akselerasi vertikal/` (salinan; asli di-commit `9ae5bd2`,
 - Runner: callback tabrakan kini mencatat `other_actor.type_id` + x ke kolom `tabrakan` di `ringkasan_episode.csv` ([#21]).
 - Asumsi: hujan = `SoftRainNoon` (dari `cleanTest copy.py`; laporan Dika tidak menyebut preset) → tanya Dika. Malam tanpa lampu kendaraan (kode Dika tidak menyalakan lampu).
 - Belum: Keva menjalankan run (±3,5–4,5 jam).
+
+## 2026-11-18 (Rabu) 22.10 — #21 run malam pertama gagal start (Claude)
+
+- ClearNoon 30/30 dan SoftRainNoon 30/30 selesai (`log_runner/20261118_180956_ClearNoon`, `_193811_SoftRainNoon`).
+- ClearNight gagal sebelum episode 1: `apply_settings` time-out 15 s tepat setelah `load_world` (server masih sibuk setelah run hujan). Sama dengan percobaan pertama 17 Nov. Tidak ada data malam yang terekam (folder `_204629_ClearNight` kosong, aman dihapus/dipindah).
+- Perbaikan: timeout 60 s saat load_world/apply_settings + coba ulang 3× ([#21] di `carla_env.py`).
+- Catatan kosmetik: waktu di baris `=====` bat sama semua karena `%time%` di dalam blok `for` diekspansi sekali.
+- Belum: jalankan `jalankan_baseline.bat ClearNight 0 30`.
+
+## 2026-11-19 (Kamis) 00.30 — #21 SELESAI: baseline π_Dika 30 ep × 3 kondisi (Keva menjalankan, Claude menganalisis)
+
+Run: `10_runner/.../log_runner/20261118_180956_ClearNoon`, `_193811_SoftRainNoon`, `_223851_ClearNight`; ringkasan `hasil_baseline.json`. Seed 0–29, offset ±2 m / ±0,5 m, GT v2 segmen Dika.
+
+| Kondisi | Pelabel roda (CI95) | Logika Dika (CI95) | Laporan Dika | Mobil lurus | Deteksi (frac langkah) |
+|---|---|---|---|---|---|
+| Cerah ClearNoon | 94,6% [94,2–94,7] | 94,7% [94,7–94,7] | 100% | 47,4% | 0,92 |
+| Hujan SoftRainNoon | 92,6% [91,6–93,7] | 94,7% [94,7–94,7] | 84,2% | 47,4% | 0,90 |
+| Malam ClearNight | 53,5% [50,5–56,3] | 77,9% [75,1–80,5] | 47,4% | 47,4% | 0,27 |
+
+- **Gate 1 (kriteria E3) tidak terpenuhi di ketiga kondisi**: CI 95% tidak mencakup angka Dika. Arahnya berbeda: cerah lebih rendah, hujan dan malam lebih tinggi (menurut logika Dika).
+- Cerah: ph_0010 kena 30/30 (sistematis), ph_0002 1/30.
+- Hujan: hasil logika Dika identik dengan cerah (18/19 di 30/30 ep) → `SoftRainNoon` kemungkinan lebih ringan dari hujan Dika. Pelabel roda menangkap kontak tambahan (ph_0011 5×, ph_0012 3×, ph_0018 3×) yang tidak dicatat logika Dika.
+- Malam: **logika Dika melebih-lebihkan penghindaran 24 poin** (77,9 vs 53,5%). Dengan pelabel roda, agen hanya ±6 poin di atas mobil lurus. ph_0002, ph_0010, ph_0017 kena 30/30.
+- **Kejanggalan malam:** logika Dika di sini 77,9% (mode 15/19), padahal laporan Dika 9/19 dan run lab 10 Nov 7/19 (kode & model sama). Deteksi 27% langkah vs ±16% frame di rekaman Dika. Dugaan: render malam build paket laptop ≠ PC lab/editor (pencahayaan/exposure), atau efek offset. Belum diuji.
+- Waktu: cerah 175,6 s/ep (lebih lambat; penyebab belum diketahui, mungkin laptop dipakai saat itu), hujan 135,8, malam 134,0. Tabrakan 0 di 90 ep. Kamera telat 0.
+- GPU (`log_runner/gpu_baseline.csv`, 1.985 sampel): **VRAM median 7.784 MiB, maks 7.884 MiB (≈ penuh dari 8 GB)**; suhu median 60 °C, maks 74,9 °C (malam); utilisasi median 56%.
+- Dampak: VRAM hampir habis → menambah monitor/ensemble di proses yang sama berisiko OOM; perlu dicek sebelum Fase 2.
+- Belum: (1) diagnosis malam: 3 ep `--offset_x 0 --offset_y 0` + 1 ep `--video 1` untuk dibandingkan kecerahannya dengan `malam.mp4` Dika; (2) tanya Dika preset hujan; (3) keputusan dosbing: baseline baru vs reproduksi (butir #1); (4) #22 formal.
+
+## 2026-11-19 (Kamis) 00.45 — diagnosis malam #1: offset bukan penyebab (Keva menjalankan, Claude menganalisis)
+
+- Run `log_runner/20261119_003030_ClearNight`, 3 ep, offset 0, seed 0–2.
+- Logika Dika: 15, 15, 18 terhindar (rata-rata 84%). Pelabel roda: 11, 11, 13 (61%). Deteksi 25–26% langkah. Pembanding run dengan offset (seed 0–2): logika Dika 16, 12, 15; roda 12, 10, 9.
+- **Kesimpulan: offset acak bukan penyebab** angka malam jauh di atas laporan Dika (9/19) dan run lab (7/19). ph_0002, ph_0010, ph_0017 tetap kena.
+- Kandidat penyebab tersisa: (a) pengganti `sleep` (`_tunggu_kamera`) membuat YOLO selalu melihat frame terkini; di kode asli, frame bisa basi kalau render malam > 50 ms; (b) render malam build paket laptop ≠ PC lab.
+- Ditambahkan flag `--sleep_asli 1` ([#21b]): kembali ke `time.sleep(0.05)` seperti Dika; `frame_kamera` tetap dicatat sehingga keterlambatan frame terlihat. Folder run diberi akhiran `_sleepasli`.
+- Belum: jalankan 3 ep `--sleep_asli 1`. Jika hasil turun ke ±7–9/19 → penyebab (a), dan baseline Dika dipengaruhi frame basi (temuan). Jika tetap ±15/19 → penyebab (b).
+
+## 2026-11-19 (Kamis) 01.15 — diagnosis malam #2: sleep bukan penyebab; persepsi di laptop jauh lebih kuat (Claude)
+
+- Run `log_runner/20261119_004205_ClearNight_sleepasli`, 3 ep, offset 0, `--sleep_asli 1`: logika Dika 16, 15, 18; roda 12, 9, 12; deteksi 24–28%. **Lag frame kamera = 0 di semua langkah**: di laptop, gambar selalu tiba dalam 50 ms, jadi pengganti sleep tidak mengubah apa pun. Kandidat (a) gugur. 229–232 s/ep (sleep membuat 70% lebih lambat).
+- Metrik T20 (deteksi agen saat pusat lubang 3–15 m di depan) dihitung dari log laptop:
+
+| Kondisi | Laptop (ini) | Rekaman Dika (T20) |
+|---|---|---|
+| Cerah | 96,8% | 59% |
+| Hujan | 96,3% | 50% |
+| Malam | 30,7% (sleep asli 30,0%) | 6% |
+| Deteksi saat tidak ada lubang 3–15 m: cerah / hujan / malam | 70 / 62 / 9,5% | 10 / 32 / ? |
+
+- Kesimpulan sementara: YOLO yang sama mendeteksi jauh lebih sering di render laptop pada **semua** kondisi → penyebab utama kemungkinan **lingkungan render** (build paket Shipping laptop vs PC lab/editor; tingkat kualitas grafis, LOD/streaming tekstur decal), bukan kode runner. Catatan: definisi "tidak ada lubang" di sini = tidak ada di 3–15 m; lubang > 15 m bisa ikut terdeteksi.
+- Usulan: satu uji murah lagi (CARLA `-quality-level=Low`, 3 ep malam), lalu berhenti dan bawa ke dosbing sebagai baseline baru di lingkungan laptop.
+
+## 2026-11-19 (Kamis) 11.30 — koreksi: semua run #20–#21 memakai CARLA `-quality-level=Low`
+
+- Keva: `CarlaUE4.exe` selama ini dijalankan dengan `-quality-level=Low` untuk ketiga kondisi (dan diagnosis malam). Usulan uji "Low" di entri 01.15 tidak berlaku; yang perlu diuji justru **Epic** (default; kemungkinan yang dipakai Dika lewat editor/`make launch`, belum dikonfirmasi).
+- Dampak: deteksi YOLO yang jauh lebih tinggi dari rekaman Dika (T20) kemungkinan besar terkait kualitas render Low. Baseline #21 = π_Dika **di lingkungan laptop, kualitas Low**, bukan lingkungan Dika.
+- Catatan VRAM: 7,8 GB kemungkinan sebagian besar alokasi rakus TensorFlow (tidak ada `set_memory_growth` di kode), bukan kebutuhan sebenarnya.
+- Belum: uji 3 ep malam di Epic (deteksi, waktu, VRAM) → putuskan kualitas standar TA; tanya Dika kualitas & preset hujan.
+
+## 2026-11-19 (Kamis) 13.25 — diagnosis malam #3: kualitas render adalah penyebabnya (Keva menjalankan, Claude menganalisis)
+
+- Run `log_runner/20261119_131412_ClearNight`, CARLA **Epic** (default), 3 ep, offset 0, seed 0–2.
+- **Logika Dika: 9, 7, 6** (rata-rata 38,6%) → cocok dengan laporan Dika 9/19 dan run lab 7/19. Di Low dengan seed sama: 15, 15, 18.
+- **Pelabel roda: 3, 2, 2 (12,3%)** → jauh di bawah mobil lurus 47,4%. Logika Dika melebih-lebihkan ±26 poin.
+- Deteksi: 20–21% langkah; saat lubang 3–15 m 24–25% (Low: 31%; rekaman Dika: 6%). Waktu 131–134 s/ep (sama dengan Low).
+- Kesimpulan: **kualitas render (`-quality-level`) adalah penyebab utama** perbedaan dengan angka Dika. Run #21 sebelumnya (Low) bukan lingkungan Dika.
+- Usulan keputusan: standar TA = **Epic** (cocok dengan Dika, waktu sama). Data Low disimpan sebagai temuan pergeseran render (kandidat skenario OOD).
+- Perapian (Claude): run Low 17–19 Nov dipindah ke `log_runner/_kualitas_low/` (termasuk `gpu_baseline.csv`). Folder Epic diagnosis gagal dipindah (Permission denied, kemungkinan masih terkunci Windows) → Keva pindahkan manual ke `log_runner/_diagnosis/`.
+- `cleanTest.py`: argumen `--label` (nama folder diberi akhiran kualitas). `jalankan_baseline.bat`: `--label Epic` + catatan WAJIB buka CARLA tanpa `-quality-level`.
+- Belum: ulangi #21 di Epic (90 ep, ±3,5 jam) + perekam GPU; uji VRAM Epic.
+
+## 2026-11-19 (Kamis) 14.25 — persiapan ulang #21 di Epic (Claude)
+- `10_runner/.../jalankan_baseline.py`: pengganti `.bat`, lanjut-otomatis dari seed yang belum selesai setelah time-out/crash (maks 3×/kondisi, jeda 60 s), jeda 30 s antar kondisi, log ke `log_runner/jalankan_baseline.log`, label folder `_Epic`.
+- Anti time-out di `carla_env.py` (60 s + 3× coba ulang `apply_settings`, dipasang 18 Nov 22.10) tetap berlaku.
+- `INSTRUKSI_21_EPIC.md` ditulis.
+- Belum: Keva menjalankan run Epic.

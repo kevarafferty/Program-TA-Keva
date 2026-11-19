@@ -20,6 +20,8 @@ _ap.add_argument("--seed_awal", type=int, default=0, help="seed episode ke-k = s
 _ap.add_argument("--offset_x", type=float, default=2.0, help="offset spawn longitudinal maks (m)")
 _ap.add_argument("--offset_y", type=float, default=0.5, help="offset spawn lateral maks (m); jangan > 1,0")
 _ap.add_argument("--tampil", type=int, default=1, help="1 = jendela cv2, 0 = tanpa jendela (lebih cepat)")
+_ap.add_argument("--sleep_asli", type=int, default=0, help="1 = time.sleep(0.05) seperti Dika (diagnosis), 0 = tunggu frame kamera")
+_ap.add_argument("--label", default="", help="label kualitas render, mis. Epic atau Low (tidak bisa dibaca dari API)")
 _ap.add_argument("--video", type=int, default=0, help="1 = rekam mp4 (makan disk)")
 ARGS = _ap.parse_args()
 
@@ -33,7 +35,7 @@ TEST_WEATHER = getattr(carla.WeatherParameters, CUACA)
 RECORD_VIDEO = bool(ARGS.video)
 TAMPIL       = bool(ARGS.tampil)
 STAMP        = time.strftime("%Y%m%d_%H%M%S")
-RUN_DIR      = os.path.join("log_runner", f"{STAMP}_{CUACA}")
+RUN_DIR      = os.path.join("log_runner", f"{STAMP}_{CUACA}" + (f"_{ARGS.label}" if ARGS.label else "") + ("_sleepasli" if ARGS.sleep_asli else ""))
 VIDEO_DIR    = os.path.join(RUN_DIR, "video")
 DATA_DIR     = RUN_DIR
 
@@ -300,6 +302,7 @@ def main():
 
     env.offset_maks_x, env.offset_maks_y = ARGS.offset_x, ARGS.offset_y   # [#19]
     env.episode_seed = ARGS.seed_awal
+    env.mode_sleep_asli = bool(ARGS.sleep_asli)   # [#21b]
     state = env.reset()
     sensor_mgr = SensorManager(env=env)
 

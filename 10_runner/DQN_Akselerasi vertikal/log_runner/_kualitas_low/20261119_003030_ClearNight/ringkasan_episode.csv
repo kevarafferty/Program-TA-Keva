@@ -1,0 +1,4 @@
+episode,seed,offset_x,offset_y,langkah,detik,faktor_realtime,hits,avoids,reward,kamera_telat,x_akhir,tabrakan
+1,0,0.0,0.0,2823,162.5,0.87,4,15,1396.72,0,-26.92,
+2,1,0.0,0.0,2836,161.4,0.88,4,15,1401.36,0,-26.95,
+3,2,0.0,0.0,2831,162.7,0.87,1,18,2072.49,0,-26.93,

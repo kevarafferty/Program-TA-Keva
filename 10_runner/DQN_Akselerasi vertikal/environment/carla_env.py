@@ -152,7 +152,7 @@ class CarlaEnv:
         print("Inisialisasi CARLA Environment...")
 
         self.client = carla.Client('127.0.0.1', 2000)   # [#19] bukan localhost (WARP)
-        self.client.set_timeout(15.0)
+        self.client.set_timeout(60.0)   # [#21] load_world/apply_settings bisa > 15 s setelah run sebelumnya
 
         print(f"Loading map: {town} ...")
         self.world = self.client.load_world(town)
@@ -161,7 +161,16 @@ class CarlaEnv:
         settings = self.world.get_settings()
         settings.synchronous_mode  = True
         settings.fixed_delta_seconds = 0.05   # 20 FPS
-        self.world.apply_settings(settings)
+        for _coba in range(3):          # [#21] coba ulang kalau server masih sibuk memuat peta
+            try:
+                self.world.apply_settings(settings)
+                break
+            except RuntimeError as _e:
+                print(f"⚠️  apply_settings gagal (percobaan {_coba + 1}/3): {_e}")
+                time.sleep(10)
+        else:
+            raise RuntimeError("apply_settings gagal 3 kali; restart CarlaUE4.exe")
+        self.client.set_timeout(15.0)
         self.world.set_weather(weather)
 
         # Spawn point default
@@ -180,6 +189,7 @@ class CarlaEnv:
         self.world_frame       = -1
         self.kamera_telat      = 0
         self.tabrakan_log      = []   # [#21]
+        self.mode_sleep_asli   = False   # [#21b] True = time.sleep(dt) seperti kode asli Dika, tanpa tunggu kamera
 
         # ── YOLO ──────────────────────────────────────────────────
         self.yolo_model = None
@@ -339,7 +349,10 @@ class CarlaEnv:
         """Eksekusi satu langkah simulasi."""
         self._apply_action(action)
         self.world_frame = self.world.tick()     # [#19] tanpa sleep
-        self._tunggu_kamera(self.world_frame)
+        if self.mode_sleep_asli:                  # [#21b] diagnosis: perilaku asli Dika
+            time.sleep(self.dt)
+        else:
+            self._tunggu_kamera(self.world_frame)
 
         self._update_vehicle_state()
         self.current_step += 1
