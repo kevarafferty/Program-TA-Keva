@@ -472,3 +472,12 @@ Run: `10_runner/.../log_runner/20261118_180956_ClearNoon`, `_193811_SoftRainNoon
 - Tabrakan cerah seed 2 & 8: `static.wall` x ≈ −37.
 - `analisis_baseline.py`: perbaikan pencarian angka Dika untuk folder berlabel `_Epic`.
 - Belum: #23 Gate 1 (butuh keputusan dosbing atas kriteria); tanya Dika preset hujan; tandai #21–#22 di `TODO_TA.csv`.
+
+## 2026-11-21 (Sabtu) 20.10 — pencocokan preset hujan + temuan Scalability High (Claude)
+- **Temuan:** ketiga video layar Dika (`TA_Dika/Video Test/final cerah.mp4`, `hujan.mp4`, `malam.mp4`) menunjukkan Unreal Editor (Play) dengan label viewport **`Scalability: High`**. Lingkungan Dika = Editor + High, bukan paket + Epic. Baseline #21–#22 (paket, Epic) perlu dibaca dengan catatan ini; malam di Epic sudah mendekati angka Dika, tetapi selisih High vs Epic belum diukur.
+- Tangkapan dari video Dika disimpan di `11_cuaca/_pratinjau_dika/` (frame layar + potongan label Scalability).
+- Dibuat `11_cuaca/cocokkan_cuaca.py` (referensi / ambil / bandingkan) dan `11_cuaca/INSTRUKSI_CUACA.md`.
+- `referensi` sudah dijalankan untuk cerah, hujan, dan malam (60 frame/video, area x ≥ 300, kanal R/B dibalik) → `11_cuaca/referensi/`. Median hujan Dika vs cerah Dika: saturasi 12,7 vs 36,3; gradien pita jauh 16,8 vs 43,3 (kabut tebal); luminansi jalan 135,5 vs 174,8.
+- `bandingkan` diuji dengan data tiruan (frame Dika sendiri): alur jalan. `ambil` **belum diuji** (butuh CARLA).
+- Dugaan sebelum render (dicatat supaya tidak ditafsirkan setelah melihat hasil): hujan Dika ≈ HardRainNoon (langit tertutup penuh, kabut tebal), bukan SoftRainNoon.
+- Belum (Keva): render EditorHigh + PaketEpic, bandingkan, kirim hasil; tanya Dika preset hujan dan apakah memang Scalability High.

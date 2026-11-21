@@ -1,0 +1,196 @@
+{
+ "kondisi": "cerah",
+ "label": "EditorHigh",
+ "median_dika": {
+  "terang": 155.39593505859375,
+  "kontras": 36.13569641113281,
+  "langit": 144.55084228515625,
+  "saturasi": 36.34177849264706,
+  "tepi_jauh": 43.257802963256836,
+  "jalan_terang": 174.81448364257812,
+  "jalan_kontras": 15.485730171203613
+ },
+ "iqr_dika": {
+  "terang": 6.549247741699219,
+  "kontras": 7.966973781585693,
+  "langit": 7.231513977050781,
+  "saturasi": 4.051040900735295,
+  "tepi_jauh": 5.1287336349487305,
+  "jalan_terang": 3.0647811889648438,
+  "jalan_kontras": 7.102752685546875
+ },
+ "preset": {
+  "ClearNoon": {
+   "median": {
+    "terang": 155.94014739990234,
+    "kontras": 36.155357360839844,
+    "langit": 141.98444366455078,
+    "saturasi": 37.5788671875,
+    "tepi_jauh": 44.14279365539551,
+    "jalan_terang": 176.3221206665039,
+    "jalan_kontras": 16.46391487121582
+   },
+   "jarak": {
+    "terang": 0.08309539702454384,
+    "kontras": 0.0024678065029502413,
+    "langit": 0.35489091616913665,
+    "saturasi": 0.3053755133966685,
+    "tepi_jauh": 0.17255540161182864,
+    "jalan_terang": 0.49192321766859926,
+    "jalan_kontras": 0.13771909896323412
+   },
+   "skor": 0.22114676447670875,
+   "n": 8
+  },
+  "CloudyNoon": {
+   "median": {
+    "terang": 137.13656616210938,
+    "kontras": 29.68753433227539,
+    "langit": 112.2218132019043,
+    "saturasi": 23.98564568014706,
+    "tepi_jauh": 31.97108554840088,
+    "jalan_terang": 157.54114532470703,
+    "jalan_kontras": 16.484583377838135
+   },
+   "jarak": {
+    "terang": 2.788010106905337,
+    "kontras": 0.8093615286849887,
+    "langit": 4.4705754819596795,
+    "saturasi": 3.0501130734713806,
+    "tepi_jauh": 2.2006830961048314,
+    "jalan_terang": 5.636075547600615,
+    "jalan_kontras": 0.14062902804810457
+   },
+   "skor": 2.7279211232535623,
+   "n": 8
+  },
+  "WetNoon": {
+   "median": {
+    "terang": 156.34516143798828,
+    "kontras": 34.3363094329834,
+    "langit": 145.98095703125,
+    "saturasi": 34.69392003676471,
+    "tepi_jauh": 42.573970794677734,
+    "jalan_terang": 174.52387237548828,
+    "jalan_kontras": 16.573198318481445
+   },
+   "jarak": {
+    "terang": 0.14493670369969117,
+    "kontras": 0.22585576750715453,
+    "langit": 0.19776145778494253,
+    "saturasi": 0.4067740850464509,
+    "tepi_jauh": 0.13333353167715006,
+    "jalan_terang": 0.09482284351529846,
+    "jalan_kontras": 0.15310516857649853
+   },
+   "skor": 0.19379850825816947,
+   "n": 8
+  },
+  "WetCloudyNoon": {
+   "median": {
+    "terang": 138.4352035522461,
+    "kontras": 30.463141441345215,
+    "langit": 112.14208221435547,
+    "saturasi": 22.573081341911767,
+    "tepi_jauh": 32.5025691986084,
+    "jalan_terang": 160.4495620727539,
+    "jalan_kontras": 15.718929767608643
+   },
+   "jarak": {
+    "terang": 2.5897220834017727,
+    "kontras": 0.7120087407465486,
+    "langit": 4.4816009723067705,
+    "saturasi": 3.39880477341914,
+    "tepi_jauh": 2.0970544641583735,
+    "jalan_terang": 4.687095320718832,
+    "jalan_kontras": 0.03283228442960691
+   },
+   "skor": 2.571302662740149,
+   "n": 8
+  },
+  "SoftRainNoon": {
+   "median": {
+    "terang": 155.4642562866211,
+    "kontras": 31.52540397644043,
+    "langit": 147.50523376464844,
+    "saturasi": 29.896038602941175,
+    "tepi_jauh": 38.07981491088867,
+    "jalan_terang": 171.64659118652344,
+    "jalan_kontras": 16.136945247650146
+   },
+   "jarak": {
+    "terang": 0.010431919927588146,
+    "kontras": 0.578675487215521,
+    "langit": 0.4085439769414749,
+    "saturasi": 1.5911317727095604,
+    "tepi_jauh": 1.0096036216589217,
+    "jalan_terang": 1.0336439245519744,
+    "jalan_kontras": 0.0916848868709263
+   },
+   "skor": 0.6748165128394238,
+   "n": 8
+  },
+  "MidRainyNoon": {
+   "median": {
+    "terang": 138.77957153320312,
+    "kontras": 30.30259609222412,
+    "langit": 112.3603630065918,
+    "saturasi": 21.467051930147058,
+    "tepi_jauh": 29.070897102355957,
+    "jalan_terang": 161.1873779296875,
+    "jalan_kontras": 15.305432319641113
+   },
+   "jarak": {
+    "terang": 2.5371407802447044,
+    "kontras": 0.7321600997848031,
+    "langit": 4.451416312091905,
+    "saturasi": 3.671828284873679,
+    "tepi_jauh": 2.766161565542621,
+    "jalan_terang": 4.446355179272455,
+    "jalan_kontras": 0.025384222081867122
+   },
+   "skor": 2.661492349127434,
+   "n": 8
+  },
+  "HardRainNoon": {
+   "median": {
+    "terang": 133.4036407470703,
+    "kontras": 18.67371940612793,
+    "langit": 138.96620178222656,
+    "saturasi": 13.878547794117647,
+    "tepi_jauh": 19.000187873840332,
+    "jalan_terang": 138.2501220703125,
+    "jalan_kontras": 13.103192329406738
+   },
+   "jarak": {
+    "terang": 3.3579878451532634,
+    "kontras": 2.1917954650943217,
+    "langit": 0.7722643585634421,
+    "saturasi": 5.545051567969152,
+    "tepi_jauh": 4.7297475002635805,
+    "jalan_terang": 11.930496605735026,
+    "jalan_kontras": 0.3354386598093176
+   },
+   "skor": 4.1232545717983005,
+   "n": 8
+  }
+ },
+ "urutan": [
+  "WetNoon",
+  "ClearNoon",
+  "SoftRainNoon",
+  "WetCloudyNoon",
+  "MidRainyNoon",
+  "CloudyNoon",
+  "HardRainNoon"
+ ],
+ "keterangan_metrik": {
+  "terang": "rata-rata luminansi",
+  "kontras": "simpangan baku luminansi",
+  "langit": "luminansi area langit (y < 30%)",
+  "saturasi": "rata-rata saturasi HSV",
+  "tepi_jauh": "gradien rata-rata di pita jauh (y 30-45%), turun kalau berkabut",
+  "jalan_terang": "luminansi jalan (y > 60%), naik kalau basah/memantul",
+  "jalan_kontras": "simpangan baku luminansi jalan"
+ }
+}
