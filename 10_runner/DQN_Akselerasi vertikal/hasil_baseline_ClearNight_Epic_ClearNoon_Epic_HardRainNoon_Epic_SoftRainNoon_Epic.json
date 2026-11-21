@@ -1,0 +1,189 @@
+{
+ "ClearNoon_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 94.7,
+  "roda_ci95": [
+   94.7,
+   94.7
+  ],
+  "dika_pct_rata2": 99.5,
+  "dika_ci95": [
+   98.8,
+   100.0
+  ],
+  "angka_dika_laporan": 100.0,
+  "mobil_lurus_pct": 47.4,
+  "roda_hanya_dilewati_pct": 94.7,
+  "roda_hanya_dilewati_ci95": [
+   94.7,
+   94.7
+  ],
+  "roda_tak_tercapai_gagal_pct": 94.4,
+  "roda_tak_tercapai_gagal_ci95": [
+   93.9,
+   94.7
+  ],
+  "akhir_episode": {
+   "finis": 28,
+   "tabrak": 2
+  },
+  "lubang_sering_kena": [
+   [
+    "ph_0010",
+    30
+   ]
+  ],
+  "episode_tabrakan": 2,
+  "episode_finis": 28,
+  "detik_rata2": 135.8
+ },
+ "SoftRainNoon_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 94.7,
+  "roda_ci95": [
+   94.7,
+   94.7
+  ],
+  "dika_pct_rata2": 100.0,
+  "dika_ci95": [
+   100.0,
+   100.0
+  ],
+  "angka_dika_laporan": 84.2,
+  "mobil_lurus_pct": 47.4,
+  "roda_hanya_dilewati_pct": 94.7,
+  "roda_hanya_dilewati_ci95": [
+   94.7,
+   94.7
+  ],
+  "roda_tak_tercapai_gagal_pct": 94.7,
+  "roda_tak_tercapai_gagal_ci95": [
+   94.7,
+   94.7
+  ],
+  "akhir_episode": {
+   "finis": 30
+  },
+  "lubang_sering_kena": [
+   [
+    "ph_0010",
+    30
+   ]
+  ],
+  "episode_tabrakan": 0,
+  "episode_finis": 30,
+  "detik_rata2": 136.7
+ },
+ "ClearNight_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 17.0,
+  "roda_ci95": [
+   15.1,
+   19.1
+  ],
+  "dika_pct_rata2": 36.3,
+  "dika_ci95": [
+   33.3,
+   39.5
+  ],
+  "angka_dika_laporan": 47.4,
+  "mobil_lurus_pct": 47.4,
+  "roda_hanya_dilewati_pct": 17.0,
+  "roda_hanya_dilewati_ci95": [
+   15.1,
+   19.3
+  ],
+  "roda_tak_tercapai_gagal_pct": 17.0,
+  "roda_tak_tercapai_gagal_ci95": [
+   15.1,
+   19.1
+  ],
+  "akhir_episode": {
+   "finis": 30
+  },
+  "lubang_sering_kena": [
+   [
+    "ph_0006",
+    30
+   ],
+   [
+    "ph_0015",
+    30
+   ],
+   [
+    "ph_0013",
+    30
+   ],
+   [
+    "ph_0004",
+    30
+   ],
+   [
+    "ph_0017",
+    30
+   ]
+  ],
+  "episode_tabrakan": 0,
+  "episode_finis": 30,
+  "detik_rata2": 133.9
+ },
+ "HardRainNoon_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 71.9,
+  "roda_ci95": [
+   66.7,
+   77.2
+  ],
+  "dika_pct_rata2": 71.8,
+  "dika_ci95": [
+   63.5,
+   79.1
+  ],
+  "angka_dika_laporan": 84.2,
+  "mobil_lurus_pct": 47.4,
+  "roda_hanya_dilewati_pct": 66.7,
+  "roda_hanya_dilewati_ci95": [
+   60.8,
+   72.3
+  ],
+  "roda_tak_tercapai_gagal_pct": 54.6,
+  "roda_tak_tercapai_gagal_ci95": [
+   47.4,
+   61.6
+  ],
+  "akhir_episode": {
+   "finis": 10,
+   "keluar_jalan": 11,
+   "tabrak": 9
+  },
+  "lubang_sering_kena": [
+   [
+    "ph_0010",
+    20
+   ],
+   [
+    "ph_0013",
+    18
+   ],
+   [
+    "ph_0017",
+    14
+   ],
+   [
+    "ph_0011",
+    12
+   ],
+   [
+    "ph_0000",
+    12
+   ]
+  ],
+  "episode_tabrakan": 20,
+  "episode_finis": 10,
+  "detik_rata2": 114.7
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "HardRainNoon_Epic": {
+  "episode": 30,
+  "seed_ganda": 0,
+  "roda_pct_rata2": 71.9,
+  "roda_ci95": [
+   66.8,
+   77.2
+  ],
+  "dika_pct_rata2": 71.8,
+  "dika_ci95": [
+   63.3,
+   79.1
+  ],
+  "angka_dika_laporan": 84.2,
+  "mobil_lurus_pct": 47.4,
+  "lubang_sering_kena": [
+   [
+    "ph_0010",
+    20
+   ],
+   [
+    "ph_0013",
+    18
+   ],
+   [
+    "ph_0017",
+    14
+   ],
+   [
+    "ph_0011",
+    12
+   ],
+   [
+    "ph_0000",
+    12
+   ]
+  ],
+  "episode_tabrakan": 20,
+  "episode_finis": 10,
+  "detik_rata2": 114.7
+ }
+}

@@ -481,3 +481,32 @@ Run: `10_runner/.../log_runner/20261118_180956_ClearNoon`, `_193811_SoftRainNoon
 - `bandingkan` diuji dengan data tiruan (frame Dika sendiri): alur jalan. `ambil` **belum diuji** (butuh CARLA).
 - Dugaan sebelum render (dicatat supaya tidak ditafsirkan setelah melihat hasil): hujan Dika ≈ HardRainNoon (langit tertutup penuh, kabut tebal), bukan SoftRainNoon.
 - Belum (Keva): render EditorHigh + PaketEpic, bandingkan, kirim hasil; tanya Dika preset hujan dan apakah memang Scalability High.
+
+## 2026-11-21 (Sabtu) 20.40 — hasil pencocokan cuaca: hujan Dika = HardRainNoon (Keva menjalankan, Claude menganalisis)
+- Render `ambil` EditorHigh dan PaketEpic berhasil (7 preset × 8 titik). Hasil: `11_cuaca/hasil_EditorHigh/`, `11_cuaca/hasil_PaketEpic/`.
+- **Hujan:** HardRainNoon juara di kedua render (skor 0,35 High / 0,42 Epic). Runner-up jauh: 3,69–3,70 (selisih ±9×). Montase cocok: kabut tebal, langit abu rata, jalan basah. SoftRainNoon (yang dipakai #21) skor 4,75 dan secara visual hampir sama dengan cerah → menjelaskan kenapa baseline hujan #21 = cerah.
+- **Uji kewarasan cerah: lolos sebagian.** WetNoon (0,17–0,19) dan ClearNoon (0,22–0,30) seri di dalam derau (< 0,3 IQR); semua preset berawan/hujan > 2,5. Artinya metrik membedakan atmosfer (awan, kabut) dengan sangat baik, tetapi tidak bisa membedakan preset yang hanya berbeda kebasahan jalan pada langit cerah. Untuk keputusan hujan ini tidak masalah, karena tidak ada preset lain yang mendekati HardRainNoon.
+- **High vs Epic:** median semua metrik berbeda < 1 unit untuk setiap preset → untuk tampilan cuaca siang, Scalability High (Dika) ≈ Epic (paket). Belum diuji: malam, dan perilaku YOLO (bukan hanya statistik citra).
+- **Implikasi:** kode Dika yang ada (`SoftRainNoon`) ≠ kode yang dipakai saat laporan (HardRainNoon menurut video). Konsisten dengan T13/T19. Dugaan sebelum render (HardRainNoon) terkonfirmasi.
+- Belum (Keva): baseline hujan ulang 30 ep `python jalankan_baseline.py --kondisi HardRainNoon` (paket, Epic); konfirmasi ke Dika; perbarui HASIL_BASELINE.md setelah run.
+
+## 2026-11-21 (Sabtu) 21.45 — baseline hujan HardRainNoon 30 ep + status Gate 1 (Keva menjalankan, Claude menganalisis)
+- Run `10_runner/.../log_runner/20261121_204019_HardRainNoon_Epic`, paket Epic, seed 0–29, SELESAI 30/30 tanpa time-out.
+- **Akhir episode: finis 10, keluar jalan 11 (y < 245,55, sisi kiri), tabrak tembok 9.** Bandingkan cerah 28 finis / 2 tabrak, SoftRain 30 finis, malam 30 finis. Di hujan lebat agen tidak stabil dan mengakhiri 2/3 episode sebelum garis akhir.
+- **Bug metrik ditemukan (Claude):** `analisis_baseline.py` menghitung lubang yang tidak tercapai sebagai "terhindar". Tidak berpengaruh untuk run lama (hampir semua finis), tetapi membesarkan hasil hujan. Ditambahkan dua versi ([#21c]); default `--out` kini `hasil_baseline_<kondisi>.json` agar tidak menimpa hasil lama.
+
+| HardRainNoon, 30 ep | % | CI 95% |
+|---|---|---|
+| Pelabel roda, cara lama (tak tercapai = terhindar) | 71,9 | 66,7–77,2 |
+| Pelabel roda, hanya lubang yang dilewati | 66,7 | 60,8–72,3 |
+| Pelabel roda, tak tercapai = gagal | 54,6 | 47,4–61,6 |
+| Logika Dika (cara lama) | 71,8 | 63,5–79,1 |
+| Laporan Dika | 84,2 | 1 run |
+
+- Logika Dika pada 10 episode yang finis (penghitung avoids di `ringkasan_episode.csv`): 168/190 = **84,0%**, sama dengan laporan Dika. Run hujan Dika juga finis (2.911 langkah). Tafsiran: angka 84,2% Dika konsisten dengan satu run yang kebetulan finis (peluang ±1/3), bukan perilaku rata-rata. Ini pengondisian setelah melihat data → dipakai sebagai penjelasan, bukan klaim reproduksi.
+- Status Gate 1 dengan kriteria E3 (CI mencakup angka Dika): cerah ya; hujan tidak (84,2 di luar [63,5–79,1]); malam tidak. Dengan kriteria revisi (baseline ditetapkan + setiap selisih punya penyebab teridentifikasi): ketiganya terjelaskan → usulkan ke dosbing.
+- Kecelakaan kecil (Claude): `analisis_baseline.py` versi lama menimpa `hasil_baseline.json`; sudah dipulihkan dari commit 0b69b27, hasil hujan disimpan di `hasil_baseline_hardrain_epic.json`. `git status` dari Claude meninggalkan `.git/index.lock` → dipindah ke `.git/stale-index-lock-claude-2111` (aman dihapus).
+- Belum: memo Gate 1 untuk dosbing; perbarui `HASIL_BASELINE.md` (hujan = HardRainNoon); putuskan metrik utama; commit.
+
+- 21.50 (Claude): `10_runner/DQN_Akselerasi vertikal/INSTRUKSI_ANALISIS_BASELINE.md` ditulis (cara pakai, arti tiap baris output, pemeriksaan wajib, error umum).
+- 21.55 (Claude): output Keva identik dengan analisis Claude (4 kondisi lolos pemeriksaan: 30 ep, tanpa seed ganda). `analisis_baseline.py`: SoftRainNoon tidak lagi diberi pembanding "laporan Dika 84.2%" (hujan Dika = HardRainNoon).
