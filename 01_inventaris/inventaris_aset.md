@@ -35,7 +35,7 @@ Lokasi dasar: `D:\ITB\Teknik Fisika\Tugas Akhir 102284tf\`
 | YOLO Retta | `...\carla_work\runs\detect\runs_pothole\yolo11n_150e_9k_gpu\weights\best.pt` | yolo11n, kelas aman/sedang/parah, imgsz 640 |
 | Dataset latih YOLO Retta | `...\carla_work\datasets_yolo_9k\` | 8.652 latih + 961 validasi |
 | CARLA Python API 0.9.15 | `Retta\PythonAPI\carla\dist\` | Wheel `cp37` (Python 3.7 saja) |
-| Panduan setup Retta | `Retta\LIDAR CARLA\README_SETUP.md`, `aktifin yolo.txt`, `requirements.txt` | Dasar `alat_carla/SETUP_ENV.md` |
+| Panduan setup Retta | `Retta\LIDAR CARLA\README_SETUP.md`, `aktifin yolo.txt`, `requirements.txt` | Dasar panduan env lama `alat_carla/SETUP_ENV.md` (dihapus 22 Nov; kini `alat_carla/env_laptop/`) |
 | Salinan folder Dika di folder Retta | `Retta\TA_Dika\` | Duplikat; isi sama dengan `TA_Dika Unlocked\Repository\TA_Dika` |
 
 ## Masih belum ada (penghalang)

@@ -1,0 +1,14 @@
+{
+ "selisih_nyala_vs_mati": 1.6601603190104166,
+ "selisih_nyala_vs_nyala_lagi": 1.9760139973958333,
+ "selisih_mati_vs_sebagian": 0.6007820638020833,
+ "piksel_berubah_nyala_vs_mati": 0.00165771484375,
+ "yolo_nyala_n_kotak": 1,
+ "yolo_nyala_conf_maks": 0.4878137409687042,
+ "yolo_mati_n_kotak": 0,
+ "yolo_mati_conf_maks": 0.0,
+ "yolo_sebagian_n_kotak": 2,
+ "yolo_sebagian_conf_maks": 0.15566174685955048,
+ "lulus": true,
+ "catatan": "21 Nov: dinilai ulang dengan kriteria YOLO + cek visual Claude (lubang hilang saat mati, kembali saat nyala). Kriteria selisih piksel lama keliru."
+}

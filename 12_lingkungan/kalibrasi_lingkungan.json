@@ -1,0 +1,40 @@
+{
+ "throttle_ke_kmh": {
+  "0.30": 7.63,
+  "0.40": 11.77,
+  "0.50": 17.03,
+  "0.60": 23.77,
+  "0.70": 34.5,
+  "0.80": 50.06,
+  "1.00": 88.16
+ },
+ "diperbarui": "2026-11-22 07:56:34",
+ "azimut_menghadap_kamera": 180.0,
+ "azimut_catatan": "21 Nov: metrik otomatis memilih 210 (seri dengan 180, 172,7 vs 173,3); cek visual Claude: 180 = matahari tepat di ujung jalan",
+ "throttle_ke_kmh_per_kendaraan": {
+  "vehicle.nissan.micra": {
+   "0.40": 4.56,
+   "0.45": 5.54,
+   "0.50": 6.68,
+   "0.55": 8.03,
+   "0.60": 12.53,
+   "0.70": 57.39
+  },
+  "vehicle.citroen.c3": {
+   "0.40": 5.28,
+   "0.45": 7.79,
+   "0.50": 9.96,
+   "0.55": 18.33,
+   "0.60": 20.71,
+   "0.70": 72.26
+  },
+  "vehicle.tesla.model3": {
+   "0.10": 0.0,
+   "0.15": 8.16,
+   "0.20": 13.06,
+   "0.25": 17.65,
+   "0.30": 18.22,
+   "0.40": 31.02
+  }
+ }
+}

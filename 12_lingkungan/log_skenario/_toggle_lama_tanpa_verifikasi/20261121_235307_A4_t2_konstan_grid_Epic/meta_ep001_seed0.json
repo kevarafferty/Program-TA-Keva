@@ -1,0 +1,199 @@
+{
+ "skenario": {
+  "kode": "A4",
+  "tingkat": 2,
+  "seed": 0,
+  "mode": "konstan",
+  "backend": "grid",
+  "kelompok": "Persepsi",
+  "ket": "Silau matahari rendah searah kamera",
+  "konfig_tata_letak": {
+   "x_mulai": -287.0,
+   "x_selesai": -33.0,
+   "x_finis": -27.0,
+   "kerapatan_per_100m": [
+    2.0,
+    5.0
+   ],
+   "n_min": 3,
+   "jarak_min_m": 10.0,
+   "jarak_min_selajur_m": 10.0,
+   "pola": "acak",
+   "n_pasangan_rapat": 2,
+   "jarak_pasangan_m": [
+    4.0,
+    8.0
+   ],
+   "lajur_y": [
+    250.5,
+    247.2
+   ],
+   "jitter_lateral_m": 0.0,
+   "severity_boleh": [
+    "High"
+   ],
+   "hanya_ukuran_standar": true,
+   "jamin_lolos": true,
+   "celah_min_m": 1.601,
+   "maks_percobaan": 200,
+   "varian_aset": [
+    {
+     "nama": "high_2x3",
+     "mesh_path": "/Game/Carla/Static/Lubang/SM_Lubang_High_2x3.SM_Lubang_High_2x3",
+     "extent_x": 1.0,
+     "extent_y": 1.5,
+     "severity_label": "High",
+     "bobot": 1.0
+    }
+   ]
+  },
+  "cuaca_awal": {
+   "basis": "ClearNoon",
+   "ubah": {
+    "sun_altitude_angle": 10.0,
+    "sun_azimuth_angle": "AZIMUT_MENGHADAP_KAMERA"
+   }
+  },
+  "cuaca_target": {
+   "basis": "ClearNoon",
+   "ubah": {
+    "sun_altitude_angle": 10.0,
+    "sun_azimuth_angle": "AZIMUT_MENGHADAP_KAMERA"
+   }
+  },
+  "lampu": null,
+  "korupsi": null,
+  "seed_korupsi": 50277346266315,
+  "kecepatan": null,
+  "kendaraan": "vehicle.micro.microlino",
+  "spawn": {
+   "offset_x": 2.0,
+   "offset_y": 0.5,
+   "heading_deg": 0.0,
+   "offset_x_aktual": 1.3776874061001925,
+   "offset_y_aktual": 0.2579544029403025,
+   "heading_deg_aktual": 0.0
+  },
+  "x_finis": -27.0,
+  "transisi": null
+ },
+ "siap": {
+  "tata_letak": {
+   "seed": 0,
+   "backend": "grid",
+   "n": 7,
+   "n_target": 7,
+   "jarak_min_m": 12.1,
+   "celah_bebas_min_m": 3.201,
+   "lajur": [
+    5,
+    2
+   ],
+   "id": [
+    "ph_0004",
+    "ph_0006",
+    "ph_0011",
+    "ph_0013",
+    "ph_0014",
+    "ph_0017",
+    "ph_0018"
+   ],
+   "catatan": []
+  },
+  "backend": {
+   "nyala": [
+    "ph_0004",
+    "ph_0006",
+    "ph_0011",
+    "ph_0013",
+    "ph_0014",
+    "ph_0017",
+    "ph_0018"
+   ],
+   "mati": 33
+  },
+  "throttle": 0.3,
+  "cuaca_awal": {
+   "cloudiness": 5.0,
+   "precipitation": 0.0,
+   "precipitation_deposits": 0.0,
+   "wind_intensity": 10.0,
+   "sun_azimuth_angle": 180.0,
+   "sun_altitude_angle": 10.0,
+   "fog_density": 2.0,
+   "fog_distance": 0.75,
+   "wetness": 0.0,
+   "fog_falloff": 0.10000000149011612,
+   "scattering_intensity": 1.0,
+   "mie_scattering_scale": 0.029999999329447746,
+   "rayleigh_scattering_scale": 0.03310000151395798,
+   "dust_storm": 0.0
+  },
+  "cuaca_target": {
+   "cloudiness": 5.0,
+   "precipitation": 0.0,
+   "precipitation_deposits": 0.0,
+   "wind_intensity": 10.0,
+   "sun_azimuth_angle": 180.0,
+   "sun_altitude_angle": 10.0,
+   "fog_density": 2.0,
+   "fog_distance": 0.75,
+   "wetness": 0.0,
+   "fog_falloff": 0.10000000149011612,
+   "scattering_intensity": 1.0,
+   "mie_scattering_scale": 0.029999999329447746,
+   "rayleigh_scattering_scale": 0.03310000151395798,
+   "dust_storm": 0.0
+  }
+ },
+ "geometri_kendaraan": {
+  "blueprint": "vehicle.micro.microlino",
+  "bbox_extent": [
+   1.1036475896835327,
+   0.7404598593711853,
+   0.6880123615264893
+  ],
+  "roda_lokal_xy": [
+   [
+    0.6839,
+    -0.5958
+   ],
+   [
+    0.6839,
+    0.5958
+   ],
+   [
+    -0.8408,
+    -0.3608
+   ],
+   [
+    -0.8408,
+    0.3608
+   ]
+  ]
+ },
+ "versi": {
+  "python": "3.8.20",
+  "carla_client": "?",
+  "ultralytics": "8.4.13",
+  "torch": "2.4.1+cu118",
+  "tensorflow": "2.10.0",
+  "carla_server": "0.9.15-dirty"
+ },
+ "spawn_offset": [
+  1.3776874061001925,
+  0.2579544029403025
+ ],
+ "langkah_onset": null,
+ "detik": 110.48,
+ "akhir": "finis",
+ "hits": 0,
+ "avoids": 7,
+ "tabrakan": [],
+ "tabrakan_lubang": [],
+ "label_render": "Epic",
+ "langkah": 2730,
+ "hook_tidak_cocok": 0,
+ "tanpa_rekam_persepsi": 0,
+ "logit_dari_sigmoid": false
+}

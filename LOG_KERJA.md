@@ -510,3 +510,102 @@ Run: `10_runner/.../log_runner/20261118_180956_ClearNoon`, `_193811_SoftRainNoon
 
 - 21.50 (Claude): `10_runner/DQN_Akselerasi vertikal/INSTRUKSI_ANALISIS_BASELINE.md` ditulis (cara pakai, arti tiap baris output, pemeriksaan wajib, error umum).
 - 21.55 (Claude): output Keva identik dengan analisis Claude (4 kondisi lolos pemeriksaan: 30 ep, tanpa seed ganda). `analisis_baseline.py`: SoftRainNoon tidak lagi diberi pembanding "laporan Dika 84.2%" (hujan Dika = HardRainNoon).
+- 22.05 (Claude): `HASIL_BASELINE.md` diperbarui (hujan = HardRainNoon, metrik utama + kegagalan episode, SoftRainNoon ditandai preset keliru). Memo Gate 1 untuk dosbing ditulis: https://claude.ai/artifact/5Xb62EK5SJRjq6WvwJyFwj (3 keputusan diminta: kriteria revisi, metrik utama, perlu/tidak uji malam di Editor High). Belum (Keva): kirim memo ke dosbing, tanya Dika, commit.
+
+## 2026-11-21 (Sabtu) 23.10 — #24 dan #25 ditulis (Claude); belum dijalankan di CARLA
+
+Folder baru `12_lingkungan/`. Kode Dika tidak diubah (env baru = turunan `CarlaEnv`). Instruksi: `12_lingkungan/INSTRUKSI_24_25.md`.
+
+| No | Pekerjaan | Hasil | Berkas |
+|---|---|---|---|
+| 24 | Generator tata letak dari seed, backend grid (`enable_environment_objects` pada 40 slot GT v2) + spawn (`static.prop.mesh`) | 30 seed → 30 tata letak, deterministik di Python 3.13 (cloud) dan 3.10 (VM laptop) | `generator_tata_letak.py` |
+| 25a | Katalog skenario REG, ID0, A1–A6, B3, C1–C4, D1, E1, E2 × 3 tingkat; mode konstan/transisi | 120 kombinasi bisa dibangkitkan dari seed (`python skenario.py`); B1, B2 butuh aset | `skenario.py` |
+| 25b | Env skenario: cuaca + transisi berbasis posisi, lampu, throttle, kendaraan, korupsi citra, hook persepsi | State 10-D identik dengan fungsi asli Dika pada citra CARLA (uji) | `env_skenario.py`, `persepsi_hook.py` |
+| 25c | Logger per langkah: pose, aksi, Q, state, deteksi, cuaca, f_transisi + NPZ fitur 896-D, logit top-100 anchor, semua deteksi | Terbaca ulang lewat `muat_episode()` | `logger_skenario.py` |
+| 25d | Runner + matriks dengan lanjut-otomatis | Matriks bawaan 28 kondisi × 30 ep ≈ 33 jam | `jalankan_skenario.py`, `jalankan_matriks.py` |
+| — | Uji: 101 unit + 8 end-to-end (CARLA tiruan, YOLO `best_pure.pt` dan `model_best.h5` asli) | 109 lulus | `tests/` |
+| — | Skrip pemeriksaan + kalibrasi di CARLA | Belum dijalankan | `uji_carla_24_25.py` |
+
+Temuan saat menulis:
+- Ultralytics 8.4.216 memakai **salinan** model di predictor; hook pada `yolo.model` tidak pernah terpanggil. Diperbaiki: hook dipasang pada model predictor setelah inferensi pemanasan, dan dicek ulang tiap langkah. Kalau hook gagal, perilaku agen tidak berubah; kegagalannya dicatat (`hook_tidak_cocok`).
+- Hanya 19 posisi lubang tersedia di segmen Dika (semua High, 2 × 3 m). Grid cukup untuk ID0, A*, C2–C4, C1 t1, D1 t1; **C1 t2–3, D1 t2–3, B3 butuh backend spawn** (aset mesh baru + `make package`).
+
+Keputusan/asumsi (perlu Keva setujui; detail di INSTRUKSI bagian "Keputusan desain"): desain berpasangan (tata letak/offset tidak bergantung skenario); ID-0 = 2–5 lubang/100 m sehingga tata letak Dika = C1 t1; A2 t3 = HardRainNoon; A1 pakai LowBeam (REG t3 = malam Dika tanpa lampu); transisi onset 30–55% ruas, rampa 20 m; C3 dari pita di luar ID-0; REG ditambahkan untuk uji regresi.
+
+Belum (Keva): Langkah A `uji_carla_24_25.py semua` + 2 run uji (±25 menit); Langkah B regresi REG 3 × 30 ep (1 malam); keputusan perlu/tidaknya backend spawn. Belum (Claude): pelabel kegagalan per lintasan lubang + analisis Fase 2 dari log ini.
+
+## 2026-11-21 (Sabtu) 23.45 — perbaikan hook persepsi + hasil Langkah A (Keva menjalankan, Claude menganalisis)
+
+- **Bug:** `hook persepsi error: Inplace update to inference tensor outside InferenceMode`. Ultralytics 8.4.13 (laptop) mengubah tensor secara in-place di NMS; tensor tangkapan hook dibuat di dalam `torch.inference_mode()`. Di cloud (8.4.216) tidak muncul. Perbaikan di `persepsi_hook.py`: ekstraksi dijalankan di dalam `inference_mode`, NMS diberi salinan, error NMS lain jatuh ke pencocokan cadangan. Direproduksi dengan 8.4.13 lalu diuji: 109 lulus di 8.4.13 dan 8.4.216.
+- **Bug pelaporan:** kolom `hook_tidak_cocok` di ringkasan menunjukkan 0 padahal 2.579/2.869 langkah tidak terekam (langkah tanpa rekaman tidak dihitung). Sekarang kolom itu = tidak cocok + tidak terekam, dan runner mencetak peringatan jika > 1% langkah.
+- Run REG t1 seed 0–1 (23.13): perilaku valid (19/19 terhindar, 0 HIT, finis), tetapi persepsi ±90% kosong → dipindah ke `log_skenario/_persepsi_tak_terekam/` agar seed 0–1 diulang.
+- `slot`: 40/40 slot cocok, 1 objek per slot. **LULUS.**
+- `toggle`: visual lubang hilang saat mati dan kembali saat nyala; YOLO 1 kotak (nyala) vs 0 (mati). **LULUS.** Kriteria otomatis lama (selisih piksel) keliru karena awan/anti-aliasing memberi selisih sama besar; diganti kriteria YOLO.
+- `kecepatan`: throttle 0,30 → 7,63 km/jam (cocok dengan ±7 baseline); 0,60 → 23,8; 0,70 → 34,5. Target C2 20/25/30 km/jam ≈ throttle 0,55/0,61/0,66 (interpolasi).
+- `azimut`: metrik memilih 210°, seri dengan 180°. Visual: 180° = matahari tepat di ujung jalan → `kalibrasi_lingkungan.json` diubah ke 180°. Lubang tampak sangat berbeda saat backlit (tepi keemasan).
+- Belum (Keva): ulangi `python jalankan_skenario.py --kode REG --tingkat 1 --episodes 2` dan A3 transisi 1 ep; cek kolom `hook_tidak_cocok` = 0.
+
+## 2026-11-21 (Sabtu) 23.50 — uji ulang setelah perbaikan hook: LULUS (Keva menjalankan, Claude memeriksa)
+
+- REG t1 seed 0–1 (`log_skenario/20261121_232836_REG_t1_konstan_grid_Epic`): 2.874 dan 2.901 langkah, finis, logika Dika 19/19, persepsi terekam 100% (fitur 896-D tanpa NaN, jumlah deteksi NPZ = jumlah `n_det` CSV), aksi = argmax Q di semua langkah. Offset seed 0 = (1,378; 0,258) sama dengan baseline #21. Deteksi di 90–91% langkah (baseline cerah Epic: 0,92).
+- A3 t2 transisi seed 0 (`..._233705_A3_t2_transisi_grid_Epic`): onset x −202,4 → langkah 1.022; rampa 200 langkah (10 s); fog_density 2 → 55, fog_distance → 10. Langkah berdeteksi 0,30 → 0,17; median conf teratas 0,48 → 0,35; jarak fitur neck ke rata-rata pra-onset (z rms) 0,92 → 3,14. Logika Dika tetap 7/7 terhindar (1 episode; belum dihitung pelabel roda).
+- Catatan: waktu A3 99,6 s vs REG 150–168 s untuk jumlah langkah serupa; penyebab belum diketahui (baseline #20: 137 s).
+- Berikutnya: regresi REG t1–t3 × 30 ep (malam ini).
+
+## 2026-11-22 (Minggu) 07.30 — matriks malam 21–22 Nov: ±40% episode lubang TAK TAMPAK; perbaikan toggle + verifikasi (Claude)
+
+Run: 13 kondisi × 1 ep (uji per kondisi) + REG t1–t3 × 30, 23.44–03.11, tanpa BERHENTI. Semua dipindah ke `12_lingkungan/log_skenario/_toggle_lama_tanpa_verifikasi/` (jangan dipakai untuk analisis).
+
+- **Gejala:** REG t1 logika Dika 389/532 = 73% (baseline 99,5%). Per episode bimodal: 15 ep deteksi YOLO ±90% langkah dan 19/19 terhindar; 13 ep deteksi 2–9% dan 6–9/19 (agen buta). Malam: 12/30 ep deteksi 0,00 persis. Hujan: 8–11/30 ep dengan conf median 0,15–0,19 dan deteksi dekat ≈ jauh (deteksi palsu jalan basah, lubang tak tampak) — tersamar karena tetap ada deteksi.
+- **Pembanding:** baseline #21–#22 (cleanTest, tanpa toggle) 0/90 episode seperti ini (deteksi min 0,90 / 0,62 / 0,17).
+- **Penyebab (kesimpulan kuat, mekanisme CARLA belum dibuktikan):** `BackendGrid.terapkan` mematikan semua lalu langsung menyalakan slot terpilih dalam satu saat; di CARLA paket ±40% episode berakhir tak tampak. Uji `toggle` 21 Nov lolos karena hanya satu kali dan ada tick di antaranya. Ini kesalahan desain Claude.
+- **Perbaikan:** (1) toggle hanya slot yang berubah, dengan tick di antara mati dan nyala; (2) **verifikasi per episode** (`verifikasi_lubang.py`): kamera parameter Dika 8 m (lalu 6 m) di belakang lubang pertama/tengah/terakhir, cuaca sementara ClearNoon, YOLO harus melihat kotak di tengah; gagal → toggle diulang (mati, tick, nyala, tick), maks 3×, lalu error (episode tidak dijalankan); kolom baru `verif_percobaan`, `verif_conf_min`; (3) `cek_kualitas_run.py` menandai episode "buta" (deteksi dekat − jauh < 0,08). Pada run lama: REG t1 menandai tepat 13 seed yang sama, malam 12, hujan 8.
+- CARLA tiruan kini meniru bug ini (`BUG_TOGGLE`): cara lama terbukti gagal, cara baru 12/12 episode benar dengan bug selalu aktif, verifikasi memulihkan lubang yang disabotase. 113 uji lulus (Ultralytics 8.4.13 dan 8.4.216).
+- Catatan menarik (dari data rusak, hanya hipotesis): di hujan, episode dengan lubang tak tampak semuanya finis tanpa tabrakan; tabrakan/keluar jalan hanya terjadi saat lubang tampak → kegagalan hujan kemungkinan dipicu manuver menghindar, bukan oleh hujan itu sendiri. Uji ulang dengan data baru.
+- Belum (Keva): jalankan ulang uji per kondisi + REG (±4,5 jam). #25 belum selesai.
+
+## 2026-11-22 (Minggu) 07.30 — audit dan perapian dokumentasi folder (Claude)
+
+Tujuan: folder mudah dipahami orang baru, tanpa dokumen sekali pakai yang sudah usang. Tidak ada kode atau data yang diubah
+(kecuali satu komentar di `12_lingkungan/generator_tata_letak.py` yang merujuk nama berkas lama).
+
+| Tindakan | Berkas |
+|---|---|
+| Ditulis ulang: ringkasan TA dalam bahasa awam, temuan utama, peta folder lengkap 01–12, urutan membaca, cara menyiapkan lingkungan, tips run semalaman, pertanyaan terbuka, konvensi | `README.md` |
+| Kolom `status` dan `catatan_status` ditambahkan (#1–#22 selesai, #23 menunggu dosbing, #24 selesai, #25 berjalan) | `TODO_TA.csv` |
+| `INSTRUKSI_24_25.md` → `README.md` folder, status diperbarui (113 uji, Langkah A lulus, verifikasi lubang, `cek_kualitas_run.py`) | `12_lingkungan/README.md` |
+| README baru (menggantikan instruksi sekali pakai) | `11_cuaca/README.md`, `08_kunjungan_lab/README.md` |
+| Ditulis ulang (dulu "belum pernah dijalankan") | `alat_carla/BACA.md` |
+| Banner "arsip/snapshot" + rujukan ke hasil terbaru | `TEMUAN.md`, `PERBEDAAN_PROPOSAL.md` |
+| Dihapus (sekali pakai/usang; tetap ada di riwayat git) | `INSTRUKSI_17-20.md`, `INSTRUKSI_21.md`, `INSTRUKSI_21_EPIC.md`, `11_cuaca/INSTRUKSI_CUACA.md`, `08_kunjungan_lab/CEKLIS_LAB.md`, `06_pesan/`, `alat_carla/SETUP_ENV.md` (digantikan `env_laptop/`), `10_runner/.../jalankan_baseline.bat` (digantikan `jalankan_baseline.py`), `.git/stale-index-lock-claude-2111` |
+| Ditambahkan | `.gitignore` (`__pycache__`, `.pytest_cache`) |
+
+Keputusan: instruksi langkah-demi-langkah sekali pakai mulai sekarang dibuat sebagai Claude Docs, tidak disimpan di folder ini.
+
+Belum (Keva):
+- Tulis keputusan bimbingan 13 Nov di LOG (tidak ada catatannya; `TODO_TA.csv` #5).
+- Konfirmasi apakah pesan ke Dika/Retta (#3) sudah terkirim; draf ada di riwayat git (`git show HEAD:06_pesan/pesan_dika.md`).
+- Commit perapian ini, sekaligus keluarkan cache yang terlanjur ter-commit: `git rm -r --cached --quiet -- "*__pycache__*" "*.pytest_cache*"` lalu `git add -A`.
+
+## 2026-11-22 (Minggu) 08.00 — uji per kondisi ulang (dengan verifikasi): LULUS 13/13; C4 diperbaiki (Keva menjalankan, Claude menganalisis)
+
+- 13 kondisi × seed 0, 06.51–07.29, semua SELESAI, verifikasi lolos di percobaan pertama (13/13, conf min 0,14–0,52), `hook_tidak_cocok` 0. Toggle hanya-yang-berubah sudah cukup; ulang toggle tidak pernah dibutuhkan.
+- `cek_kualitas_run.py`: hanya A5 tertandai (dekat 0,16 vs jauh 0,08), padahal verifikasi membuktikan lubang tampak → efek nyata blur + tetes air, bukan bug.
+- Episode berakhir tabrakan: C2 (x −83,5; v median 17,5 km/jam; y 246,9–252,1) dan E2 (x −195,8; 16,3 km/jam; y 246,2–252,5): manuver menghindar melebar pada kecepatan tinggi → tembok sebelum batas out_of_road terpicu; sesuai prediksi T12. D1: `static.wall` x −30,8, struktur dekat garis finis yang sama dengan baseline (x ≈ −37); semua lubang < −33, metrik lubang tidak terpengaruh.
+- **Cacat desain C4 (Claude):** Tesla throttle 0,3 melaju 18,2 km/jam (Microlino 7,6) → C4 tercampur dengan C2. Perbaikan: C4 memakai throttle per kendaraan agar kecepatan = Microlino di throttle 0,3 (`target_kmh = ACUAN_MICROLINO`); runner menolak C4 sampai tabel ada. Run C4 lama dipindah ke `log_skenario/_C4_tanpa_kalibrasi_kecepatan/`. 114 uji lulus.
+- C2 t1: target 20 km/jam, median terukur 17,5 (fase akselerasi ±6 s + belok mengurangi kecepatan). Laporkan kecepatan terukur, bukan target.
+- Status #25: semua kondisi grid berjalan dari seed di CARLA kecuali C4 (menunggu kalibrasi, ±7 menit). Belum: REG ulang, backend spawn (keputusan).
+
+## 2026-11-22 (Minggu) 08.05 — kalibrasi kecepatan C4 (Keva menjalankan, Claude menganalisis)
+
+- `uji_carla_24_25.py kecepatan` (throttle 0,10–0,40): Tesla 0,15 → 8,16; 0,20 → 13,1; 0,30 → 18,2 km/jam. Micra 0,40 → 4,56; C3 0,40 → 5,28; keduanya hampir diam di 0,15–0,25 (±0,2 km/jam) → target 7,6 km/jam di luar tabel; C4 t1–t2 masih ditolak runner (sengaja).
+- C4 t3 seed 0 (`log_skenario/20261122_074548_C4_t3_konstan_grid_Epic`): throttle 0,147 → v median 7,30 km/jam (Microlino 7,63). Verifikasi lolos, hook 0. Berakhir `static.wall` x −74,97 saat kembali ke lajur (y 249,5 → 250,5), tanpa lubang dekat. Tesla lebar 2,16 m vs Microlino 1,48 m; sisi kanan ±251,6–251,7 m, Microlino maks 251,2 tanpa tabrakan. **Dugaan (belum dicek visual):** ada tembok/kerb di y ≈ 251,6–251,7, lebih sempit dari ROAD_Y_MAX Dika 252,55 → efek C4 yang sah.
+- Belum (Keva): kalibrasi ulang Micra/C3 dengan throttle 0,40–0,70, lalu C4 t1, t2 × 1 ep. Setelah itu #25 selesai untuk lingkup grid.
+
+## 2026-11-22 (Minggu) 08.10 — C4 t1–t3 terkalibrasi; #25 SELESAI untuk lingkup grid (Keva menjalankan, Claude menganalisis)
+
+- Kalibrasi ulang Micra/C3 (throttle 0,40–0,70): Micra 0,55 → 8,03, 0,60 → 12,5, 0,70 → 57,4 km/jam; C3 0,45 → 7,79, 0,55 → 18,3, 0,70 → 72,3 (lonjakan tajam = perpindahan gigi; jangan pakai di atas 0,6).
+- Kecepatan median setelah 10 s: Micra 7,57 (throttle 0,535), C3 7,54 (0,447), Tesla 7,30 (0,147) vs Microlino 7,63 → C4 kini hanya menguji dimensi.
+- Akhir episode: Micra x −31,2 dan C3 x −32,4 (`static.wall`, struktur dekat finis, setelah lubang terakhir); Tesla x −75,0 sebelum 2 lubang terakhir. Ketiganya yaw ±14–15° ke kanan saat menabrak. **Koreksi** dugaan 08.05: pojok depan-kanan Tesla dengan yaw 14,5° mencapai y ≈ 252,4 (tepi jalan 252,55), bukan tembok di y 251,6 (dugaan lama mengabaikan yaw). Masih 1 episode.
+- Analisis C4 nanti: lubang yang tidak tercapai dihitung terpisah, bukan "terhindar" (sama dengan #21c).
+- **#25 selesai untuk lingkup grid**: semua kondisi matriks bawaan dibangkitkan dari seed di CARLA, verifikasi lubang per episode, persepsi 100% terekam. Terbuka: backend spawn (C1/D1 t2–3, B3), aset B1/B2, pelabel kegagalan per lintasan lubang + analisis Fase 2, REG ulang.

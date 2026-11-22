@@ -1,0 +1,61 @@
+[2026-11-21 23:44:32] A1 t2 konstan: mulai, sisa 1 seed
+[2026-11-21 23:46:53] A1 t2 konstan: SELESAI
+[2026-11-21 23:47:23] A1 t2 transisi: mulai, sisa 1 seed
+[2026-11-21 23:49:38] A1 t2 transisi: SELESAI
+[2026-11-21 23:50:08] A2 t3 konstan: mulai, sisa 1 seed
+[2026-11-21 23:52:25] A2 t3 konstan: SELESAI
+[2026-11-21 23:52:55] A4 t2 konstan: mulai, sisa 1 seed
+[2026-11-21 23:55:06] A4 t2 konstan: SELESAI
+[2026-11-21 23:55:36] A5 t2 konstan: mulai, sisa 1 seed
+[2026-11-22 00:00:04] A5 t2 konstan: SELESAI
+[2026-11-22 00:00:34] A6 t2 konstan: mulai, sisa 1 seed
+[2026-11-22 00:03:43] A6 t2 konstan: SELESAI
+[2026-11-22 00:04:13] C1 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 00:06:27] C1 t1 konstan: SELESAI
+[2026-11-22 00:06:57] C2 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 00:07:44] C2 t1 konstan: SELESAI
+[2026-11-22 00:08:14] C3 t2 konstan: mulai, sisa 1 seed
+[2026-11-22 00:10:16] C3 t2 konstan: SELESAI
+[2026-11-22 00:10:46] C4 t3 konstan: mulai, sisa 1 seed
+[2026-11-22 00:11:45] C4 t3 konstan: SELESAI
+[2026-11-22 00:12:15] D1 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 00:14:21] D1 t1 konstan: SELESAI
+[2026-11-22 00:14:51] E1 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 00:17:15] E1 t1 konstan: SELESAI
+[2026-11-22 00:17:45] E2 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 00:18:25] E2 t1 konstan: SELESAI
+[2026-11-22 00:18:55] MATRIKS SELESAI DIPROSES. Cek baris SELESAI/BERHENTI.
+[2026-11-22 00:18:55] REG t1 konstan: mulai, sisa 28 seed
+[2026-11-22 01:10:58] REG t1 konstan: SELESAI
+[2026-11-22 01:11:28] REG t2 konstan: mulai, sisa 30 seed
+[2026-11-22 02:07:06] REG t2 konstan: SELESAI
+[2026-11-22 02:07:36] REG t3 konstan: mulai, sisa 30 seed
+[2026-11-22 03:10:48] REG t3 konstan: SELESAI
+[2026-11-22 03:11:18] MATRIKS SELESAI DIPROSES. Cek baris SELESAI/BERHENTI.
+[2026-11-22 06:51:55] A1 t2 konstan: mulai, sisa 1 seed
+[2026-11-22 06:54:29] A1 t2 konstan: SELESAI
+[2026-11-22 06:54:59] A1 t2 transisi: mulai, sisa 1 seed
+[2026-11-22 06:57:26] A1 t2 transisi: SELESAI
+[2026-11-22 06:57:56] A2 t3 konstan: mulai, sisa 1 seed
+[2026-11-22 07:00:21] A2 t3 konstan: SELESAI
+[2026-11-22 07:00:51] A4 t2 konstan: mulai, sisa 1 seed
+[2026-11-22 07:03:10] A4 t2 konstan: SELESAI
+[2026-11-22 07:03:40] A5 t2 konstan: mulai, sisa 1 seed
+[2026-11-22 07:08:37] A5 t2 konstan: SELESAI
+[2026-11-22 07:09:07] A6 t2 konstan: mulai, sisa 1 seed
+[2026-11-22 07:12:48] A6 t2 konstan: SELESAI
+[2026-11-22 07:13:18] C1 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 07:15:56] C1 t1 konstan: SELESAI
+[2026-11-22 07:16:26] C2 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 07:17:38] C2 t1 konstan: SELESAI
+[2026-11-22 07:18:08] C3 t2 konstan: mulai, sisa 1 seed
+[2026-11-22 07:20:31] C3 t2 konstan: SELESAI
+[2026-11-22 07:21:01] C4 t3 konstan: mulai, sisa 1 seed
+[2026-11-22 07:22:01] C4 t3 konstan: SELESAI
+[2026-11-22 07:22:31] D1 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 07:24:58] D1 t1 konstan: SELESAI
+[2026-11-22 07:25:28] E1 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 07:28:00] E1 t1 konstan: SELESAI
+[2026-11-22 07:28:30] E2 t1 konstan: mulai, sisa 1 seed
+[2026-11-22 07:29:15] E2 t1 konstan: SELESAI
+[2026-11-22 07:29:45] MATRIKS SELESAI DIPROSES. Cek baris SELESAI/BERHENTI.

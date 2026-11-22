@@ -1,5 +1,10 @@
 # Temuan dari pemeriksaan kode, bobot, dan data Dika & Retta
 
+> **Arsip (snapshot 7 Nov 2026).** Ditulis sebelum CARLA berjalan di laptop. Banyak status "Dugaan" sudah terjawab
+> sesudahnya, dan beberapa rujukan berkas sudah berubah: panduan env sekarang `alat_carla/env_laptop/README.md`
+> (`SETUP_ENV.md` dihapus), GT lubang sekarang `alat_carla/pothole_gt_v2_*.json`. Untuk hasil terbaru lihat
+> `HASIL_BASELINE.md` dan `LOG_KERJA.md`. Nomor T1–T24 tetap dipakai sebagai rujukan di log.
+
 Dikerjakan 7 November 2026 (pagi: T1–T15; siang setelah folder lengkap diunduh: T16–T24 dan pembaruan status). Setiap temuan menyebut bukti (berkas/skrip yang menghasilkannya)
 dan dampaknya ke proposal. Status: **Terbukti** = diperiksa langsung dari berkas atau dijalankan;
 **Dugaan** = konsisten dengan bukti tapi perlu konfirmasi Dika/Retta.

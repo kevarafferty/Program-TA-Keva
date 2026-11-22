@@ -1,5 +1,10 @@
 # Perbedaan proposal TA dengan temuan 7–8 November 2026
 
+> **Arsip (snapshot 8 Nov 2026).** Membandingkan proposal versi Oktober dengan temuan 7–8 Nov. Proposal sudah direvisi
+> sesudahnya (`../Proposal Tugas Akhir/1_Rev_Proposal_TA_13323035_Muhammad_Keva_Rafferty.pdf`, 17 Nov), jadi sebagian
+> butir mungkin sudah diakomodasi. Perubahan rencana setelah 8 Nov (standar render Epic, hujan = `HardRainNoon`,
+> metrik utama pelabel roda, kriteria Gate 1 revisi) ada di `HASIL_BASELINE.md` dan `LOG_KERJA.md`.
+
 Dibandingkan dengan: `Proposal_TA_13323035_Muhammad_Keva_Rafferty.pdf` (versi Oktober 2026, 37 halaman).
 Nomor subbab dan tabel di bawah mengikuti PDF tersebut. Catatan: `TEMUAN.md` ditulis sebelum PDF ini diterima,
 sehingga beberapa nomor di sana merujuk versi lama (misalnya label kegagalan ada di §2.1.2, bukan §2.1.3;
