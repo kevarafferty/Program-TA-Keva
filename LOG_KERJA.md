@@ -609,3 +609,10 @@ Belum (Keva):
 - Akhir episode: Micra x −31,2 dan C3 x −32,4 (`static.wall`, struktur dekat finis, setelah lubang terakhir); Tesla x −75,0 sebelum 2 lubang terakhir. Ketiganya yaw ±14–15° ke kanan saat menabrak. **Koreksi** dugaan 08.05: pojok depan-kanan Tesla dengan yaw 14,5° mencapai y ≈ 252,4 (tepi jalan 252,55), bukan tembok di y 251,6 (dugaan lama mengabaikan yaw). Masih 1 episode.
 - Analisis C4 nanti: lubang yang tidak tercapai dihitung terpisah, bukan "terhindar" (sama dengan #21c).
 - **#25 selesai untuk lingkup grid**: semua kondisi matriks bawaan dibangkitkan dari seed di CARLA, verifikasi lubang per episode, persepsi 100% terekam. Terbuka: backend spawn (C1/D1 t2–3, B3), aset B1/B2, pelabel kegagalan per lintasan lubang + analisis Fase 2, REG ulang.
+
+## 2026-11-22 (Minggu) 16.25 — backend spawn LULUS (Keva membuat aset + package + uji, Claude memeriksa)
+
+- Build baru (aset `/Game/Carla/Static/Lubang/SM_Lubang_High_2x3`): uji_package_train_fix LULUS (18/18), slot 40/40.
+- `uji_carla_24_25.py spawn`: blueprint `static.prop.mesh` ada (atribut role_name, mass, scale, ros_name, mesh_path), spawn berhasil, `spawn_tampak.png` bertekstur retak seperti lubang Dika, tabrakan dengan prop: tidak ada. `imu_z_maks` 209,8 m/s² kemungkinan dari mobil mendarat setelah spawn di z+0,5 (skrip mengambil maksimum seluruh run; cacat skrip, bukan aset). Bukti tidak ada benturan: z kendaraan di atas lubang = di luar lubang (0,0025 m) pada D1 t2 dan C1 t2.
+- D1 t2 spawn seed 0: finis, logika Dika 5 HIT / 2 terhindar, deteksi dekat 0,91 (lubang tampak; agen gagal pada pasangan rapat). C1 t2 spawn seed 0: 22 lubang, 10 HIT / 10 terhindar, tabrakan tembok x −80,8 (bukan lubang). Verifikasi lolos (conf min 0,47 / 0,34), persepsi 100%. Masing-masing 1 episode.
+- Diskusi B1/B2: rekomendasi Claude = B2 (1–2 jenis tiruan) sekarang, dibatasi satu malam, B1 ditunda; semua aset dalam SATU package sebelum REG dan #26. Menunggu keputusan Keva.

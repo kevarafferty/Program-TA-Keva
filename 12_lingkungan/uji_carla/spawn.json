@@ -1,0 +1,17 @@
+{
+ "blueprint_ada": true,
+ "atribut": [
+  "role_name",
+  "mass",
+  "scale",
+  "ros_name",
+  "mesh_path"
+ ],
+ "mesh_path": "/Game/Carla/Static/Lubang/SM_Lubang_High_2x3.SM_Lubang_High_2x3",
+ "spawn_berhasil": true,
+ "x_akhir": -248.9646453857422,
+ "tabrakan": [],
+ "tabrakan_dengan_prop": [],
+ "imu_z_maks": 209.7997808456421,
+ "lulus_tanpa_tabrakan": true
+}
