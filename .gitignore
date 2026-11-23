@@ -7,3 +7,5 @@ __pycache__/
 # label bisa dibuat ulang dari kode: python analisis_skenario.py --ulang
 12_lingkungan/log_skenario/**/label_*.npz
 12_lingkungan/hasil_analisis/cache_baseline_*.json
+# [24 Nov] checkpoint pelatihan pi_ens (buffer ±10 MB, ditimpa tiap episode); bobot dan CSV tetap di-commit
+13_ensemble/latih/*/titik/

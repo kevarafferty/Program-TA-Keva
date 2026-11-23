@@ -663,3 +663,25 @@ Run: `12_lingkungan/log_skenario/*REG_t*` (t1 terpotong di seed 27 lalu dilanjut
 - `HASIL_BASELINE.md` diperbarui (Claude): catatan di atas + bagian baru "Baseline build tetap" (REG t1–t3, regresi, penyebab perbedaan hujan, konsekuensi). Isi lama tidak diubah.
 - Baseline hujan TA = REG t2 di build spawn (56,0% [50,7–61,1], episode gagal 12/30).
 - Belum (Keva): cadangkan folder `WindowsNoEditor` build spawn; jangan package ulang. Belum (Claude): skrip pelatihan ulang DQN ensemble (#26), menunggu keputusan K dan jumlah seed.
+
+## 2026-11-24 (Selasa) 00.30 — #26 kode pelatihan π_ens ditulis (Claude); belum dijalankan di CARLA
+
+Permintaan Keva: instruksi #26 (DQN ensemble K = 5 × 3 seed). Skrip belum ada, jadi ditulis dulu. Folder baru `13_ensemble/` (lihat README di sana). Kode Dika tidak diubah.
+
+| Pekerjaan | Hasil | Berkas |
+|---|---|---|
+| Bootstrapped DQN K kepala + opsi randomized prior, buffer bertopeng, simpan `.npz` | Arsitektur tiap kepala = jaringan Dika bercabang setelah fc2 | `13_ensemble/agen_ensemble.py` |
+| Reward Dika + 2 perbaikan proposal 2.1.5 (ukuran melintang, tanpa cooldown) | Uji mereproduksi bug Dika (lubang 1,9 m di samping = AVOID; lubang kedua 8 m pada 14,4 km/jam = AVOID) dan versi perbaikan = HIT; kasus biasa identik | `13_ensemble/env_latih.py` |
+| Skrip latih satu seed: checkpoint tiap episode, lanjut otomatis, ulang setelah crash, evaluasi seleksi tiap 25 episode (ID0 seed 90000–90004), batas waktu `--jam_maks` | | `13_ensemble/latih_ensemble.py` |
+| `jalankan_skenario.py --ensemble` + `--tag_kebijakan` | Q per kepala → `qkepala_*.npy`; folder run berakhiran `ens-<run>`; tanpa opsi perilaku sama | `12_lingkungan/jalankan_skenario.py` |
+| Uji | 16 lulus (13_ensemble) + 114 lulus (12_lingkungan, kecuali `test_label.py` yang tidak disalin ke cloud) | `13_ensemble/tests/` |
+
+Temuan saat menulis:
+- Epsilon Dika (decay 0,999 per train step, min 0,1) habis dalam ±2.300 langkah = kurang dari 1 episode; replay buffer Dika 10.000 transisi ≈ 3,5 episode dan ikut menyimpan citra 84×84 yang tidak dipakai jaringan. π_ens memakai eksplorasi kepala-acak per episode + buffer 100.000 vector 10-D.
+- Ambang HIT Dika memakai `extent_x` (1,0 m, searah jalan) untuk jarak lateral; lubang 2 × 3 m melintang 1,5 m. Ini sumber T6 di kode reward, bukan hanya di penghitung evaluasi.
+- Perkiraan waktu: 300 episode latih + 60 episode evaluasi ≈ 12–19 jam per seed (137–190 s/episode). "Semalaman" di TODO #26 tidak realistis per seed; 3 seed ≈ 2–3 hari laptop. Overhead agen 2,8 ms/langkah (CPU cloud).
+- Di cloud, torch 2.15 + TF 2.21 crash (LLVM ganda) bila TF diimpor sebelum inferensi YOLO; uji 12_lingkungan yang lama pun gagal di kombinasi itu. Dengan torch 2.6 semua lulus. Laptop (torch 2.4.1 + TF 2.10) tidak terdampak, tetapi env dibuat sebelum model TF untuk berjaga-jaga.
+
+Keputusan/asumsi (perlu Keva setujui): 300 episode (Dika 389); β prior dipilih setelah pilot; backend grid; Gate 2 di ID0 seed 0–29 terhadap π_Dika pada seed yang sama; kriteria non-inferioritas ditetapkan sebelum melihat hasil.
+
+Belum (Keva): commit; pilot 30 episode; kirim folder pilot ke Claude. Belum (Claude): pilih β dari pilot; analisis Gate 2.

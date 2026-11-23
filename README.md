@@ -62,6 +62,7 @@ Nomor folder = urutan dikerjakan. Setiap folder punya `HASIL.md`, `README.md`, a
 | `10_runner/DQN_Akselerasi vertikal/` | Salinan kode Dika + runner baseline (`cleanTest.py`, `jalankan_baseline.py`, `analisis_baseline.py`), log 30-episode | Selesai (#19–#22) |
 | `11_cuaca/` | Pencocokan preset cuaca CARLA dengan video Dika | Selesai (21 Nov) |
 | `12_lingkungan/` | **Generator tata letak lubang + runner skenario off-nominal + logger** fitur/logit/Q (#24–#25) | Sedang berjalan |
+| `13_ensemble/` | **Pelatihan ulang DQN ensemble π_ens** (K kepala bootstrapped, reward Dika + 2 perbaikan, seleksi dari evaluasi) (#26) | Kode + uji selesai; belum dijalankan di CARLA |
 | `alat_carla/` | Skrip pengukuran di CARLA, *ground truth* lubang GT v2, env Python laptop (`env_laptop/`) | Dipakai |
 | `asset_lab/`, `train_fix_migrate/` | Aset peta `train_fix` dari PC lab (besar, tidak perlu dibuka) | Aset |
 
@@ -76,6 +77,7 @@ Nomor folder = urutan dikerjakan. Setiap folder punya `HASIL.md`, `README.md`, a
 | `10_runner/.../INSTRUKSI_ANALISIS_BASELINE.md` | Cara menjalankan dan membaca `analisis_baseline.py` |
 | `12_lingkungan/README.md` | Cara memakai generator + runner skenario, isi log, keputusan desain |
 | `12_lingkungan/kalibrasi_lingkungan.json` | Kalibrasi throttle → kecepatan dan azimut matahari |
+| `13_ensemble/README.md` | Desain π_ens, berkas, keluaran per run, pertanyaan terbuka |
 
 ## Menyiapkan lingkungan
 

@@ -38,6 +38,9 @@ ap.add_argument("--label", default="Epic", help="kualitas render (tidak bisa dib
 ap.add_argument("--rampa", type=float, default=20.0, help="panjang rampa transisi (m); 0 = mendadak")
 ap.add_argument("--dir_dika", default=DIR_DIKA_DEFAULT)
 ap.add_argument("--model", default="model_best.h5", help="relatif terhadap --dir_dika atau path absolut")
+ap.add_argument("--ensemble", default="", help="[#26] bobot pi_ens .npz (13_ensemble/latih/<run>/bobot/...). "
+                "Aksi = argmax rata-rata Q kepala; kolom q* di log = rata-rata; Q per kepala -> qkepala_*.npy")
+ap.add_argument("--tag_kebijakan", default="", help="akhiran nama folder run; bawaan untuk --ensemble: ens-<run>")
 ap.add_argument("--yolo", default="Yolo/best_pure.pt")
 ap.add_argument("--gt_v2", default=os.path.normpath(os.path.join(DIR, "..", "alat_carla", "pothole_gt_v2_lengkap.json")))
 ap.add_argument("--kalibrasi", default=os.path.join(DIR, "kalibrasi_lingkungan.json"))
@@ -53,7 +56,13 @@ sys.path.insert(0, DIR)
 from skenario import muat_kalibrasi, resolusi, spesifikasi_ke_json, throttle_untuk   # noqa: E402
 from generator_tata_letak import buat_tata_letak, muat_slot_grid                      # noqa: E402
 
+if A.ensemble:
+    A.ensemble = os.path.abspath(A.ensemble)
+    if not A.tag_kebijakan:
+        A.tag_kebijakan = "ens-" + os.path.basename(os.path.dirname(os.path.dirname(A.ensemble))).replace("_", "-")
 NAMA_KONFIG = "%s_t%d_%s_%s_%s" % (A.kode, A.tingkat, A.mode, A.backend, A.label)
+if A.tag_kebijakan:                     # kebijakan lain = folder lain, supaya lanjut-otomatis tidak tercampur
+    NAMA_KONFIG += "_" + A.tag_kebijakan.replace("_", "-")
 
 
 def seed_sudah():
@@ -141,9 +150,15 @@ def main():
     if env.grid.tidak_ketemu:
         print("⚠️  slot tak ketemu:", env.grid.tidak_ketemu)
 
-    agent = DQNAgent(num_actions=env.num_actions)
-    agent.load(A.model)
-    agent.epsilon = 0.0
+    if A.ensemble:
+        sys.path.insert(0, os.path.normpath(os.path.join(DIR, "..", "13_ensemble")))
+        from agen_ensemble import muat_untuk_evaluasi
+        agen_ens, konfig_ens = muat_untuk_evaluasi(A.ensemble)
+        print("pi_ens: %s (K=%d, beta=%g)" % (A.ensemble, konfig_ens["K"], konfig_ens["beta_prior"]))
+    else:
+        agent = DQNAgent(num_actions=env.num_actions)
+        agent.load(A.model)
+        agent.epsilon = 0.0
 
     f_ring = open(os.path.join(run_dir, "ringkasan_episode.csv"), "w", newline="")
     w_ring = csv.writer(f_ring)
@@ -172,6 +187,7 @@ def main():
             t0 = time.perf_counter()
             done, step, total, info, reward = False, 0, 0.0, {}, 0.0
             langkah_onset = None                # baris pertama yang frame-nya dirender dengan f_transisi > 0
+            q_kepala = []
             while not done and step < A.maks_langkah:
                 pose = _pose(env)
                 f_tr = env._f_terpasang if env.transisi is not None else 1.0
@@ -179,7 +195,12 @@ def main():
                     langkah_onset = step + 1
                 cuaca = env._cuaca_terpasang
                 vs = np.asarray(state["vehicle_state"], dtype=np.float32)
-                q = agent.network(vs[None, :], training=False).numpy()[0]   # = select_action (epsilon 0)
+                if A.ensemble:
+                    qk = agen_ens.q_semua(vs)                                # (K, A)
+                    q_kepala.append(qk.astype(np.float32))
+                    q = qk.mean(axis=0)                                      # = AgenEnsemble.aksi_eval
+                else:
+                    q = agent.network(vs[None, :], training=False).numpy()[0]   # = select_action (epsilon 0)
                 action = int(np.argmax(q))
                 next_state, reward, done, info = env.step(action)
                 total += reward
@@ -191,7 +212,12 @@ def main():
             meta = dict(skenario=spesifikasi_ke_json(sp), siap=info_siap, geometri_kendaraan=geo, versi=versi,
                         spawn_offset=list(env.spawn_offset), langkah_onset=langkah_onset,
                         detik=round(detik, 2), akhir=akhir, hits=info.get("hits", 0), avoids=info.get("avoids", 0),
-                        tabrakan=env.tabrakan_log, tabrakan_lubang=env.tabrakan_lubang, label_render=A.label)
+                        tabrakan=env.tabrakan_log, tabrakan_lubang=env.tabrakan_lubang, label_render=A.label,
+                        kebijakan=(dict(jenis="ensemble", bobot=A.ensemble, konfig=konfig_ens) if A.ensemble
+                                   else dict(jenis="dqn_dika", model=A.model)))
+            if A.ensemble:
+                np.save(os.path.join(run_dir, "qkepala_%s.npy" % nama), np.stack(q_kepala) if q_kepala
+                        else np.zeros((0, konfig_ens["K"], env.num_actions), np.float32))
             meta = log.tutup(meta, env.tata_letak.ke_gt())
             gagal_hook = meta["hook_tidak_cocok"] + meta["tanpa_rekam_persepsi"]   # tidak cocok + tidak terekam
             if gagal_hook > 0.01 * max(step, 1):
