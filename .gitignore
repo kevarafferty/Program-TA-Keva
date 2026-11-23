@@ -1,3 +1,9 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# [23 Nov] data biner besar per episode: tidak masuk git (GitHub), cadangkan terpisah
+12_lingkungan/log_skenario/**/persepsi_*.npz
+# label bisa dibuat ulang dari kode: python analisis_skenario.py --ulang
+12_lingkungan/log_skenario/**/label_*.npz
+12_lingkungan/hasil_analisis/cache_baseline_*.json
