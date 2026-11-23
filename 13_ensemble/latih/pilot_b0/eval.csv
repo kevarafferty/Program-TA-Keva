@@ -1,0 +1,7 @@
+episode_latih,seed,cuaca,n_lubang,langkah,detik,reward,hits,avoids,akhir,x_akhir,cv_aksi_median,std_q_rata,abs_q_rata,frac_aksi0,frac_aksi1,frac_aksi2
+10,90000,ClearNoon,9,186,8.2,-224.85,0,0,keluar_jalan,-291.29,2.6702,0.7377,0.286,0.0,0.656,0.344
+10,90001,ClearNoon,7,84,3.4,-243.19,0,0,keluar_jalan,-296.39,0.7407,0.1616,0.231,0.0,0.19,0.81
+20,90000,ClearNoon,9,258,10.7,-351.68,1,0,keluar_jalan,-280.73,0.526,0.8162,0.754,0.899,0.101,0.0
+20,90001,ClearNoon,7,339,13.0,-151.41,0,0,keluar_jalan,-269.86,0.8193,0.4458,0.779,0.87,0.062,0.068
+30,90000,ClearNoon,9,195,7.5,-367.24,1,0,keluar_jalan,-286.94,0.4045,0.983,2.66,0.862,0.0,0.138
+30,90001,ClearNoon,7,367,14.4,-99.0,0,1,keluar_jalan,-266.66,0.6848,0.8734,1.816,0.959,0.0,0.041

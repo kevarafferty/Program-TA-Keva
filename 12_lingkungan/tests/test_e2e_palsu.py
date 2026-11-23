@@ -203,7 +203,7 @@ def _jalankan(dika, *arg, out):
     e["TF_CPP_MIN_LOG_LEVEL"] = "3"
     cmd = [sys.executable, os.path.join(DIR, "jalankan_skenario.py"), "--dir_dika", dika, "--out", out,
            "--maks_langkah", "400", "--label", "palsu"] + list(arg)
-    p = subprocess.run(cmd, capture_output=True, text=True, timeout=1200, env=e)
+    p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=1200, env=e)
     assert p.returncode == 0, p.stdout[-3000:] + p.stderr[-3000:]
     return p.stdout
 

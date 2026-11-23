@@ -37,7 +37,7 @@ def _env():
 
 def _latih(out, *arg, rc_harap=0):
     cmd = [sys.executable, os.path.join(DIR, "latih_ensemble.py"), "--out", out, "--label", "palsu", "--seed", "1",
-           "--K", "3", "--min_replay", "50", "--eval_tiap", "2", "--eval_ep", "1", "--maks_langkah", "300",
+           "--K", "3", "--min_replay", "50", "--eval_langkah", "1", "--eval_ep", "1", "--maks_langkah", "300",
            "--jeda", "0"] + list(arg)
     p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=1800, env=_env())
     assert p.returncode == rc_harap, p.stdout[-4000:] + p.stderr[-4000:]
@@ -72,14 +72,17 @@ def test_berkas_dan_isi(run_latih):
     assert int(ep[-1]["n_train"]) > 0 and int(ep[-1]["buffer"]) == sum(int(r["langkah"]) for r in ep)
     assert all(r["verif_percobaan"] == "1" for r in ep)
     ring = _baca(os.path.join(run, "eval_ringkas.csv"))
-    assert [int(r["episode_latih"]) for r in ring] == [2, 3]            # tiap 2 + episode terakhir
+    assert [int(r["episode_latih"]) for r in ring] == [1, 2, 3]         # eval_langkah 1 = setiap episode
+    assert [int(r["langkah_latih"]) for r in ring] == [int(r["langkah_total"]) for r in ep]
+    assert int(ep[-1]["langkah_total"]) == sum(int(r["langkah"]) for r in ep)
     ev = _baca(os.path.join(run, "eval.csv"))
-    assert [int(r["seed"]) for r in ev] == [90000, 90000]
+    assert [int(r["seed"]) for r in ev] == [90000, 90000, 90000]
     assert os.path.exists(os.path.join(run, "bobot", "bobot_ep0002.npz"))
     assert os.path.exists(os.path.join(run, "bobot", "bobot_terbaik.npz"))
     assert os.path.exists(os.path.join(run, "bobot", "bobot_akhir.npz"))
     st = json.load(open(os.path.join(run, "titik", "status.json")))
-    assert st["selesai"] and st["episode"] == 3 and st["ep_terbaik"] in (2, 3)
+    assert st["selesai"] and st["episode"] == 3 and st["ep_terbaik"] in (1, 2, 3)
+    assert st["langkah"] == int(ep[-1]["langkah_total"])
     k = json.load(open(os.path.join(run, "konfig.json")))
     assert k["agen"]["K"] == 3 and k["argumen"]["seed_latih_awal"] == 110000
 
@@ -101,13 +104,32 @@ def test_lanjut_menambah_episode_dan_konfig_dijaga(run_latih):
     ep = _baca(os.path.join(run, "episode.csv"))
     assert [int(r["episode"]) for r in ep] == [1, 2, 3, 4]
     assert int(ep[-1]["buffer"]) == n_buf + int(ep[-1]["langkah"])     # buffer lama dimuat, bukan mulai kosong
-    assert [int(r["episode_latih"]) for r in _baca(os.path.join(run, "eval_ringkas.csv"))] == [2, 3, 4]
+    assert [int(r["episode_latih"]) for r in _baca(os.path.join(run, "eval_ringkas.csv"))] == [1, 2, 3, 4]
     # konfigurasi berbeda pada folder yang sama -> ditolak
     st = json.load(open(os.path.join(run, "titik", "status.json")))
     st["selesai"] = False
     json.dump(st, open(os.path.join(run, "titik", "status.json"), "w"))
     s = _latih(out, "--episodes", "5", "--p_masker", "0.7", "--nama", "seed1_K3_b0", "--maks_ulang", "0", rc_harap=1)
     assert "BERHENTI" in s
+
+
+def test_anggaran_langkah_dan_eval_berkala(tmp_path):
+    """Tanpa batas episode: berhenti begitu langkah_total tercapai; eval tiap eval_langkah + di akhir."""
+    out = str(tmp_path)
+    _latih(out, "--episodes", "0", "--langkah_total", "500", "--eval_langkah", "250", "--nama", "anggaran")
+    run = os.path.join(out, "anggaran")
+    ep = _baca(os.path.join(run, "episode.csv"))
+    tot = [int(r["langkah_total"]) for r in ep]
+    assert tot[-1] >= 500 and (len(tot) == 1 or tot[-2] < 500)            # berhenti di episode pertama yang melewati
+    ring = _baca(os.path.join(run, "eval_ringkas.csv"))
+    l_eval = [int(r["langkah_latih"]) for r in ring]
+    assert l_eval[-1] == tot[-1]
+    batas = 250
+    for le in l_eval[:-1]:                                                # setiap eval terjadi setelah melewati ambang
+        assert le >= batas
+        while batas <= le:
+            batas += 250
+    assert all(float(r["epsilon_akhir"]) <= 1.0 for r in ep)
 
 
 def test_runner_skenario_dengan_ensemble(run_latih, tmp_path):

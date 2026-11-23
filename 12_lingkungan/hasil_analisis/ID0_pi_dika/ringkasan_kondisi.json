@@ -1,0 +1,66 @@
+{
+ "versi_label": "label_kegagalan v2 (22 Nov 2026, FRAKSI_MIN 0,5 / D_TERLAMBAT 8 m)",
+ "kondisi": [
+  {
+   "kode": "ID0",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 30,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 24,
+    "tabrakan": 6
+   },
+   "roda_tak_tercapai_gagal": 57.59800384800385,
+   "roda_tak_tercapai_gagal_ci95": [
+    51.97895622895624,
+    62.89972342472343
+   ],
+   "roda_hanya_dilewati": 57.59800384800385,
+   "roda_hanya_dilewati_ci95": [
+    51.72219215969216,
+    62.75104016354016
+   ],
+   "dika": 74.64345839345839,
+   "dika_ci95": [
+    70.14790764790764,
+    78.87411014911014
+   ],
+   "episode_gagal": 20.0,
+   "episode_gagal_ci95": [
+    6.666666666666667,
+    36.666666666666664
+   ],
+   "gagal_persepsi_lintasan": 3.028138528138528,
+   "gagal_persepsi_lintasan_ci95": [
+    1.2299603174603173,
+    4.995725108225106
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 15.43510643197619,
+   "gagal_persepsi_frame_ci95": [
+    11.914278573665227,
+    19.029720470825147
+   ],
+   "palsu_top_frame": 9.142693486694183,
+   "palsu_top_frame_ci95": [
+    8.104975010494288,
+    10.170571842605415
+   ],
+   "langkah_kontak_H": 9.923660145180971,
+   "langkah_kontak_H_ci95": [
+    8.609094654140016,
+    11.350201829819715
+   ]
+  }
+ ],
+ "regresi": []
+}

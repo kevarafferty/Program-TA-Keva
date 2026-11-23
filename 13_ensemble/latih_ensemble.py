@@ -3,9 +3,12 @@ latih_ensemble.py — [#26] Latih pi_ens (bootstrapped DQN, K kepala) pada kondi
 
 Contoh (Anaconda Prompt, env carla_env, CarlaUE4.exe build tetap sudah terbuka TANPA -quality-level):
     python latih_ensemble.py --cek                                  # cetak rencana + tata letak, tanpa CARLA
-    python latih_ensemble.py --seed 0 --episodes 30 --nama pilot    # pilot ±1,5 jam
-    python latih_ensemble.py --seed 0                               # pelatihan penuh seed 0
-    python latih_ensemble.py --seed 0 --jam_maks 10                 # berhenti rapi setelah 10 jam; jalankan lagi = lanjut
+    python latih_ensemble.py --seed 0 --beta_prior 30               # pelatihan penuh seed 0 (350.000 langkah)
+    python latih_ensemble.py --seed 0 --beta_prior 30 --jam_maks 6  # berhenti rapi setelah 6 jam; jalankan lagi = lanjut
+
+Anggaran pelatihan dihitung dalam LANGKAH simulasi, bukan episode (24 Nov, setelah pilot): episode awal hanya
+80-800 langkah karena agen cepat keluar jalan, jadi "300 episode" berarti jumlah pengalaman yang sangat berbeda
+antar seed. Bawaan 350.000 langkah = jumlah train step pi_Dika (training_checkpoint.json: 349.810).
 
 Skrip induk menjalankan proses anak (skrip ini dengan --anak) dan mengulangnya bila CARLA time-out/crash
 (maks --maks_ulang kali). Setiap episode selesai -> checkpoint (bobot, target, buffer, RNG, status), jadi
@@ -15,7 +18,7 @@ Seed:
   --seed s           seed TF/NumPy (inisialisasi bobot, masker, kepala per episode) = "seed acak" proposal.
   tata letak latih   episode e memakai ID0 seed (seed_latih_awal + e), seed_latih_awal = 100000 + 10000*s.
                      Tidak bertumpang tindih dengan seed evaluasi (90000-...) maupun data monitor (0-...).
-  evaluasi seleksi   tiap --eval_tiap episode: --eval_ep episode ID0 seed 90000.. (tetap untuk semua seed),
+  evaluasi seleksi   tiap --eval_langkah langkah latih: --eval_ep episode ID0 seed 90000.. (tetap untuk semua seed),
                      epsilon 0, aksi = argmax rata-rata Q kepala, tanpa belajar. Model terbaik dipilih dari sini,
                      BUKAN dari reward episode latih (proposal 2.1.5). Gate 2 memakai seed lain (0-29).
 
@@ -46,12 +49,14 @@ ap.add_argument("--nama", default=None, help="nama folder run (bawaan seed<s>_K<
 ap.add_argument("--K", type=int, default=5)
 ap.add_argument("--beta_prior", type=float, default=0.0, help="skala randomized prior; 0 = tanpa prior")
 ap.add_argument("--p_masker", type=float, default=0.5)
-ap.add_argument("--episodes", type=int, default=300, help="jumlah episode latih (Dika: 389)")
+ap.add_argument("--langkah_total", type=int, default=350_000, help="anggaran langkah latih (pi_Dika: 349.810)")
+ap.add_argument("--episodes", type=int, default=0, help="opsional: batas episode latih (0 = tanpa batas)")
 ap.add_argument("--kapasitas", type=int, default=100_000)
 ap.add_argument("--min_replay", type=int, default=1000, help="Dika: 1000")
 ap.add_argument("--eps_awal", type=float, default=0.1, help="epsilon setelah buffer >= min_replay")
-ap.add_argument("--eps_episode", type=int, default=30, help="epsilon turun linear ke 0 dalam N episode")
-ap.add_argument("--eval_tiap", type=int, default=25)
+ap.add_argument("--eps_akhir", type=float, default=0.02)
+ap.add_argument("--eps_langkah", type=int, default=100_000, help="epsilon turun linear eps_awal -> eps_akhir")
+ap.add_argument("--eval_langkah", type=int, default=25_000, help="evaluasi seleksi tiap N langkah latih")
 ap.add_argument("--eval_ep", type=int, default=5)
 ap.add_argument("--eval_seed_awal", type=int, default=90000)
 ap.add_argument("--seed_latih_awal", type=int, default=None)
@@ -80,12 +85,15 @@ sys.path.insert(0, DIR_LING)
 sys.path.insert(0, DIR)
 
 
-def epsilon_untuk(ep_latih, buffer_cukup):
+def epsilon_untuk(langkah, buffer_cukup):
     if not buffer_cukup:
         return 1.0
-    if A.eps_episode <= 0:
-        return 0.0
-    return max(0.0, A.eps_awal * (1.0 - ep_latih / float(A.eps_episode)))
+    f = min(1.0, langkah / float(max(A.eps_langkah, 1)))
+    return A.eps_awal + f * (A.eps_akhir - A.eps_awal)
+
+
+def batas_tercapai(st):
+    return st["langkah"] >= A.langkah_total or (A.episodes > 0 and st["episode"] >= A.episodes)
 
 
 def baca_status():
@@ -117,8 +125,8 @@ def induk():
     while True:
         st = baca_status()
         if st and st.get("selesai"):
-            log("SELESAI: %d episode latih, skor eval terbaik %.3f di episode %s" % (
-                st["episode"], st.get("skor_terbaik", float("nan")), st.get("ep_terbaik")))
+            log("SELESAI: %d episode / %d langkah latih, skor eval terbaik %.3f di episode %s" % (
+                st["episode"], st.get("langkah", 0), st.get("skor_terbaik", float("nan")), st.get("ep_terbaik")))
             return 0
         sisa_jam = 0.0
         if A.jam_maks > 0:
@@ -169,13 +177,13 @@ def cek():
     from generator_tata_letak import buat_tata_letak, muat_slot_grid
     slot = muat_slot_grid(A.gt_v2)
     print("Run: %s" % RUN)
-    print("K=%d beta_prior=%g p_masker=%g | %d episode latih | eval %d ep tiap %d episode (seed %d..%d)" % (
-        A.K, A.beta_prior, A.p_masker, A.episodes, A.eval_ep, A.eval_tiap, A.eval_seed_awal,
+    print("K=%d beta_prior=%g p_masker=%g | %d langkah latih | eval %d ep tiap %d langkah (seed %d..%d)" % (
+        A.K, A.beta_prior, A.p_masker, A.langkah_total, A.eval_ep, A.eval_langkah, A.eval_seed_awal,
         A.eval_seed_awal + A.eval_ep - 1))
-    n_eval = (A.episodes // A.eval_tiap) * A.eval_ep
-    print("Total episode simulasi = %d latih + %d eval = %d -> perkiraan %.1f jam pada 150 s/episode" % (
-        A.episodes, n_eval, A.episodes + n_eval, (A.episodes + n_eval) * 150 / 3600))
-    for nama, seeds in (("latih", [A.seed_latih_awal + e for e in range(min(3, A.episodes))]),
+    n_eval = -(-A.langkah_total // A.eval_langkah)
+    print("Perkiraan: latih %.1f jam (23 langkah/s, pilot 24 Nov) + %d evaluasi x %d ep (maks %.1f jam bila semua finis)"
+          % (A.langkah_total / 23 / 3600, n_eval, A.eval_ep, n_eval * A.eval_ep * 2900 / 23 / 3600))
+    for nama, seeds in (("latih", [A.seed_latih_awal + e for e in range(3)]),
                         ("eval", [A.eval_seed_awal + i for i in range(A.eval_ep)])):
         for s in seeds:
             sp = resolusi("ID0", 1, s, "konstan", A.backend)
@@ -192,12 +200,12 @@ def cek():
 # Anak: pelatihan sesungguhnya
 # ================================================================================================
 AKHIR = {800.0: "finis", -300.0: "tabrakan", -200.0: "keluar_jalan", -10.0: "timeout"}
-KOLOM_EP = ["episode", "seed_tata_letak", "cuaca", "n_lubang", "kepala", "epsilon", "langkah", "detik",
+KOLOM_EP = ["episode", "langkah_total", "seed_tata_letak", "cuaca", "n_lubang", "kepala", "epsilon", "epsilon_akhir", "langkah", "detik",
             "faktor_realtime", "reward", "hits", "avoids", "akhir", "x_akhir", "loss_rata", "n_train", "buffer",
             "cv_aksi_median", "std_q_rata", "abs_q_rata", "frac_aksi0", "frac_aksi1", "frac_aksi2", "verif_percobaan"]
 KOLOM_EVAL = ["episode_latih", "seed", "cuaca", "n_lubang", "langkah", "detik", "reward", "hits", "avoids", "akhir",
               "x_akhir", "cv_aksi_median", "std_q_rata", "abs_q_rata", "frac_aksi0", "frac_aksi1", "frac_aksi2"]
-KOLOM_RING = ["episode_latih", "n_ep", "lubang", "avoids", "hits", "skor", "frac_finis", "reward_rata", "terbaik"]
+KOLOM_RING = ["episode_latih", "langkah_latih", "n_ep", "lubang", "avoids", "hits", "skor", "frac_finis", "reward_rata", "terbaik"]
 
 
 def _tambah_csv(path, kolom, baris):
@@ -235,7 +243,8 @@ def anak():
         with open(os.path.join(RUN, "konfig.json")) as f:
             k_lama = json.load(f)["argumen"]
         for kunci in ("K", "beta_prior", "p_masker", "kapasitas", "seed", "seed_latih_awal", "eval_seed_awal",
-                      "eval_ep", "eval_tiap", "reward", "backend", "eps_awal", "eps_episode", "min_replay"):
+                      "eval_ep", "eval_langkah", "reward", "backend", "eps_awal", "eps_akhir", "eps_langkah",
+                      "min_replay"):
             if k_lama.get(kunci) != getattr(A, kunci):
                 raise SystemExit("Konfigurasi berbeda dengan run yang ada (%s: %r vs %r). Pakai --nama lain."
                                  % (kunci, k_lama.get(kunci), getattr(A, kunci)))
@@ -265,7 +274,8 @@ def anak():
         agen.buffer.muat(os.path.join(RUN, "titik", "buffer.npz"))
         print("▶️  Lanjut setelah episode %d (buffer %d, train step %d)" % (st["episode"], len(agen.buffer), agen.n_train))
     else:
-        st = dict(episode=0, skor_terbaik=-1.0, ep_terbaik=None, selesai=False, eval_selesai=[])
+        st = dict(episode=0, langkah=0, eval_berikut=A.eval_langkah, eval_tertunda=False, skor_terbaik=-1.0,
+                  ep_terbaik=None, langkah_terbaik=None, selesai=False, eval_selesai=[])
         with open(os.path.join(RUN, "konfig.json"), "w") as f:
             json.dump(dict(argumen=vars(A), agen=agen.konfig(), versi=_versi_paket(),
                            mulai=time.strftime("%Y-%m-%d %H:%M:%S")), f, indent=1)
@@ -302,15 +312,12 @@ def anak():
                 l = agen.latih()
                 if l is not None:
                     losses.append(l)
-                if len(agen.buffer) < agen.min_replay:
-                    epsilon = 1.0
-                elif epsilon == 1.0:
-                    epsilon = epsilon_untuk(st["episode"], True)
+                epsilon = epsilon_untuk(st["langkah"] + step, len(agen.buffer) >= agen.min_replay)
             state = state2
         detik = time.perf_counter() - t0
         akhir = AKHIR.get(round(float(reward), 1), "maks_langkah" if step >= A.maks_langkah else "lain")
         n = max(step, 1)
-        return dict(cuaca=sp["cuaca_target"]["basis"], n_lubang=env.tata_letak.n, langkah=step,
+        return dict(epsilon_akhir=round(epsilon, 4), cuaca=sp["cuaca_target"]["basis"], n_lubang=env.tata_letak.n, langkah=step,
                     detik=round(detik, 1), faktor_realtime=round(step * 0.05 / max(detik, 1e-9), 2),
                     reward=round(total, 2), hits=info.get("hits", 0), avoids=info.get("avoids", 0), akhir=akhir,
                     x_akhir=round(env.vehicle.get_location().x, 2),
@@ -340,12 +347,16 @@ def anak():
         if terbaik:
             agen.simpan_bobot(os.path.join(RUN, "bobot", "bobot_terbaik.npz"),
                               dict(episode_latih=ep_latih, skor_eval=skor, frac_finis=finis))
-            st.update(skor_terbaik=skor, ep_terbaik=ep_latih, kunci_terbaik=[skor, finis, rew])
+            st.update(skor_terbaik=skor, ep_terbaik=ep_latih, langkah_terbaik=st["langkah"],
+                      kunci_terbaik=[skor, finis, rew])
         _tambah_csv(os.path.join(RUN, "eval_ringkas.csv"), KOLOM_RING,
-                    dict(episode_latih=ep_latih, n_ep=len(hasil), lubang=lub, avoids=av,
+                    dict(episode_latih=ep_latih, langkah_latih=st["langkah"], n_ep=len(hasil), lubang=lub, avoids=av,
                          hits=sum(r["hits"] for r in hasil), skor=round(skor, 4), frac_finis=round(finis, 3),
                          reward_rata=round(rew, 1), terbaik=int(terbaik)))
         st["eval_selesai"].append(ep_latih)
+        st["eval_tertunda"] = False
+        while st["eval_berikut"] <= st["langkah"]:
+            st["eval_berikut"] += A.eval_langkah
         print("📊 EVAL setelah episode %d: skor %.3f (avoids %d/%d lubang), finis %.0f%%%s" % (
             ep_latih, skor, av, lub, 100 * finis, "  🔥 TERBAIK" if terbaik else ""))
         simpan_titik()
@@ -362,35 +373,38 @@ def anak():
             json.dump(st, f, indent=1)
         os.replace(tmp, os.path.join(d, "status.json"))
 
-    def perlu_eval(ep):
-        return ep > 0 and (ep % A.eval_tiap == 0 or ep == A.episodes) and ep not in st["eval_selesai"]
+    def perlu_eval():
+        if st["episode"] == 0 or st["episode"] in st["eval_selesai"]:
+            return False
+        return st["langkah"] >= st["eval_berikut"] or batas_tercapai(st)
 
     def waktu_habis():
         return A.jam_maks > 0 and (time.time() - t_mulai) / 3600.0 >= A.jam_maks
 
     rc = 0
     try:
-        if perlu_eval(st["episode"]):                   # crash terjadi di tengah evaluasi
+        if perlu_eval():                                # crash terjadi di tengah evaluasi
             evaluasi(st["episode"])
-        while st["episode"] < A.episodes:
+        while not batas_tercapai(st):
             if waktu_habis():
                 rc = KODE_BATAS_WAKTU
                 break
             ep = st["episode"] + 1
             seed_tl = A.seed_latih_awal + ep - 1
-            eps = epsilon_untuk(ep - 1, len(agen.buffer) >= agen.min_replay)
+            eps = epsilon_untuk(st["langkah"], len(agen.buffer) >= agen.min_replay)
             r = jalankan_episode(seed_tl, latih=True, epsilon=eps)
+            st["langkah"] += r["langkah"]
             row = dict(r, episode=ep, seed_tata_letak=seed_tl, kepala=agen.kepala_aktif, epsilon=round(eps, 3),
-                       n_train=agen.n_train, buffer=len(agen.buffer))
+                       n_train=agen.n_train, buffer=len(agen.buffer), langkah_total=st["langkah"])
             _tambah_csv(os.path.join(RUN, "episode.csv"), KOLOM_EP, {k: row.get(k, "") for k in KOLOM_EP})
             st["episode"] = ep
             simpan_titik()
-            print("EPISODE %d/%d seed %d kepala %d eps %.2f: %d langkah, %.0f s, %s, reward %.1f, hits %s avoids %s/%s, cv %.3f"
-                  % (ep, A.episodes, seed_tl, agen.kepala_aktif, eps, r["langkah"], r["detik"], r["akhir"], r["reward"],
+            print("EPISODE %d (%d/%d langkah) seed %d kepala %d eps %.2f: %d langkah, %.0f s, %s, reward %.1f, hits %s avoids %s/%s, cv %.3f"
+                  % (ep, st["langkah"], A.langkah_total, seed_tl, agen.kepala_aktif, eps, r["langkah"], r["detik"], r["akhir"], r["reward"],
                      r["hits"], r["avoids"], r["n_lubang"], r["cv_aksi_median"]))
-            if perlu_eval(ep):
+            if perlu_eval():
                 evaluasi(ep)
-        if st["episode"] >= A.episodes and rc == 0:
+        if batas_tercapai(st) and rc == 0:
             agen.simpan_bobot(os.path.join(RUN, "bobot", "bobot_akhir.npz"), dict(episode_latih=st["episode"]))
             st["selesai"] = True
             simpan_titik()

@@ -688,3 +688,28 @@ Belum (Keva): commit; pilot 30 episode; kirim folder pilot ke Claude. Belum (Cla
 
 - 00.20 (Keva menjalankan pytest 13_ensemble di laptop, Claude memperbaiki): 12 lulus, 4 error di `test_agen.py` (fixture `modul_env`): `WinError 127 cublas64_11.dll` saat torch diimpor SETELAH TensorFlow dalam satu proses (TF 2.10 CUDA 11.2 vs torch cu118 membawa DLL bernama sama). Hanya urutan impor di berkas uji; skrip latih dan runner mengimpor torch dulu, dan kelima uji end-to-end (proses terpisah, urutan produksi) lulus di laptop. Perbaikan: `test_agen.py` mengimpor torch sebelum `agen_ensemble`; `test_latih_palsu.py` membaca output proses anak sebagai UTF-8 (peringatan UnicodeDecodeError cp1252).
 - 00.15 (Keva): pytest 13_ensemble di laptop setelah perbaikan: **16 lulus** (TF 2.10/Keras 2, torch cu118). Langkah 1 instruksi #26 selesai. Berikutnya: commit, pilot 30 episode.
+- 00.20 (Keva): pytest 12_lingkungan di laptop setelah perubahan `jalankan_skenario.py --ensemble`: **119 lulus** (114 + 5 `test_label.py`), runner lama tidak rusak. 4 peringatan UnicodeDecodeError cp1252 = sebab sama dengan 00.20 di 13_ensemble; `tests/test_e2e_palsu.py` kini membaca output anak sebagai UTF-8 (Claude).
+
+## 2026-11-24 (Selasa) 01.30 — pilot π_ens 30 episode di CARLA (Keva menjalankan, Claude menganalisis) + anggaran diubah ke langkah
+
+- Run `13_ensemble/latih/pilot_b0` (β 0, 30 episode, eval 2 ep tiap 10 episode), 00.26–00.35. **Tanpa crash**: induk, checkpoint, evaluasi, seleksi, penutupan env semua jalan; verifikasi lubang lolos di percobaan pertama di semua episode.
+- **Kecepatan: ±22–23 langkah/s** (232 langkah/10 s; 1.880/87 s dengan train step) = faktor real-time ±1,1. Jauh lebih cepat dari perkiraan saya (150 s/episode), dan episode awal pendek: 30 episode = 10.517 langkah saja.
+- Perilaku: 29/30 episode keluar jalan setelah 80–1.880 langkah (x akhir −291 s.d. −267, baru 10–35 m dari 270 m); skor eval 0–0,06. **Wajar untuk 10.500 langkah**: kurva reward Dika (`training_checkpoint.json`) median −340 s.d. −370 selama 75 episode pertama, finis pertama di episode 106.
+- Kurva Dika juga menunjukkan pelatihannya **tidak stabil**: median episode positif hanya di episode ±251–325, lalu jatuh lagi ke −184…−364 di episode 326–389. `model_best.h5` = satu episode reward 2.299. Ini memperkuat seleksi dari episode evaluasi dan menunjukkan risiko Gate 2: π_ens bisa saja mencapai puncak lalu turun; bobot di setiap titik evaluasi tersimpan.
+- Skala Q (dihitung Claude dari buffer pilot, 10.517 state): π_Dika Q median-margin aksi terbaik−kedua 0,64; |Q| di jalan ±15, sampai −170 menjelang keluar jalan. Prior acak (fc 10→128→128→64→3, glorot) memberi sebaran antar kepala 0,077. **β = 30** → sebaran prior ±2,3 ≈ 3–4× margin aksi, ±15% |Q|. Dipilih dari skala, tidak dituning.
+- **Perubahan kode (Claude):** anggaran per seed = **350.000 langkah** (= train step π_Dika 349.810), bukan 300 episode; evaluasi seleksi tiap 25.000 langkah (+ di akhir); ε 0,1 → 0,02 linear dalam 100.000 langkah lalu tetap 0,02 (versi lama: 0 setelah 30 episode = ±10.000 langkah, terlalu cepat). Alasan: dengan episode berpanjang 80–2.900 langkah, "300 episode" = jumlah pengalaman berbeda antar seed dan tidak sebanding dengan π_Dika. 17 uji lulus (cloud), termasuk uji baru anggaran langkah.
+- **Koreksi perkiraan waktu saya (23 Nov):** bukan 12–19 jam per seed. 350.000 langkah / 22 langkah/s ≈ 4,4 jam + evaluasi (maks ±2,5 jam bila semua episode evaluasi finis) ≈ **5–7 jam per seed**. Satu seed = satu malam; 3 seed = 3 malam.
+- `pilot_b0` tidak dipakai untuk analisis (konfigurasi lama).
+
+## 2026-11-24 (Selasa) 02.20 — π_Dika di ID0 seed 0–29 (Langkah 4 #26; Keva menjalankan, Claude menganalisis)
+
+- Run `12_lingkungan/log_skenario/20261124_011514_ID0_t1_konstan_grid_Epic`: 30/30, `hook_tidak_cocok` 0, verifikasi lubang lolos percobaan pertama di semua episode, kamera_telat 0. 108 s/episode (faktor real-time 1,29). Folder kosong `..._011335_...` (start yang dibatalkan, tanpa CSV) dipindah ke `_kosong_20261124_011335_ID0_t1_konstan_grid_Epic`.
+- `analisis_skenario.py --pola "2026*ID0*" --tanpa_baseline --out hasil_analisis/ID0_pi_dika`:
+
+| π_Dika, build tetap | Roda (utama) | Logika Dika | Episode gagal | Persepsi gagal / lintasan |
+|---|---|---|---|---|
+| REG t1 (19 lubang tata letak Dika, ClearNoon) | 94,7 | 99,5 | 0 | — |
+| **ID0 (subset acak 5–13 dari 19 posisi yang sama, ClearNoon/CloudyNoon)** | **57,6 [52,0–62,9]** | **74,6 [70,1–78,9]** | **20,0 [6,7–36,7]** | 3,0 [1,2–5,0] |
+
+- **Temuan: π_Dika tidak menggeneralisasi ke kombinasi lain dari posisi lubang yang SAMA.** Roda turun 94,7 → 57,6 padahal posisi, kamera, YOLO, kecepatan, dan offset sama; persepsi hanya gagal pada 3% lintasan → kegagalan di keputusan, bukan persepsi. Bukan efek cuaca: logika Dika ClearNoon 75,4% (16 ep) vs CloudyNoon 74,5% (14 ep). Tafsiran (dugaan): agen Dika belajar urutan zig-zag tata letak latihnya (19 lubang selalu sama, 389 episode), bukan aturan umum "hindari lubang yang terdeteksi". Ini mendukung H3/motivasi monitor keputusan, dan menjadi angka acuan Gate 2 (bukan 94,7).
+- 6 episode gagal semuanya `static.wall` di x −29,3 s.d. −30,5, SETELAH lubang terakhir (slot x −34,9, lajur kiri y 247,2): agen membelok ke kanan dengan yaw 23–32° lalu menabrak struktur dekat garis finis (x −27). Lubang sudah terlewati sehingga metrik lubang tidak terpengaruh. Kegagalan ini sah (manuver terlalu tajam di dekat struktur), tetapi `episode_gagal` di ID0 sebagian besar mencerminkan ujung peta; laporkan dengan catatan ini untuk π_Dika dan π_ens.

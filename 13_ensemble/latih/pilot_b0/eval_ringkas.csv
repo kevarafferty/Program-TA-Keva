@@ -1,0 +1,4 @@
+episode_latih,n_ep,lubang,avoids,hits,skor,frac_finis,reward_rata,terbaik
+10,2,16,0,0,0.0,0.0,-234.0,1
+20,2,16,0,1,0.0,0.0,-251.5,0
+30,2,16,1,1,0.0625,0.0,-233.1,1

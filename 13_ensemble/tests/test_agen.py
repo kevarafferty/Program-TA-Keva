@@ -14,9 +14,6 @@ DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, DIR)
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
 
-# torch HARUS dimuat sebelum TensorFlow (urutan yang sama dengan latih_ensemble.py dan jalankan_skenario.py).
-# Di Windows, TF 2.10 (CUDA 11.2) dan torch cu118 sama-sama membawa cublas64_11.dll; kalau TF dimuat dulu,
-# torch gagal dengan WinError 127 saat fixture modul_env mengimpor env_latih.
 try:
     import torch  # noqa: F401
 except Exception:
