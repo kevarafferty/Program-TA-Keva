@@ -39,7 +39,7 @@ def _latih(out, *arg, rc_harap=0):
     cmd = [sys.executable, os.path.join(DIR, "latih_ensemble.py"), "--out", out, "--label", "palsu", "--seed", "1",
            "--K", "3", "--min_replay", "50", "--eval_tiap", "2", "--eval_ep", "1", "--maks_langkah", "300",
            "--jeda", "0"] + list(arg)
-    p = subprocess.run(cmd, capture_output=True, text=True, timeout=1800, env=_env())
+    p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=1800, env=_env())
     assert p.returncode == rc_harap, p.stdout[-4000:] + p.stderr[-4000:]
     return p.stdout
 
@@ -51,7 +51,7 @@ def _baca(path):
 
 def test_cek_tanpa_carla(tmp_path):
     p = subprocess.run([sys.executable, os.path.join(DIR, "latih_ensemble.py"), "--cek", "--out", str(tmp_path)],
-                       capture_output=True, text=True, timeout=120)
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
     assert p.returncode == 0, p.stderr
     assert "seed 100000" in p.stdout and "seed  90000" in p.stdout
 
@@ -116,7 +116,7 @@ def test_runner_skenario_dengan_ensemble(run_latih, tmp_path):
     log = str(tmp_path / "log")
     cmd = [sys.executable, os.path.join(LING, "jalankan_skenario.py"), "--dir_dika", DIKA, "--out", log,
            "--maks_langkah", "300", "--label", "palsu", "--kode", "ID0", "--episodes", "1", "--ensemble", bobot]
-    p = subprocess.run(cmd, capture_output=True, text=True, timeout=1200, env=_env())
+    p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=1200, env=_env())
     assert p.returncode == 0, p.stdout[-3000:] + p.stderr[-3000:]
     runs = glob.glob(os.path.join(log, "*_ID0_t1_konstan_grid_palsu_ens-seed1-K3-b0"))
     assert len(runs) == 1

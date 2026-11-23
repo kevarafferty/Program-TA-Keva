@@ -685,3 +685,6 @@ Temuan saat menulis:
 Keputusan/asumsi (perlu Keva setujui): 300 episode (Dika 389); β prior dipilih setelah pilot; backend grid; Gate 2 di ID0 seed 0–29 terhadap π_Dika pada seed yang sama; kriteria non-inferioritas ditetapkan sebelum melihat hasil.
 
 Belum (Keva): commit; pilot 30 episode; kirim folder pilot ke Claude. Belum (Claude): pilih β dari pilot; analisis Gate 2.
+
+- 00.20 (Keva menjalankan pytest 13_ensemble di laptop, Claude memperbaiki): 12 lulus, 4 error di `test_agen.py` (fixture `modul_env`): `WinError 127 cublas64_11.dll` saat torch diimpor SETELAH TensorFlow dalam satu proses (TF 2.10 CUDA 11.2 vs torch cu118 membawa DLL bernama sama). Hanya urutan impor di berkas uji; skrip latih dan runner mengimpor torch dulu, dan kelima uji end-to-end (proses terpisah, urutan produksi) lulus di laptop. Perbaikan: `test_agen.py` mengimpor torch sebelum `agen_ensemble`; `test_latih_palsu.py` membaca output proses anak sebagai UTF-8 (peringatan UnicodeDecodeError cp1252).
+- 00.15 (Keva): pytest 13_ensemble di laptop setelah perbaikan: **16 lulus** (TF 2.10/Keras 2, torch cu118). Langkah 1 instruksi #26 selesai. Berikutnya: commit, pilot 30 episode.
