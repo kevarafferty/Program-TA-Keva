@@ -616,3 +616,50 @@ Belum (Keva):
 - `uji_carla_24_25.py spawn`: blueprint `static.prop.mesh` ada (atribut role_name, mass, scale, ros_name, mesh_path), spawn berhasil, `spawn_tampak.png` bertekstur retak seperti lubang Dika, tabrakan dengan prop: tidak ada. `imu_z_maks` 209,8 m/s² kemungkinan dari mobil mendarat setelah spawn di z+0,5 (skrip mengambil maksimum seluruh run; cacat skrip, bukan aset). Bukti tidak ada benturan: z kendaraan di atas lubang = di luar lubang (0,0025 m) pada D1 t2 dan C1 t2.
 - D1 t2 spawn seed 0: finis, logika Dika 5 HIT / 2 terhindar, deteksi dekat 0,91 (lubang tampak; agen gagal pada pasangan rapat). C1 t2 spawn seed 0: 22 lubang, 10 HIT / 10 terhindar, tabrakan tembok x −80,8 (bukan lubang). Verifikasi lolos (conf min 0,47 / 0,34), persepsi 100%. Masing-masing 1 episode.
 - Diskusi B1/B2: rekomendasi Claude = B2 (1–2 jenis tiruan) sekarang, dibatasi satu malam, B1 ditunda; semua aset dalam SATU package sebelum REG dan #26. Menunggu keputusan Keva.
+
+## 2026-11-22 (Minggu) 17.40 — pelabel kegagalan + analisis skenario (Claude)
+
+- B1/B2 tidak diprioritaskan (keputusan Keva) → usulkan ke dosbing sebagai saran lanjutan.
+- Dibuat `12_lingkungan/label_kegagalan.py`, `analisis_skenario.py`, `tests/test_label.py` (5 lulus, Python 3.13 dan 3.10), `INSTRUKSI_LABEL_ANALISIS.md`.
+- **Proyeksi kamera tervalidasi pertama kali pada data CARLA asli** (C1 t1 cerah): IoU kotak teratas YOLO vs kotak proyeksi ≥ 0,3 pada 86% frame berlubang 3–15 m; selisih pusat median 1,4 px (x) / 0,1 px (y); kotak YOLO ±1,6× lebih tinggi.
+- **Baseline #21–#22 tereproduksi persis** oleh pipeline baru: roda utama 94,4 / 54,6 / 17,0%, episode gagal 2 / 20 / 0. Logika Dika malam 36,1% (vs 36,3% di HASIL_BASELINE; kini dari penghitung env, bukan tiruan).
+- Koreksi definisi (Claude): label persepsi per lintasan versi 1 (≥ 3 frame cocok = terlihat) terlalu longgar (A1 malam 0% gagal padahal cocok hanya 4–61% frame). Versi 2: gagal jika cocok < 50% frame jendela; label tambahan `terlambat` (tidak pernah cocok pada ≥ 8 m). Ambang dipilih setelah melihat data uji → hitungan mentah disimpan untuk analisis sensitivitas.
+- Hasil uji per kondisi (n = 1, hanya uji alur): persepsi gagal per lintasan A1 71%, A2 86%, A4 86%, A5 100%, E1 71%; C1 t1/C2/C3/C4/D1 0% dengan roda utama 0–71% → pola H2/H3 (persepsi gagal pada A, keputusan gagal pada C/D). C4 Tesla: roda 0% vs logika Dika 71% (logika Dika memakai lebar Microlino).
+- Belum (Keva): REG t1–t3 × 30 di build spawn (malam ini), lalu `analisis_skenario.py` → bagian regresi harus SETARA. Belum (Claude): skrip pelatihan ulang DQN ensemble (#26).
+
+## 2026-11-23 (Senin) 18.10 — REG t1–t3 × 30 di build spawn: regresi SETARA untuk cerah dan malam, TIDAK untuk hujan (Keva menjalankan, Claude menganalisis)
+
+Run: `12_lingkungan/log_skenario/*REG_t*` (t1 terpotong di seed 27 lalu dilanjutkan otomatis; 30/30/30, 0 tersangka buta, verifikasi semua episode, hook 0). Analisis: `hasil_analisis/laporan.md` (`analisis_skenario.py`, kini dengan cache label + cache baseline, dijalankan bertahap karena batas waktu perintah).
+
+| | Roda utama REG vs baseline | Logika Dika | Episode gagal |
+|---|---|---|---|
+| ClearNoon | 94,7 vs 94,4 (selisih [0,0; 0,9]) | 99,5 vs 99,5 | 0 vs 6,7% |
+| HardRainNoon | 56,0 vs 54,6 ([−7,5; 10,5]) | 79,6 vs 71,8 ([−1,8; 18,2]) | **40,0 vs 66,7% ([−50; −3,3])** |
+| ClearNight | 14,9 vs 17,0 ([−4,9; 0,5]) | 34,9 vs 36,1 | 0 vs 0 |
+
+- **Hujan tidak setara pada episode gagal.** Komposisi berubah: keluar jalan 11 → 1, tabrakan 9 → 11. Di baseline 7 dari 11 keluar jalan mengumpul di x −82 s.d. −84; di REG tidak ada.
+- **Deteksi YOLO di hujan turun**: median fraksi langkah berdeteksi 0,552 [0,506–0,577] vs baseline 0,661 [0,620–0,716] (tidak tumpang tindih). Cerah sedikit turun (0,898 vs 0,917), malam sama (0,208 vs 0,206).
+- Dua penjelasan bersaing, belum dibedakan: (a) **build** (package spawn 22 Nov vs package 12 Nov) merender hujan berbeda; (b) **runner** baru (cuaca dipasang ulang per episode lewat WeatherParameters baru setelah verifikasi ClearNoon; cleanTest memasang preset sekali saat awal).
+- Label per lintasan REG t2: persepsi gagal 84,9%, palsu/frame 40%; REG t3: persepsi gagal 89,3%.
+- Belum (Keva): diagnosis 5 ep cleanTest HardRainNoon di build baru (lihat chat 23 Nov). #26 ditunda sampai penyebab hujan diketahui.
+
+## 2026-11-23 (Senin) 18.20 — diagnosis hujan: penyebabnya BUILD, bukan runner (Keva menjalankan, Claude menganalisis)
+
+- cleanTest asli Dika di build spawn, HardRainNoon, seed 0–4 (`10_runner/.../log_runner/20261123_175541_HardRainNoon_EpicSpawnBuild`): fraksi langkah berdeteksi 0,545 / 0,606 (ep pendek, keluar jalan x −266,6) / 0,550 / 0,570 / 0,577.
+- Sama dengan runner baru di build yang sama (REG t2 median 0,552) dan berbeda dari cleanTest di build 12 Nov (0,620–0,716). → **Runner baru setara dengan cleanTest; package 22 Nov merender hujan berbeda** sehingga deteksi YOLO turun ±0,1 (cerah ±0,02, malam tidak berubah). Mekanisme belum diketahui.
+- Catatan: waktu 183–191 s/ep (faktor real-time 0,79), lebih lambat dari biasanya (±137 s); penyebab belum dicek.
+- Usulan (menunggu keputusan Keva): build spawn = build tetap untuk semua data TA; dibekukan (backup + tidak build ulang); baseline hujan untuk TA = REG t2 di build ini; angka hujan HASIL_BASELINE (build 12 Nov) diberi catatan tidak sebanding. Cek render: cocokkan_cuaca ambil di build baru + bandingkan dengan rekaman Dika.
+
+## 2026-11-23 (Senin) 18.55 — perbandingan render hujan build lama vs baru (Keva menjalankan cocokkan_cuaca, Claude menganalisis)
+
+- `11_cuaca/hasil_PaketSpawn/ringkasan_hujan.json`: statistik citra global HardRainNoon build baru = build lama (selisih < 0,5 unit di semua metrik); HardRainNoon tetap paling mirip rekaman Dika (skor 0,41 vs 0,42 lama; peringkat kedua 3,68). Klaim "hujan Dika = HardRainNoon" tetap berlaku di build baru.
+- YOLO pada 8 posisi yang sama: cerah identik (conf ±0,02–0,08). Hujan: build lama memberi **kotak palsu "pita bawah"** (seluruh lebar citra, y ±540–640 px, permukaan jalan basah dengan riak hujan dekat kamera) pada 4/8 frame (conf 0,06–0,23; di x −245 menjadi satu-satunya kotak); build baru 0/8. Kotak lubang asli sama di kedua build.
+- Di log REG t2 (build baru, 84.252 langkah) kotak pita bawah tetap ada: 24,5% langkah, menjadi kotak teratas pada 17,6% (cerah 0%, malam 0,6%). → Bukan hilang, tetapi lebih jarang di build baru (dugaan: render riak/percikan hujan berbeda); 8 frame statis terlalu sedikit untuk angka build lama.
+- Tafsiran (dugaan kuat, n kecil): kotak palsu pita bawah memicu manuver → keluar jalan; build lama lebih sering → deteksi 0,66 vs 0,55 dan keluar jalan 11 vs 1. Ini juga mekanisme kegagalan hujan baseline (HASIL_BASELINE butir 5).
+- Usulan tetap: build spawn = build tetap (dibekukan), baseline hujan TA = REG t2. Menunggu persetujuan Keva untuk memperbarui HASIL_BASELINE.md.
+
+## 2026-11-23 (Senin) 19.05 — keputusan: build spawn menjadi build tetap (Keva setuju)
+
+- `HASIL_BASELINE.md` diperbarui (Claude): catatan di atas + bagian baru "Baseline build tetap" (REG t1–t3, regresi, penyebab perbedaan hujan, konsekuensi). Isi lama tidak diubah.
+- Baseline hujan TA = REG t2 di build spawn (56,0% [50,7–61,1], episode gagal 12/30).
+- Belum (Keva): cadangkan folder `WindowsNoEditor` build spawn; jangan package ulang. Belum (Claude): skrip pelatihan ulang DQN ensemble (#26), menunggu keputusan K dan jumlah seed.

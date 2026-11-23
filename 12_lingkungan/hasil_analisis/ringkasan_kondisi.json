@@ -1,0 +1,1360 @@
+{
+ "versi_label": "label_kegagalan v2 (22 Nov 2026, FRAKSI_MIN 0,5 / D_TERLAMBAT 8 m)",
+ "kondisi": [
+  {
+   "kode": "A1",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 0.0,
+   "roda_tak_tercapai_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "roda_hanya_dilewati": 0.0,
+   "roda_hanya_dilewati_ci95": [
+    0.0,
+    0.0
+   ],
+   "dika": 57.142857142857146,
+   "dika_ci95": [
+    57.142857142857146,
+    57.142857142857146
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 71.42857142857143,
+   "gagal_persepsi_lintasan_ci95": [
+    71.42857142857143,
+    71.42857142857143
+   ],
+   "terlambat_lintasan": 28.57142857142857,
+   "terlambat_lintasan_ci95": [
+    28.57142857142857,
+    28.57142857142857
+   ],
+   "gagal_persepsi_frame": 68.28947368421052,
+   "gagal_persepsi_frame_ci95": [
+    68.28947368421052,
+    68.28947368421052
+   ],
+   "palsu_top_frame": 2.050473186119874,
+   "palsu_top_frame_ci95": [
+    2.050473186119874,
+    2.050473186119874
+   ],
+   "langkah_kontak_H": 17.054845980465817,
+   "langkah_kontak_H_ci95": [
+    17.054845980465817,
+    17.054845980465817
+   ]
+  },
+  {
+   "kode": "A1",
+   "tingkat": 2,
+   "mode": "transisi",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 42.857142857142854,
+   "roda_tak_tercapai_gagal_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "roda_hanya_dilewati": 42.857142857142854,
+   "roda_hanya_dilewati_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "dika": 85.71428571428571,
+   "dika_ci95": [
+    85.71428571428571,
+    85.71428571428571
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 42.857142857142854,
+   "gagal_persepsi_lintasan_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 44.534412955465584,
+   "gagal_persepsi_frame_ci95": [
+    44.534412955465584,
+    44.534412955465584
+   ],
+   "palsu_top_frame": 4.667681380010147,
+   "palsu_top_frame_ci95": [
+    4.667681380010147,
+    4.667681380010147
+   ],
+   "langkah_kontak_H": 9.29203539823009,
+   "langkah_kontak_H_ci95": [
+    9.29203539823009,
+    9.29203539823009
+   ]
+  },
+  {
+   "kode": "A2",
+   "tingkat": 3,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 42.857142857142854,
+   "roda_tak_tercapai_gagal_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "roda_hanya_dilewati": 42.857142857142854,
+   "roda_hanya_dilewati_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "dika": 100.0,
+   "dika_ci95": [
+    100.0,
+    100.0
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 85.71428571428571,
+   "gagal_persepsi_lintasan_ci95": [
+    85.71428571428571,
+    85.71428571428571
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 61.6710875331565,
+   "gagal_persepsi_frame_ci95": [
+    61.6710875331565,
+    61.6710875331565
+   ],
+   "palsu_top_frame": 56.69135802469136,
+   "palsu_top_frame_ci95": [
+    56.69135802469136,
+    56.69135802469136
+   ],
+   "langkah_kontak_H": 8.312342569269521,
+   "langkah_kontak_H_ci95": [
+    8.312342569269521,
+    8.312342569269521
+   ]
+  },
+  {
+   "kode": "A4",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 42.857142857142854,
+   "roda_tak_tercapai_gagal_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "roda_hanya_dilewati": 42.857142857142854,
+   "roda_hanya_dilewati_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "dika": 100.0,
+   "dika_ci95": [
+    100.0,
+    100.0
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 85.71428571428571,
+   "gagal_persepsi_lintasan_ci95": [
+    85.71428571428571,
+    85.71428571428571
+   ],
+   "terlambat_lintasan": 71.42857142857143,
+   "terlambat_lintasan_ci95": [
+    71.42857142857143,
+    71.42857142857143
+   ],
+   "gagal_persepsi_frame": 74.06380027739252,
+   "gagal_persepsi_frame_ci95": [
+    74.06380027739252,
+    74.06380027739252
+   ],
+   "palsu_top_frame": 5.286783042394015,
+   "palsu_top_frame_ci95": [
+    5.286783042394015,
+    5.286783042394015
+   ],
+   "langkah_kontak_H": 7.960381511371974,
+   "langkah_kontak_H_ci95": [
+    7.960381511371974,
+    7.960381511371974
+   ]
+  },
+  {
+   "kode": "A5",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 14.285714285714286,
+   "roda_tak_tercapai_gagal_ci95": [
+    14.285714285714286,
+    14.285714285714286
+   ],
+   "roda_hanya_dilewati": 14.285714285714286,
+   "roda_hanya_dilewati_ci95": [
+    14.285714285714286,
+    14.285714285714286
+   ],
+   "dika": 28.571428571428573,
+   "dika_ci95": [
+    28.571428571428573,
+    28.571428571428573
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 100.0,
+   "gagal_persepsi_lintasan_ci95": [
+    100.0,
+    100.0
+   ],
+   "terlambat_lintasan": 85.71428571428571,
+   "terlambat_lintasan_ci95": [
+    85.71428571428571,
+    85.71428571428571
+   ],
+   "gagal_persepsi_frame": 96.44607843137256,
+   "gagal_persepsi_frame_ci95": [
+    96.44607843137256,
+    96.44607843137256
+   ],
+   "palsu_top_frame": 7.840083073727934,
+   "palsu_top_frame_ci95": [
+    7.840083073727934,
+    7.840083073727934
+   ],
+   "langkah_kontak_H": 16.666666666666664,
+   "langkah_kontak_H_ci95": [
+    16.666666666666664,
+    16.666666666666664
+   ]
+  },
+  {
+   "kode": "A6",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 71.42857142857143,
+   "roda_tak_tercapai_gagal_ci95": [
+    71.42857142857143,
+    71.42857142857143
+   ],
+   "roda_hanya_dilewati": 71.42857142857143,
+   "roda_hanya_dilewati_ci95": [
+    71.42857142857143,
+    71.42857142857143
+   ],
+   "dika": 100.0,
+   "dika_ci95": [
+    100.0,
+    100.0
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 11.05121293800539,
+   "gagal_persepsi_frame_ci95": [
+    11.05121293800539,
+    11.05121293800539
+   ],
+   "palsu_top_frame": 7.6730190571715156,
+   "palsu_top_frame_ci95": [
+    7.6730190571715156,
+    7.6730190571715156
+   ],
+   "langkah_kontak_H": 4.714912280701754,
+   "langkah_kontak_H_ci95": [
+    4.714912280701754,
+    4.714912280701754
+   ]
+  },
+  {
+   "kode": "C1",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 94.73684210526316,
+   "roda_tak_tercapai_gagal_ci95": [
+    94.73684210526316,
+    94.73684210526316
+   ],
+   "roda_hanya_dilewati": 94.73684210526316,
+   "roda_hanya_dilewati_ci95": [
+    94.73684210526316,
+    94.73684210526316
+   ],
+   "dika": 100.0,
+   "dika_ci95": [
+    100.0,
+    100.0
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 4.961464354527938,
+   "gagal_persepsi_frame_ci95": [
+    4.961464354527938,
+    4.961464354527938
+   ],
+   "palsu_top_frame": 25.81863979848866,
+   "palsu_top_frame_ci95": [
+    25.81863979848866,
+    25.81863979848866
+   ],
+   "langkah_kontak_H": 2.229965156794425,
+   "langkah_kontak_H_ci95": [
+    2.229965156794425,
+    2.229965156794425
+   ]
+  },
+  {
+   "kode": "C1",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "spawn",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "tabrakan": 1
+   },
+   "roda_tak_tercapai_gagal": 40.90909090909091,
+   "roda_tak_tercapai_gagal_ci95": [
+    40.90909090909091,
+    40.90909090909091
+   ],
+   "roda_hanya_dilewati": 45.0,
+   "roda_hanya_dilewati_ci95": [
+    45.0,
+    45.0
+   ],
+   "dika": 45.45454545454545,
+   "dika_ci95": [
+    45.45454545454545,
+    45.45454545454545
+   ],
+   "episode_gagal": 100.0,
+   "episode_gagal_ci95": [
+    100.0,
+    100.0
+   ],
+   "gagal_persepsi_lintasan": 15.0,
+   "gagal_persepsi_lintasan_ci95": [
+    15.0,
+    15.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 12.616566099835435,
+   "gagal_persepsi_frame_ci95": [
+    12.616566099835435,
+    12.616566099835435
+   ],
+   "palsu_top_frame": 24.971098265895954,
+   "palsu_top_frame_ci95": [
+    24.971098265895954,
+    24.971098265895954
+   ],
+   "langkah_kontak_H": 35.9375,
+   "langkah_kontak_H_ci95": [
+    35.9375,
+    35.9375
+   ]
+  },
+  {
+   "kode": "C2",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "tabrakan": 1
+   },
+   "roda_tak_tercapai_gagal": 42.857142857142854,
+   "roda_tak_tercapai_gagal_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "roda_hanya_dilewati": 75.0,
+   "roda_hanya_dilewati_ci95": [
+    75.0,
+    75.0
+   ],
+   "dika": 42.857142857142854,
+   "dika_ci95": [
+    42.857142857142854,
+    42.857142857142854
+   ],
+   "episode_gagal": 100.0,
+   "episode_gagal_ci95": [
+    100.0,
+    100.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 12.5,
+   "gagal_persepsi_frame_ci95": [
+    12.5,
+    12.5
+   ],
+   "palsu_top_frame": 8.791208791208792,
+   "palsu_top_frame_ci95": [
+    8.791208791208792,
+    8.791208791208792
+   ],
+   "langkah_kontak_H": 5.785123966942149,
+   "langkah_kontak_H_ci95": [
+    5.785123966942149,
+    5.785123966942149
+   ]
+  },
+  {
+   "kode": "C3",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 71.42857142857143,
+   "roda_tak_tercapai_gagal_ci95": [
+    71.42857142857143,
+    71.42857142857143
+   ],
+   "roda_hanya_dilewati": 71.42857142857143,
+   "roda_hanya_dilewati_ci95": [
+    71.42857142857143,
+    71.42857142857143
+   ],
+   "dika": 100.0,
+   "dika_ci95": [
+    100.0,
+    100.0
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 3.5616438356164384,
+   "gagal_persepsi_frame_ci95": [
+    3.5616438356164384,
+    3.5616438356164384
+   ],
+   "palsu_top_frame": 6.459689534301452,
+   "palsu_top_frame_ci95": [
+    6.459689534301452,
+    6.459689534301452
+   ],
+   "langkah_kontak_H": 3.9970663733039973,
+   "langkah_kontak_H_ci95": [
+    3.9970663733039973,
+    3.9970663733039973
+   ]
+  },
+  {
+   "kode": "C4",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "tabrakan": 1
+   },
+   "roda_tak_tercapai_gagal": 57.142857142857146,
+   "roda_tak_tercapai_gagal_ci95": [
+    57.142857142857146,
+    57.142857142857146
+   ],
+   "roda_hanya_dilewati": 57.142857142857146,
+   "roda_hanya_dilewati_ci95": [
+    57.142857142857146,
+    57.142857142857146
+   ],
+   "dika": 100.0,
+   "dika_ci95": [
+    100.0,
+    100.0
+   ],
+   "episode_gagal": 100.0,
+   "episode_gagal_ci95": [
+    100.0,
+    100.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 2.0188425302826376,
+   "gagal_persepsi_frame_ci95": [
+    2.0188425302826376,
+    2.0188425302826376
+   ],
+   "palsu_top_frame": 5.429625724828677,
+   "palsu_top_frame_ci95": [
+    5.429625724828677,
+    5.429625724828677
+   ],
+   "langkah_kontak_H": 7.727272727272727,
+   "langkah_kontak_H_ci95": [
+    7.727272727272727,
+    7.727272727272727
+   ]
+  },
+  {
+   "kode": "C4",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "tabrakan": 1
+   },
+   "roda_tak_tercapai_gagal": 57.142857142857146,
+   "roda_tak_tercapai_gagal_ci95": [
+    57.142857142857146,
+    57.142857142857146
+   ],
+   "roda_hanya_dilewati": 57.142857142857146,
+   "roda_hanya_dilewati_ci95": [
+    57.142857142857146,
+    57.142857142857146
+   ],
+   "dika": 100.0,
+   "dika_ci95": [
+    100.0,
+    100.0
+   ],
+   "episode_gagal": 100.0,
+   "episode_gagal_ci95": [
+    100.0,
+    100.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 0.9472259810554804,
+   "gagal_persepsi_frame_ci95": [
+    0.9472259810554804,
+    0.9472259810554804
+   ],
+   "palsu_top_frame": 7.776617954070981,
+   "palsu_top_frame_ci95": [
+    7.776617954070981,
+    7.776617954070981
+   ],
+   "langkah_kontak_H": 7.495291902071563,
+   "langkah_kontak_H_ci95": [
+    7.495291902071563,
+    7.495291902071563
+   ]
+  },
+  {
+   "kode": "C4",
+   "tingkat": 3,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "tabrakan": 1
+   },
+   "roda_tak_tercapai_gagal": 0.0,
+   "roda_tak_tercapai_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "roda_hanya_dilewati": 0.0,
+   "roda_hanya_dilewati_ci95": [
+    0.0,
+    0.0
+   ],
+   "dika": 71.42857142857143,
+   "dika_ci95": [
+    71.42857142857143,
+    71.42857142857143
+   ],
+   "episode_gagal": 100.0,
+   "episode_gagal_ci95": [
+    100.0,
+    100.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 4.143126177024483,
+   "gagal_persepsi_frame_ci95": [
+    4.143126177024483,
+    4.143126177024483
+   ],
+   "palsu_top_frame": 19.497956800934034,
+   "palsu_top_frame_ci95": [
+    19.497956800934034,
+    19.497956800934034
+   ],
+   "langkah_kontak_H": 17.69162210338681,
+   "langkah_kontak_H_ci95": [
+    17.69162210338681,
+    17.69162210338681
+   ]
+  },
+  {
+   "kode": "D1",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "tabrakan": 1
+   },
+   "roda_tak_tercapai_gagal": 66.66666666666667,
+   "roda_tak_tercapai_gagal_ci95": [
+    66.66666666666667,
+    66.66666666666667
+   ],
+   "roda_hanya_dilewati": 66.66666666666667,
+   "roda_hanya_dilewati_ci95": [
+    66.66666666666667,
+    66.66666666666667
+   ],
+   "dika": 77.77777777777777,
+   "dika_ci95": [
+    77.77777777777777,
+    77.77777777777777
+   ],
+   "episode_gagal": 100.0,
+   "episode_gagal_ci95": [
+    100.0,
+    100.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 5.068637803590286,
+   "gagal_persepsi_frame_ci95": [
+    5.068637803590286,
+    5.068637803590286
+   ],
+   "palsu_top_frame": 13.09655937846837,
+   "palsu_top_frame_ci95": [
+    13.09655937846837,
+    13.09655937846837
+   ],
+   "langkah_kontak_H": 8.075663877773735,
+   "langkah_kontak_H_ci95": [
+    8.075663877773735,
+    8.075663877773735
+   ]
+  },
+  {
+   "kode": "D1",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "spawn",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 14.285714285714286,
+   "roda_tak_tercapai_gagal_ci95": [
+    14.285714285714286,
+    14.285714285714286
+   ],
+   "roda_hanya_dilewati": 14.285714285714286,
+   "roda_hanya_dilewati_ci95": [
+    14.285714285714286,
+    14.285714285714286
+   ],
+   "dika": 28.571428571428573,
+   "dika_ci95": [
+    28.571428571428573,
+    28.571428571428573
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 7.191316146540028,
+   "gagal_persepsi_frame_ci95": [
+    7.191316146540028,
+    7.191316146540028
+   ],
+   "palsu_top_frame": 8.83742911153119,
+   "palsu_top_frame_ci95": [
+    8.83742911153119,
+    8.83742911153119
+   ],
+   "langkah_kontak_H": 16.543988783736417,
+   "langkah_kontak_H_ci95": [
+    16.543988783736417,
+    16.543988783736417
+   ]
+  },
+  {
+   "kode": "E1",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 1
+   },
+   "roda_tak_tercapai_gagal": 14.285714285714286,
+   "roda_tak_tercapai_gagal_ci95": [
+    14.285714285714286,
+    14.285714285714286
+   ],
+   "roda_hanya_dilewati": 14.285714285714286,
+   "roda_hanya_dilewati_ci95": [
+    14.285714285714286,
+    14.285714285714286
+   ],
+   "dika": 28.571428571428573,
+   "dika_ci95": [
+    28.571428571428573,
+    28.571428571428573
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 71.42857142857143,
+   "gagal_persepsi_lintasan_ci95": [
+    71.42857142857143,
+    71.42857142857143
+   ],
+   "terlambat_lintasan": 57.14285714285714,
+   "terlambat_lintasan_ci95": [
+    57.14285714285714,
+    57.14285714285714
+   ],
+   "gagal_persepsi_frame": 76.45536869340232,
+   "gagal_persepsi_frame_ci95": [
+    76.45536869340232,
+    76.45536869340232
+   ],
+   "palsu_top_frame": 5.792522380200105,
+   "palsu_top_frame_ci95": [
+    5.792522380200105,
+    5.792522380200105
+   ],
+   "langkah_kontak_H": 16.691616766467064,
+   "langkah_kontak_H_ci95": [
+    16.691616766467064,
+    16.691616766467064
+   ]
+  },
+  {
+   "kode": "E2",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 1,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "tabrakan": 1
+   },
+   "roda_tak_tercapai_gagal": 14.285714285714286,
+   "roda_tak_tercapai_gagal_ci95": [
+    14.285714285714286,
+    14.285714285714286
+   ],
+   "roda_hanya_dilewati": 50.0,
+   "roda_hanya_dilewati_ci95": [
+    50.0,
+    50.0
+   ],
+   "dika": 14.285714285714286,
+   "dika_ci95": [
+    14.285714285714286,
+    14.285714285714286
+   ],
+   "episode_gagal": 100.0,
+   "episode_gagal_ci95": [
+    100.0,
+    100.0
+   ],
+   "gagal_persepsi_lintasan": 50.0,
+   "gagal_persepsi_lintasan_ci95": [
+    50.0,
+    50.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 49.25373134328358,
+   "gagal_persepsi_frame_ci95": [
+    49.25373134328358,
+    49.25373134328358
+   ],
+   "palsu_top_frame": 1.5625,
+   "palsu_top_frame_ci95": [
+    1.5625,
+    1.5625
+   ],
+   "langkah_kontak_H": 8.808290155440414,
+   "langkah_kontak_H_ci95": [
+    8.808290155440414,
+    8.808290155440414
+   ]
+  },
+  {
+   "kode": "REG",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 30,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 30
+   },
+   "roda_tak_tercapai_gagal": 94.7368421052632,
+   "roda_tak_tercapai_gagal_ci95": [
+    94.7368421052632,
+    94.7368421052632
+   ],
+   "roda_hanya_dilewati": 94.7368421052632,
+   "roda_hanya_dilewati_ci95": [
+    94.7368421052632,
+    94.7368421052632
+   ],
+   "dika": 99.47368421052632,
+   "dika_ci95": [
+    98.94736842105264,
+    100.0
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 0.0,
+   "gagal_persepsi_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 5.480817503569691,
+   "gagal_persepsi_frame_ci95": [
+    5.268482807505324,
+    5.707222200887279
+   ],
+   "palsu_top_frame": 25.346634194767542,
+   "palsu_top_frame_ci95": [
+    24.966471209569146,
+    25.736995138383655
+   ],
+   "langkah_kontak_H": 2.3066556987007543,
+   "langkah_kontak_H_ci95": [
+    2.27130420177315,
+    2.341861385186366
+   ]
+  },
+  {
+   "kode": "REG",
+   "tingkat": 2,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 30,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 18,
+    "keluar_jalan": 1,
+    "tabrakan": 11
+   },
+   "roda_tak_tercapai_gagal": 55.964912280701746,
+   "roda_tak_tercapai_gagal_ci95": [
+    50.701754385964925,
+    60.877192982456144
+   ],
+   "roda_hanya_dilewati": 60.49512670565303,
+   "roda_hanya_dilewati_ci95": [
+    55.902339181286564,
+    65.42914230019493
+   ],
+   "dika": 79.64912280701756,
+   "dika_ci95": [
+    72.98245614035088,
+    85.26315789473686
+   ],
+   "episode_gagal": 40.0,
+   "episode_gagal_ci95": [
+    23.333333333333332,
+    56.666666666666664
+   ],
+   "gagal_persepsi_lintasan": 84.92592592592591,
+   "gagal_persepsi_lintasan_ci95": [
+    82.58669590643278,
+    87.34922027290447
+   ],
+   "terlambat_lintasan": 8.957115009746587,
+   "terlambat_lintasan_ci95": [
+    6.637426900584797,
+    11.501169590643268
+   ],
+   "gagal_persepsi_frame": 65.03350769106201,
+   "gagal_persepsi_frame_ci95": [
+    63.752955828411544,
+    66.44386296394953
+   ],
+   "palsu_top_frame": 39.99028787732613,
+   "palsu_top_frame_ci95": [
+    38.14681400247279,
+    42.035258530766185
+   ],
+   "langkah_kontak_H": 15.624773520501217,
+   "langkah_kontak_H_ci95": [
+    13.616401589172312,
+    17.592148038064625
+   ]
+  },
+  {
+   "kode": "REG",
+   "tingkat": 3,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 30,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 30
+   },
+   "roda_tak_tercapai_gagal": 14.912280701754387,
+   "roda_tak_tercapai_gagal_ci95": [
+    13.333333333333334,
+    16.666666666666664
+   ],
+   "roda_hanya_dilewati": 14.912280701754387,
+   "roda_hanya_dilewati_ci95": [
+    13.333333333333336,
+    16.491228070175442
+   ],
+   "dika": 34.91228070175439,
+   "dika_ci95": [
+    32.280701754385966,
+    37.54385964912281
+   ],
+   "episode_gagal": 0.0,
+   "episode_gagal_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_lintasan": 89.29824561403508,
+   "gagal_persepsi_lintasan_ci95": [
+    87.36842105263159,
+    91.2280701754386
+   ],
+   "terlambat_lintasan": 48.24561403508772,
+   "terlambat_lintasan_ci95": [
+    46.14035087719298,
+    50.35087719298245
+   ],
+   "gagal_persepsi_frame": 77.1014880831108,
+   "gagal_persepsi_frame_ci95": [
+    76.54805607861906,
+    77.66036435951183
+   ],
+   "palsu_top_frame": 7.452730104854896,
+   "palsu_top_frame_ci95": [
+    7.136623062179998,
+    7.794694791117633
+   ],
+   "langkah_kontak_H": 41.82295446733355,
+   "langkah_kontak_H_ci95": [
+    40.91360117982607,
+    42.658086235907014
+   ]
+  }
+ ],
+ "regresi": [
+  {
+   "kondisi": "REG t1 (ClearNoon)",
+   "n_reg": 30,
+   "n_baseline": 30,
+   "setara": true,
+   "roda_tak_tercapai_gagal": {
+    "reg": 94.7368421052632,
+    "reg_ci": [
+     94.7368421052632,
+     94.7368421052632
+    ],
+    "baseline": 94.38596491228074,
+    "baseline_ci": [
+     93.85964912280704,
+     94.7368421052632
+    ],
+    "selisih_ci": [
+     0.0,
+     0.8771929824561511
+    ],
+    "mencakup_0": true
+   },
+   "dika": {
+    "reg": 99.47368421052632,
+    "reg_ci": [
+     98.77192982456141,
+     100.0
+    ],
+    "baseline": 99.47368421052632,
+    "baseline_ci": [
+     98.77192982456141,
+     100.0
+    ],
+    "selisih_ci": [
+     -0.877192982456123,
+     0.8771929824561084
+    ],
+    "mencakup_0": true
+   },
+   "episode_gagal": {
+    "reg": 0.0,
+    "reg_ci": [
+     0.0,
+     0.0
+    ],
+    "baseline": 6.666666666666667,
+    "baseline_ci": [
+     0.0,
+     16.666666666666668
+    ],
+    "selisih_ci": [
+     -16.666666666666668,
+     0.0
+    ],
+    "mencakup_0": true
+   }
+  },
+  {
+   "kondisi": "REG t2 (HardRainNoon)",
+   "n_reg": 30,
+   "n_baseline": 30,
+   "setara": false,
+   "roda_tak_tercapai_gagal": {
+    "reg": 55.964912280701746,
+    "reg_ci": [
+     50.701754385964925,
+     61.05263157894737
+    ],
+    "baseline": 54.56140350877193,
+    "baseline_ci": [
+     47.017543859649116,
+     61.75438596491229
+    ],
+    "selisih_ci": [
+     -7.543859649122801,
+     10.52631578947367
+    ],
+    "mencakup_0": true
+   },
+   "dika": {
+    "reg": 79.64912280701756,
+    "reg_ci": [
+     72.98245614035089,
+     85.08771929824562
+    ],
+    "baseline": 71.75438596491229,
+    "baseline_ci": [
+     63.33333333333334,
+     79.29824561403508
+    ],
+    "selisih_ci": [
+     -1.75438596491226,
+     18.245614035087726
+    ],
+    "mencakup_0": true
+   },
+   "episode_gagal": {
+    "reg": 40.0,
+    "reg_ci": [
+     23.333333333333332,
+     56.666666666666664
+    ],
+    "baseline": 66.66666666666667,
+    "baseline_ci": [
+     50.0,
+     83.33333333333333
+    ],
+    "selisih_ci": [
+     -50.0,
+     -3.3333333333333286
+    ],
+    "mencakup_0": false
+   }
+  },
+  {
+   "kondisi": "REG t3 (ClearNight)",
+   "n_reg": 30,
+   "n_baseline": 30,
+   "setara": true,
+   "roda_tak_tercapai_gagal": {
+    "reg": 14.912280701754387,
+    "reg_ci": [
+     13.333333333333336,
+     16.491228070175442
+    ],
+    "baseline": 17.01754385964912,
+    "baseline_ci": [
+     15.087719298245615,
+     19.122807017543867
+    ],
+    "selisih_ci": [
+     -4.9122807017543835,
+     0.5263157894736814
+    ],
+    "mencakup_0": true
+   },
+   "dika": {
+    "reg": 34.91228070175439,
+    "reg_ci": [
+     32.28070175438596,
+     37.543859649122815
+    ],
+    "baseline": 36.140350877192986,
+    "baseline_ci": [
+     32.982456140350884,
+     39.29824561403509
+    ],
+    "selisih_ci": [
+     -5.263157894736828,
+     2.9824561403508767
+    ],
+    "mencakup_0": true
+   },
+   "episode_gagal": {
+    "reg": 0.0,
+    "reg_ci": [
+     0.0,
+     0.0
+    ],
+    "baseline": 0.0,
+    "baseline_ci": [
+     0.0,
+     0.0
+    ],
+    "selisih_ci": [
+     0.0,
+     0.0
+    ],
+    "mencakup_0": true
+   }
+  }
+ ]
+}

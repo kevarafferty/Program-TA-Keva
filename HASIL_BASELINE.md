@@ -1,5 +1,8 @@
 # Hasil baseline π_Dika (#21–#22) — kualitas Epic
 
+> **Pembaruan 23 Nov 2026:** build CARLA yang dipakai untuk semua data TA berikutnya adalah **build spawn (package 22 Nov)**. Baseline untuk build itu ada di bagian paling bawah ("Baseline build tetap"). Angka hujan di tabel utama di bawah (build 12 Nov) **tidak sebanding** dengan data build baru.
+
+
 Diperbarui 21 Nov 2026: hujan kini memakai `HardRainNoon` (preset Dika menurut pencocokan citra, `11_cuaca/`), dan metrik diperbaiki untuk episode yang berhenti sebelum finis ([#21c] di `analisis_baseline.py`).
 
 Data: `10_runner/DQN_Akselerasi vertikal/log_runner/*_Epic/` (30 episode per kondisi, seed 0–29, offset spawn ±2 m / ±0,5 m). Cerah, SoftRain, dan malam dijalankan 19 Nov; HardRain 21 Nov.
@@ -33,3 +36,29 @@ Gate 1 menurut kriteria E3 (CI logika Dika mencakup angka Dika): cerah ya, hujan
 - Waktu: 133,9–136,7 s/episode (cerah/SoftRain/malam); hujan 114,7 s/ep karena banyak episode berhenti lebih awal. Run 19 Nov 3 jam 26 menit, run hujan 21 Nov 58 menit, tanpa time-out (`log_runner/jalankan_baseline.log`).
 - GPU (`log_runner/gpu_epic.csv`, 19 Nov): VRAM median 7.832 MiB, maks 7.878 MiB (kemungkinan alokasi rakus TensorFlow, belum diverifikasi); suhu maks 72,7 °C.
 - Cara menjalankan analisis: `INSTRUKSI_ANALISIS_BASELINE.md` di `10_runner/DQN_Akselerasi vertikal/`.
+
+
+## Baseline build tetap (package 22 Nov dengan aset spawn) — dipakai untuk semua data TA berikutnya
+
+Data: `12_lingkungan/log_skenario/*REG_t*` (runner `jalankan_skenario.py`, skenario REG = 19 lubang Dika, offset ±2 / ±0,5 m, preset Dika; 30 episode per kondisi, seed 0–29; verifikasi lubang per episode, persepsi terekam 100%, 0 episode buta). Analisis: `12_lingkungan/hasil_analisis/laporan.md` (`analisis_skenario.py`, label v2).
+
+| Kondisi | Pelabel roda, tak tercapai = gagal (utama) | Episode gagal | Pelabel roda, hanya yang dilewati | Logika Dika | Persepsi gagal / lintasan | Palsu / frame |
+|---|---|---|---|---|---|---|
+| Cerah `ClearNoon` | 94,7% [94,7–94,7] | 0/30 | 94,7% | 99,5% [98,8–100] | 0,0% | 25,3% |
+| Hujan `HardRainNoon` | **56,0% [50,7–61,1]** | **12/30 (1 keluar jalan + 11 tabrak)** | 60,5% [55,9–65,4] | 79,6% [73,0–85,1] | 84,9% | 40,0% |
+| Malam `ClearNight` | **14,9% [13,3–16,5]** | 0/30 | 14,9% | 34,9% [32,3–37,5] | 89,3% | 7,5% |
+
+### Uji regresi runner baru vs baseline lama (#21–#22)
+Kriteria: CI 95% bootstrap selisih mencakup 0 untuk roda utama, logika Dika, dan episode gagal.
+- Cerah dan malam: **setara** pada ketiga metrik → runner baru tidak mengubah perilaku agen.
+- Hujan: roda utama dan logika Dika setara; **episode gagal tidak** (40% vs 66,7%; selisih [−50; −3,3]). Keluar jalan 11 → 1.
+
+### Penyebab perbedaan hujan: build, bukan runner
+1. cleanTest asli Dika di build baru, HardRainNoon seed 0–4: fraksi langkah berdeteksi 0,545–0,606, sama dengan runner baru (median 0,552) dan berbeda dari cleanTest di build lama (0,620–0,716; tidak tumpang tindih). Cerah turun sedikit (0,917 → 0,898); malam sama (0,206 vs 0,208).
+2. Statistik citra global HardRainNoon identik di kedua build (`11_cuaca/hasil_PaketSpawn`); HardRainNoon tetap paling mirip rekaman Dika (skor 0,41 vs 0,42).
+3. Pada 8 posisi yang sama, kotak YOLO untuk lubang asli sama di kedua build. Yang berbeda: **kotak palsu "pita bawah"** (selebar citra, jalan basah beriak dekat kamera) muncul di 4/8 frame hujan build lama dan 0/8 build baru. Di log REG t2 (build baru) kotak ini tetap muncul di 24,5% langkah dan menjadi kotak teratas di 17,6% (cerah 0%, malam 0,6%).
+4. Tafsiran (dugaan kuat): mekanisme kegagalan hujan = **deteksi palsu jalan basah → manuver tidak perlu → keluar jalan / tabrak**. Frekuensinya peka terhadap perbedaan render kecil antar-build. Kotak lubang asli tidak berubah.
+
+### Konsekuensi
+- **Build spawn dibekukan**: folder `WindowsNoEditor`-nya dicadangkan, tidak di-package ulang selama pengumpulan data. Kalau terpaksa build ulang, jalankan REG lagi.
+- Baseline hujan untuk TA = REG t2 di build ini. Angka hujan build lama dipakai hanya sebagai catatan sejarah dan contoh sensitivitas render (bersama temuan Low vs Epic).
