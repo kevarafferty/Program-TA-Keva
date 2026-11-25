@@ -1,0 +1,4 @@
+[2026-11-24 02:31:54] mulai proses anak (episode selesai: 0)
+[2026-11-24 03:20:10] proses anak keluar kode 1 (kegagalan ke-1 dari maks 5)
+[2026-11-24 03:21:10] mulai proses anak (episode selesai: 87)
+[2026-11-24 08:30:02] SELESAI: 313 episode / 351843 langkah latih, skor eval terbaik 0.327 di episode 117

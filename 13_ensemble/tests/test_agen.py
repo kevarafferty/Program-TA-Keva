@@ -210,3 +210,26 @@ def test_tidak_ada_perubahan_untuk_kasus_biasa(modul_env):
     """Kasus yang benar di kode Dika tetap sama: lurus melewati 3 lubang selajur berjauhan + 2 lubang lajur lain."""
     lub = [(-290.0, 250.5), (-260.0, 250.5), (-230.0, 250.5), (-275.0, 247.0), (-245.0, 247.0)]
     assert _sim(modul_env, lub, mode="perbaikan") == _sim(modul_env, lub, mode="dika") == (3, 2)
+
+
+def test_target_double_dqn_dan_clip():
+    """Target Double DQN: aksi dipilih online(+prior), nilai dari target(+prior), per kepala."""
+    import tensorflow as tf
+    ag = AgenEnsemble(K=3, beta_prior=2.0, seed=4, kapasitas=100, min_replay=1, double=True, clipnorm=10.0)
+    rng = np.random.default_rng(0)
+    s, s2 = rng.normal(size=(8, 10)).astype(np.float32), rng.normal(size=(8, 10)).astype(np.float32)
+    # bedakan online dan target supaya Double DQN != DQN biasa
+    ag.online.set_weights([w + rng.normal(scale=0.5, size=w.shape).astype(np.float32) for w in ag.online.get_weights()])
+    on2 = ag.online(s2).numpy() + 2.0 * ag.prior(s2).numpy()
+    tg2 = ag.target(s2).numpy() + 2.0 * ag.prior(s2).numpy()
+    a2 = on2.argmax(2)
+    v_double = np.take_along_axis(tg2, a2[..., None], 2)[..., 0]
+    v_max = tg2.max(2)
+    assert not np.allclose(v_double, v_max)
+    y = ag._target(tf.constant(np.ones(8, np.float32)), tf.constant(s2), tf.constant(np.zeros(8, np.float32))).numpy()
+    assert np.allclose(y, 1.0 + 0.99 * v_double, atol=1e-4)
+    ag.double = False
+    y0 = ag._target(tf.constant(np.ones(8, np.float32)), tf.constant(s2), tf.constant(np.zeros(8, np.float32))).numpy()
+    assert np.allclose(y0, 1.0 + 0.99 * v_max, atol=1e-4)
+    yd = ag._target(tf.constant(np.ones(8, np.float32)), tf.constant(s2), tf.constant(np.ones(8, np.float32))).numpy()
+    assert np.allclose(yd, 1.0)                                   # terminal: tanpa bootstrap

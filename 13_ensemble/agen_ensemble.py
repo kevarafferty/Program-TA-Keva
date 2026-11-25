@@ -108,10 +108,11 @@ class BufferBootstrap:
 
 class AgenEnsemble:
     def __init__(self, K=5, beta_prior=0.0, p_masker=0.5, kapasitas=100_000, lr=1e-4, gamma=0.99, batch=32,
-                 min_replay=1000, target_tiap=1000, seed=0, n_aksi=N_AKSI):
+                 min_replay=1000, target_tiap=1000, seed=0, n_aksi=N_AKSI, double=True, clipnorm=10.0):
         self.K, self.beta, self.p_masker = int(K), float(beta_prior), float(p_masker)
         self.gamma, self.batch, self.min_replay, self.target_tiap = gamma, batch, min_replay, target_tiap
         self.n_aksi, self.seed, self.lr = n_aksi, int(seed), lr
+        self.double, self.clipnorm = bool(double), float(clipnorm or 0.0)
         tf.random.set_seed(self.seed)
         self.rng = np.random.default_rng(self.seed)
         self.online = JaringanEnsemble(K, n_aksi, "online")
@@ -157,12 +158,19 @@ class AgenEnsemble:
         return int(np.argmax(q.mean(axis=0))), q
 
     # ---------------------------------------------------------------- pelatihan
+    def _target(self, r, s2, d):
+        """y (B,K) per kepala. Double DQN: aksi dari online(+prior), nilai dari target(+prior)."""
+        p_s2 = self.beta * self.prior(s2, training=False) if self.beta else 0.0
+        q_next = self.target(s2, training=False) + p_s2                # (B,K,A)
+        if self.double:                                                # Double DQN (van Hasselt dkk. 2016), per kepala
+            a2 = tf.argmax(self.online(s2, training=False) + p_s2, axis=2)                 # (B,K)
+            v_next = tf.reduce_sum(q_next * tf.one_hot(a2, self.n_aksi), axis=2)
+        else:
+            v_next = tf.reduce_max(q_next, axis=2)
+        return tf.stop_gradient(r[:, None] + self.gamma * v_next * (1.0 - d[:, None]))
+
     def _langkah(self, s, a, r, s2, d, m):
-        q_next = self.target(s2, training=False)                       # (B,K,A)
-        if self.beta:
-            q_next = q_next + self.beta * self.prior(s2, training=False)
-        y = r[:, None] + self.gamma * tf.reduce_max(q_next, axis=2) * (1.0 - d[:, None])   # (B,K)
-        y = tf.stop_gradient(y)
+        y = self._target(r, s2, d)
         p_s = self.beta * self.prior(s, training=False) if self.beta else 0.0
         with tf.GradientTape() as tape:
             q = self.online(s, training=True) + p_s                       # (B,K,A)
@@ -171,6 +179,8 @@ class AgenEnsemble:
             loss_k = tf.reduce_sum(err2, axis=0) / tf.maximum(tf.reduce_sum(m, axis=0), 1.0)  # (K,)
             loss = tf.reduce_mean(loss_k)
         g = tape.gradient(loss, self.online.trainable_variables)
+        if self.clipnorm > 0:
+            g, _ = tf.clip_by_global_norm(g, self.clipnorm)
         self.opt.apply_gradients(zip(g, self.online.trainable_variables))
         return loss, loss_k
 
@@ -189,7 +199,8 @@ class AgenEnsemble:
     def konfig(self):
         return dict(K=self.K, beta_prior=self.beta, p_masker=self.p_masker, lr=self.lr, gamma=self.gamma,
                     batch=self.batch, min_replay=self.min_replay, target_tiap=self.target_tiap, seed=self.seed,
-                    n_aksi=self.n_aksi, kapasitas=self.buffer.kap, n_state=N_STATE,
+                    n_aksi=self.n_aksi, kapasitas=self.buffer.kap, n_state=N_STATE, double=self.double,
+                    clipnorm=self.clipnorm,
                     arsitektur="fc1(128)-fc2(128) bersama; per kepala fc3(64)-drop(0.1)-q(3); Q=q+beta*prior")
 
     def simpan_bobot(self, path, ekstra=None):
@@ -231,6 +242,7 @@ def muat_untuk_evaluasi(path):
     z = np.load(path)
     k = json.loads(str(z["konfig"]))
     ag = AgenEnsemble(K=k["K"], beta_prior=k["beta_prior"], p_masker=k["p_masker"], kapasitas=10,
-                      seed=k.get("seed", 0), n_aksi=k.get("n_aksi", N_AKSI))
+                      seed=k.get("seed", 0), n_aksi=k.get("n_aksi", N_AKSI), double=k.get("double", False),
+                      clipnorm=k.get("clipnorm", 0.0))
     ag.muat_bobot(path)
     return ag, k

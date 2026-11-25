@@ -1,0 +1,186 @@
+{
+ "versi_label": "label_kegagalan v2 (22 Nov 2026, FRAKSI_MIN 0,5 / D_TERLAMBAT 8 m)",
+ "kondisi": [
+  {
+   "kode": "ID0",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic",
+   "episode": 30,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 24,
+    "tabrakan": 6
+   },
+   "roda_tak_tercapai_gagal": 57.59800384800385,
+   "roda_tak_tercapai_gagal_ci95": [
+    51.97895622895624,
+    62.89972342472343
+   ],
+   "roda_hanya_dilewati": 57.59800384800385,
+   "roda_hanya_dilewati_ci95": [
+    51.72219215969216,
+    62.75104016354016
+   ],
+   "dika": 74.64345839345839,
+   "dika_ci95": [
+    70.14790764790764,
+    78.87411014911014
+   ],
+   "episode_gagal": 20.0,
+   "episode_gagal_ci95": [
+    6.666666666666667,
+    36.666666666666664
+   ],
+   "gagal_persepsi_lintasan": 3.028138528138528,
+   "gagal_persepsi_lintasan_ci95": [
+    1.2299603174603173,
+    4.995725108225106
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 15.43510643197619,
+   "gagal_persepsi_frame_ci95": [
+    11.914278573665227,
+    19.029720470825147
+   ],
+   "palsu_top_frame": 9.142693486694183,
+   "palsu_top_frame_ci95": [
+    8.104975010494288,
+    10.170571842605415
+   ],
+   "langkah_kontak_H": 9.923660145180971,
+   "langkah_kontak_H_ci95": [
+    8.609094654140016,
+    11.350201829819715
+   ]
+  },
+  {
+   "kode": "ID0",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic_ens-seed0-ep117",
+   "episode": 30,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 21,
+    "tabrakan": 9
+   },
+   "roda_tak_tercapai_gagal": 47.4534632034632,
+   "roda_tak_tercapai_gagal_ci95": [
+    43.208961640211626,
+    51.89835858585858
+   ],
+   "roda_hanya_dilewati": 47.756493506493506,
+   "roda_hanya_dilewati_ci95": [
+    43.63802008177007,
+    52.06140873015872
+   ],
+   "dika": 56.25517075517075,
+   "dika_ci95": [
+    51.557227032227026,
+    60.93665524290524
+   ],
+   "episode_gagal": 30.0,
+   "episode_gagal_ci95": [
+    13.333333333333334,
+    46.666666666666664
+   ],
+   "gagal_persepsi_lintasan": 9.567340067340067,
+   "gagal_persepsi_lintasan_ci95": [
+    5.086580086580087,
+    14.485197210197207
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 24.400396612701684,
+   "gagal_persepsi_frame_ci95": [
+    20.476737220804345,
+    28.55100996655363
+   ],
+   "palsu_top_frame": 8.334479540846496,
+   "palsu_top_frame_ci95": [
+    7.263931914435923,
+    9.388302829208937
+   ],
+   "langkah_kontak_H": 12.319309049663495,
+   "langkah_kontak_H_ci95": [
+    10.922588943053293,
+    13.698364817248606
+   ]
+  },
+  {
+   "kode": "ID0",
+   "tingkat": 1,
+   "mode": "konstan",
+   "backend": "grid",
+   "label": "Epic_ens-seed0-ep291",
+   "episode": 30,
+   "seed_ganda": 0,
+   "tanpa_verifikasi": 0,
+   "hook_gagal": 0,
+   "akhir": {
+    "finis": 15,
+    "keluar_jalan": 15
+   },
+   "roda_tak_tercapai_gagal": 36.15644540644541,
+   "roda_tak_tercapai_gagal_ci95": [
+    27.771500721500722,
+    44.78213985088985
+   ],
+   "roda_hanya_dilewati": 51.579464596705975,
+   "roda_hanya_dilewati_ci95": [
+    42.73852440662786,
+    60.28946484549932
+   ],
+   "dika": 36.93566618566618,
+   "dika_ci95": [
+    28.308877465127463,
+    45.47154581529582
+   ],
+   "episode_gagal": 50.0,
+   "episode_gagal_ci95": [
+    33.333333333333336,
+    66.66666666666667
+   ],
+   "gagal_persepsi_lintasan": 11.469746728367419,
+   "gagal_persepsi_lintasan_ci95": [
+    6.492924939045628,
+    16.897335423197482
+   ],
+   "terlambat_lintasan": 0.0,
+   "terlambat_lintasan_ci95": [
+    0.0,
+    0.0
+   ],
+   "gagal_persepsi_frame": 25.14611473701647,
+   "gagal_persepsi_frame_ci95": [
+    20.343916294996575,
+    29.919313363055423
+   ],
+   "palsu_top_frame": 5.57144292245709,
+   "palsu_top_frame_ci95": [
+    4.828483141325869,
+    6.319630839317724
+   ],
+   "langkah_kontak_H": 11.370043714916756,
+   "langkah_kontak_H_ci95": [
+    9.244263957108538,
+    13.399105830929063
+   ]
+  }
+ ],
+ "regresi": []
+}

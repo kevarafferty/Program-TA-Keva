@@ -1,0 +1,9 @@
+id,x,y,severity,status,langkah_kontak,n_jendela,n_terlihat,n_cocok_top,n_cocok_any,frac_cocok,gagal_persepsi,terlambat,langkah_cocok_pertama,jarak_cocok_pertama,f_transisi_jendela
+ph_0000,-285.194,250.551,High,terhindar,,160,71,66,68,0.93,0,0,3,12.61,1.0
+ph_0001,-270.394,247.251,High,tak_tercapai,,119,114,101,101,0.886,0,0,205,14.18,1.0
+ph_0005,-215.794,247.251,High,tak_tercapai,,0,0,0,0,,-1,-1,,,
+ph_0007,-189.094,247.151,High,tak_tercapai,,0,0,0,0,,-1,-1,,,
+ph_0011,-120.894,250.551,High,tak_tercapai,,0,0,0,0,,-1,-1,,,
+ph_0012,-106.094,247.251,High,tak_tercapai,,0,0,0,0,,-1,-1,,,
+ph_0014,-79.394,247.151,High,tak_tercapai,,0,0,0,0,,-1,-1,,,
+ph_0016,-61.594,247.251,High,tak_tercapai,,0,0,0,0,,-1,-1,,,

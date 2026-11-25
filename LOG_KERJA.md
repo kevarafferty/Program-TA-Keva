@@ -713,3 +713,43 @@ Belum (Keva): commit; pilot 30 episode; kirim folder pilot ke Claude. Belum (Cla
 
 - **Temuan: π_Dika tidak menggeneralisasi ke kombinasi lain dari posisi lubang yang SAMA.** Roda turun 94,7 → 57,6 padahal posisi, kamera, YOLO, kecepatan, dan offset sama; persepsi hanya gagal pada 3% lintasan → kegagalan di keputusan, bukan persepsi. Bukan efek cuaca: logika Dika ClearNoon 75,4% (16 ep) vs CloudyNoon 74,5% (14 ep). Tafsiran (dugaan): agen Dika belajar urutan zig-zag tata letak latihnya (19 lubang selalu sama, 389 episode), bukan aturan umum "hindari lubang yang terdeteksi". Ini mendukung H3/motivasi monitor keputusan, dan menjadi angka acuan Gate 2 (bukan 94,7).
 - 6 episode gagal semuanya `static.wall` di x −29,3 s.d. −30,5, SETELAH lubang terakhir (slot x −34,9, lajur kiri y 247,2): agen membelok ke kanan dengan yaw 23–32° lalu menabrak struktur dekat garis finis (x −27). Lubang sudah terlewati sehingga metrik lubang tidak terpengaruh. Kegagalan ini sah (manuver terlalu tajam di dekat struktur), tetapi `episode_gagal` di ID0 sebagian besar mencerminkan ujung peta; laporkan dengan catatan ini untuk π_Dika dan π_ens.
+
+## 2026-11-24 (Selasa) 20.50 — cek hasil latih π_ens seed 0 (Keva menjalankan 02.31–08.30, Claude menganalisis)
+
+- Run `13_ensemble/latih/seed0_K5_b30` (β 30, 350.000 langkah): **SELESAI, teknis benar.** 313 episode / 351.843 langkah, 14 titik evaluasi; satu crash proses anak 03.20 (kode 1, setelah episode 87), induk mengulang dan melanjutkan dari checkpoint; episode.csv 313 baris tanpa duplikat, eval.csv 70 baris (14 × 5). Konfigurasi sesuai instruksi. Reset `pothole_tracking`/penghitung per episode dicek: benar.
+- **Hasil belajar lemah.** Episode latih finis hanya 1–3 per 25 episode sepanjang pelatihan (mayoritas keluar jalan/tabrakan); avoid/(avoid+hit) 0,16–0,44, tidak membaik setelah ±75.000 langkah. Evaluasi seleksi (5 ep, seed 90000–90004, aturan HIT diperbaiki): terbaik skor 0,327 di episode 117 (100.381 langkah, finis 3/5), lalu berfluktuasi 0–0,29. `cv_aksi_median` naik 0,3 → 1,3–1,7 di akhir (kepala makin berbeda, |Q| ±7–11).
+- **Pembanding setara (Claude):** log π_Dika ID0 seed 0–29 dinilai ulang dengan aturan HIT yang sama dengan reward π_ens (bodi + ukuran melintang, dari pose per langkah): **avoid/lubang 0,491** (135 avoid, 140 hit, 275 lubang). π_ens terbaik 0,327 (5 ep, seed lain). Skor 0,75 di laporan π_Dika memakai logika Dika (lebih longgar), jadi tidak sebanding dengan skor eval π_ens.
+- Kesimpulan sementara: konfigurasi sekarang kemungkinan besar TIDAK lolos Gate 2; seed 1–2 ditunda sampai penyebab diketahui. Satu seed belum bisa memisahkan "seed sial" dari "konfigurasi buruk"; kurva Dika juga tidak stabil.
+- Berikutnya (Keva, 1 malam): `jalankan_skenario.py --ensemble` untuk bobot episode 117 dan 291 pada ID0 seed 0–29 dengan `--tag_kebijakan` berbeda → metrik roda resmi + log per langkah untuk diagnosis. Catatan: tanpa `--tag_kebijakan` kedua bobot memakai nama folder yang sama (`ens-seed0-K5-b30`) dan run kedua akan melewati semua seed.
+
+## 2026-11-24 (Selasa) 21.15 — bug verifikasi lubang: mobil episode sebelumnya menutupi lubang (Claude)
+
+- Gejala (Keva, run ID0 `--ensemble bobot_ep0117`): episode 4 (seed 3) berhenti dengan `RuntimeError: Lubang tetap tak tampak setelah 3 percobaan: ['ph_0017']`.
+- Penyebab (terbukti dari log): episode 3 (seed 2) berakhir `static.wall` di x −48,94, y 250,83, tepat di atas ph_0017 (x −47,0, y 250,3). `siapkan_episode()` memverifikasi lubang SEBELUM `reset()`, padahal kendaraan episode sebelumnya baru dihapus di `reset()`. Mobil yang menabrak itu menutupi ph_0017 dari kamera verifikasi; mengulang toggle tidak menolong. Lubangnya sendiri tampak.
+- Crash proses anak pelatihan seed 0 pukul 03.20 hampir pasti sebab yang sama: episode 87 berakhir tabrakan di x −73,19, dan tata letak episode 88 (seed 100087) berisi ph_0015 di x −70,7, y 250,6. Induk memulai proses baru (aktor lama terhapus saat env ditutup) dan episode 88 berjalan normal. Data seed 0 tidak terpengaruh.
+- π_Dika ID0 tidak kena karena keenam tabrakannya di x ≈ −30, setelah semua lubang (kamera verifikasi selalu di belakang lubang).
+- Perbaikan: `env_skenario.siapkan_episode()` memanggil `self._cleanup()` di awal (hapus kendaraan + sensor episode sebelumnya sebelum verifikasi). Berlaku juga untuk `latih_ensemble.py`. Uji: 12 lulus (`12_lingkungan/tests/test_e2e_palsu.py`) + 6 lulus (`13_ensemble/tests/test_latih_palsu.py`).
+- Catatan sampingan: tabrakan `static.wall` di x −48,9 dengan y 250,83 (yaw 19,9°) berarti ada struktur sekitar y ≈ 252 di ruas itu, di dalam batas ROAD_Y_MAX Dika (252,55). Belum dicek visual.
+
+## 2026-11-25 (Rabu) 04.30 — evaluasi π_ens seed 0 (β 30) di ID0 seed 0–29 + konfigurasi baru (Keva menjalankan, Claude menganalisis)
+
+Run: `log_skenario/*ens-seed0-ep117` (dua folder: 3 episode sebelum bug verifikasi + 27 episode sesudah perbaikan) dan `*ens-seed0-ep291`; masing-masing 30 seed, hook 0, verifikasi lolos percobaan pertama. Analisis: `hasil_analisis/ID0_seed0_cek/`.
+
+| ID0 seed 0–29 | Roda (utama) | Logika Dika | Episode gagal | Persepsi gagal / lintasan | Selisih roda berpasangan vs π_Dika | Menang/seri/kalah |
+|---|---|---|---|---|---|---|
+| π_Dika | 57,6 [52,0–62,9] | 74,6 | 20,0 | 3,0 | — | — |
+| π_ens seed 0, ep 117 (pilihan seleksi) | 47,5 [43,2–51,9] | 56,3 | 30,0 | 9,6 | **−10,1 pp [−15,7; −3,9]** | 4/5/21 |
+| π_ens seed 0, ep 291 | 36,2 [27,8–44,8] | 36,9 | 50,0 | 11,5 | −21,4 pp [−30,4; −12,3] | 4/3/23 |
+
+- Seleksi dari evaluasi bekerja (ep 117 > ep 291, sesuai skor eval 5 ep), tetapi π_ens tetap lebih buruk dari π_Dika; dengan margin usulan −5 pp, Gate 2 GAGAL.
+- Perilaku: π_ens ep 117 hanya 63% aksi lurus (π_Dika 81%) dan berganti aksi 24,7 kali per 100 langkah (π_Dika 13,3) = meliuk-liuk. Ep 291 condong ke lajur kiri (median y 246,6) dan 15/30 keluar jalan di kiri.
+- **Penyebab utama yang terukur: β = 30 terlalu besar (keputusan Claude 24 Nov).** Pada 17.599 state ep 117 (6 episode log): margin aksi rata-rata-Q median **0,19**, sedangkan sumbangan prior (dirata-rata 5 kepala) membedakan aksi sebesar median **0,94**. Prior belum terserap oleh jaringan online setelah 350.000 langkah, sehingga argmax rata-rata Q banyak ditentukan derau prior → meliuk. (Membuang prior dari bobot terlatih tidak sah sebagai kontrafaktual, karena online dilatih bersama prior; angka "aksi berubah 32,7%" hanya ilustrasi.) Asumsi saya 24 Nov keliru: skala yang relevan adalah margin aksi (0,64 pada π_Dika), bukan |Q|.
+- Ketidakstabilan: skor eval puncak di ±100.000 langkah lalu turun (sama dengan pola Dika).
+
+Konfigurasi baru (Claude, berlaku untuk ketiga seed; seed 0 dilatih ulang):
+1. **β = 3** (sebaran prior per kepala ±0,23, di bawah margin aksi 0,64; masih memberi keragaman di luar data).
+2. **Target Double DQN** per kepala (aksi dari online+prior, nilai dari target+prior) untuk mengurangi overestimasi.
+3. **Clip norma gradien global 10** (reward ±300/+800 memberi galat TD besar).
+4. **Evaluasi seleksi 10 episode tiap 50.000 langkah** (seed 90000–90009; dulu 5 ep tiap 25.000 → terlalu bising untuk memilih).
+Folder baru otomatis `seed<s>_K5_b3_ddqn`. Uji: 18 lulus di cloud (+1 uji target Double DQN). Belum dijalankan di CARLA.
+Run lama `seed0_K5_b30` disimpan sebagai bukti (konfigurasi gagal), tidak dipakai Gate 2.

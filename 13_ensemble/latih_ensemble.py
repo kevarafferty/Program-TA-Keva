@@ -3,8 +3,8 @@ latih_ensemble.py — [#26] Latih pi_ens (bootstrapped DQN, K kepala) pada kondi
 
 Contoh (Anaconda Prompt, env carla_env, CarlaUE4.exe build tetap sudah terbuka TANPA -quality-level):
     python latih_ensemble.py --cek                                  # cetak rencana + tata letak, tanpa CARLA
-    python latih_ensemble.py --seed 0 --beta_prior 30               # pelatihan penuh seed 0 (350.000 langkah)
-    python latih_ensemble.py --seed 0 --beta_prior 30 --jam_maks 6  # berhenti rapi setelah 6 jam; jalankan lagi = lanjut
+    python latih_ensemble.py --seed 0                               # pelatihan penuh seed 0 (350.000 langkah)
+    python latih_ensemble.py --seed 0 --jam_maks 7                  # berhenti rapi setelah 7 jam; jalankan lagi = lanjut
 
 Anggaran pelatihan dihitung dalam LANGKAH simulasi, bukan episode (24 Nov, setelah pilot): episode awal hanya
 80-800 langkah karena agen cepat keluar jalan, jadi "300 episode" berarti jumlah pengalaman yang sangat berbeda
@@ -47,7 +47,9 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--nama", default=None, help="nama folder run (bawaan seed<s>_K<K>_b<beta>)")
 ap.add_argument("--K", type=int, default=5)
-ap.add_argument("--beta_prior", type=float, default=0.0, help="skala randomized prior; 0 = tanpa prior")
+ap.add_argument("--beta_prior", type=float, default=3.0, help="skala randomized prior; 0 = tanpa prior (run 24 Nov: 30)")
+ap.add_argument("--double", type=int, default=1, help="1 = target Double DQN (25 Nov); 0 = DQN biasa seperti Dika")
+ap.add_argument("--clipnorm", type=float, default=10.0, help="clip norma gradien global; 0 = tanpa clip")
 ap.add_argument("--p_masker", type=float, default=0.5)
 ap.add_argument("--langkah_total", type=int, default=350_000, help="anggaran langkah latih (pi_Dika: 349.810)")
 ap.add_argument("--episodes", type=int, default=0, help="opsional: batas episode latih (0 = tanpa batas)")
@@ -56,8 +58,8 @@ ap.add_argument("--min_replay", type=int, default=1000, help="Dika: 1000")
 ap.add_argument("--eps_awal", type=float, default=0.1, help="epsilon setelah buffer >= min_replay")
 ap.add_argument("--eps_akhir", type=float, default=0.02)
 ap.add_argument("--eps_langkah", type=int, default=100_000, help="epsilon turun linear eps_awal -> eps_akhir")
-ap.add_argument("--eval_langkah", type=int, default=25_000, help="evaluasi seleksi tiap N langkah latih")
-ap.add_argument("--eval_ep", type=int, default=5)
+ap.add_argument("--eval_langkah", type=int, default=50_000, help="evaluasi seleksi tiap N langkah latih")
+ap.add_argument("--eval_ep", type=int, default=10)
 ap.add_argument("--eval_seed_awal", type=int, default=90000)
 ap.add_argument("--seed_latih_awal", type=int, default=None)
 ap.add_argument("--reward", default="perbaikan", choices=["perbaikan", "dika"])
@@ -78,7 +80,7 @@ ap.add_argument("--anak", action="store_true", help=argparse.SUPPRESS)
 A = ap.parse_args()
 if A.seed_latih_awal is None:
     A.seed_latih_awal = 100000 + 10000 * A.seed
-A.nama = A.nama or "seed%d_K%d_b%g" % (A.seed, A.K, A.beta_prior)
+A.nama = A.nama or "seed%d_K%d_b%g%s" % (A.seed, A.K, A.beta_prior, "_ddqn" if A.double else "")
 RUN = os.path.join(A.out, A.nama)
 
 sys.path.insert(0, DIR_LING)
@@ -244,7 +246,7 @@ def anak():
             k_lama = json.load(f)["argumen"]
         for kunci in ("K", "beta_prior", "p_masker", "kapasitas", "seed", "seed_latih_awal", "eval_seed_awal",
                       "eval_ep", "eval_langkah", "reward", "backend", "eps_awal", "eps_akhir", "eps_langkah",
-                      "min_replay"):
+                      "min_replay", "double", "clipnorm"):
             if k_lama.get(kunci) != getattr(A, kunci):
                 raise SystemExit("Konfigurasi berbeda dengan run yang ada (%s: %r vs %r). Pakai --nama lain."
                                  % (kunci, k_lama.get(kunci), getattr(A, kunci)))
@@ -267,7 +269,7 @@ def anak():
             env.close()
     atexit.register(tutup_env)
     agen = AgenEnsemble(K=A.K, beta_prior=A.beta_prior, p_masker=A.p_masker, kapasitas=A.kapasitas, seed=A.seed,
-                        min_replay=A.min_replay)
+                        min_replay=A.min_replay, double=bool(A.double), clipnorm=A.clipnorm)
     if st:
         agen.muat_bobot(os.path.join(RUN, "titik", "bobot_titik.npz"))
         agen.muat_titik(os.path.join(RUN, "titik", "titik_agen.npz"))

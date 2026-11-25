@@ -95,6 +95,11 @@ class CarlaEnvSkenario(CarlaEnv):
     # ==========================================================================================
     def siapkan_episode(self, spec: dict, gt_path: str) -> dict:
         """Terapkan spesifikasi episode (dari skenario.resolusi). Panggil SEBELUM reset()."""
+        # [24 Nov] Hapus kendaraan + sensor episode sebelumnya SEBELUM verifikasi lubang. Dulu baru dihapus di
+        # reset(), sehingga mobil yang berhenti/menabrak di atas sebuah lubang menutupi lubang itu dari kamera
+        # verifikasi -> "tak tampak" 3x -> RuntimeError (ID0 seed 3 setelah seed 2 menabrak di x -48,9 di atas
+        # ph_0017). reset() tetap memanggil _cleanup(); memanggilnya dua kali aman (aktor sudah None).
+        self._cleanup()
         self.spec = spec
         tl = buat_tata_letak(spec["seed"], spec["konfig_tata_letak"], spec["backend"], self.slot)
         if tl.n == 0:

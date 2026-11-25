@@ -60,7 +60,7 @@ def test_cek_tanpa_carla(tmp_path):
 def run_latih(tmp_path_factory):
     out = str(tmp_path_factory.mktemp("latih"))
     s1 = _latih(out, "--episodes", "3")
-    return out, os.path.join(out, "seed1_K3_b0"), s1
+    return out, os.path.join(out, "seed1_K3_b3_ddqn"), s1
 
 
 def test_berkas_dan_isi(run_latih):
@@ -109,7 +109,7 @@ def test_lanjut_menambah_episode_dan_konfig_dijaga(run_latih):
     st = json.load(open(os.path.join(run, "titik", "status.json")))
     st["selesai"] = False
     json.dump(st, open(os.path.join(run, "titik", "status.json"), "w"))
-    s = _latih(out, "--episodes", "5", "--p_masker", "0.7", "--nama", "seed1_K3_b0", "--maks_ulang", "0", rc_harap=1)
+    s = _latih(out, "--episodes", "5", "--p_masker", "0.7", "--nama", "seed1_K3_b3_ddqn", "--maks_ulang", "0", rc_harap=1)
     assert "BERHENTI" in s
 
 
@@ -140,7 +140,7 @@ def test_runner_skenario_dengan_ensemble(run_latih, tmp_path):
            "--maks_langkah", "300", "--label", "palsu", "--kode", "ID0", "--episodes", "1", "--ensemble", bobot]
     p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=1200, env=_env())
     assert p.returncode == 0, p.stdout[-3000:] + p.stderr[-3000:]
-    runs = glob.glob(os.path.join(log, "*_ID0_t1_konstan_grid_palsu_ens-seed1-K3-b0"))
+    runs = glob.glob(os.path.join(log, "*_ID0_t1_konstan_grid_palsu_ens-seed1-K3-b3-ddqn"))
     assert len(runs) == 1
     sys.path.insert(0, LING)
     from logger_skenario import muat_episode

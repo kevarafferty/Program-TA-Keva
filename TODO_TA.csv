@@ -24,7 +24,7 @@ id,fase,tugas,mulai,selesai,durasi_hari,bergantung,milestone,critical_path,seles
 23,1C Gate 1,MILESTONE: Gate 1,24-11-26,24-11-26,0,22,ya,ya,-,menunggu dosbing,memo Gate 1 ditulis 21 Nov; kriteria revisi diusulkan
 24,1D Lingkungan,Generator tata letak lubang prosedural (spawn API atau grid on/off),25-11-26,28-11-26,4,23,tidak,ya,Tata letak acak muncul dari seed,selesai,generator + uji CARLA lulus 21 Nov; toggle diperbaiki 22 Nov
 25,1D Lingkungan,Runner skenario off-nominal + transisi di tengah episode + logger fitur/logit/Q,29-11-26,02-12-26,4,24,tidak,ya,Semua kondisi bisa dibangkitkan dari seed,berjalan,runner + logger jalan; matriks diulang setelah perbaikan toggle (22 Nov)
-26,1D Lingkungan,"Latih ulang DQN ensemble K=5 x 3 seed (350.000 langkah/seed, ±5-7 jam/seed = semalaman)",01-12-26,06-12-26,6,24,tidak,ya,Kinerja ID >= pi_Dika,berjalan,"kode + uji lulus (16 di laptop, 17 di cloud setelah ubah anggaran); pilot 30 ep 24 Nov OK (23 langkah/s); beta=30; belum: 3 seed, Gate 2"
+26,1D Lingkungan,"Latih ulang DQN ensemble K=5 x 3 seed (350.000 langkah/seed, ±5-7 jam/seed = semalaman)",01-12-26,06-12-26,6,24,tidak,ya,Kinerja ID >= pi_Dika,berjalan,"seed 0 (beta 30) selesai 24 Nov tapi gagal: roda 47,5 vs pi_Dika 57,6; konfigurasi baru beta 3 + Double DQN + clip, seed 0 dilatih ulang"
 27,1D Lingkungan,MILESTONE: Gate 2,06-12-26,06-12-26,0,26,ya,ya,-,belum,
 28,2 Monitor,"Kumpulkan data monitor ID dan OOD (semalaman, minggu UAS)",07-12-26,13-12-26,7,25;27,tidak,ya,Jumlah data sesuai S1,belum,
 29,2 Monitor,"Monitor persepsi: JointEnergy + Mahalanobis + pembanding MSP dan kecerahan, label per lintasan lubang",14-12-26,19-12-26,6,28,tidak,ya,Tabel AUROC/FPR95 vs pembanding,belum,

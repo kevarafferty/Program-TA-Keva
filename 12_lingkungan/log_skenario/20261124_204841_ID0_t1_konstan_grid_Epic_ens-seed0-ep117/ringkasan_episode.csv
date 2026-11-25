@@ -1,0 +1,4 @@
+episode,seed,kode,tingkat,mode,backend,n_lubang,sidik_tata_letak,offset_x,offset_y,heading,throttle,langkah,detik,faktor_realtime,hits,avoids,reward,akhir,x_akhir,x_onset,langkah_onset,hook_tidak_cocok,kamera_telat,tabrakan,tabrakan_lubang,verif_percobaan,verif_conf_min
+1,0,ID0,1,konstan,grid,7,290ebf5c4299e6e5,1.378,0.258,0.0,0.3,2820,119.3,1.18,2,5,49.39,tabrakan,-31.72,,,0,0,static.wall@x-31.78,0,1,0.503
+2,1,ID0,1,konstan,grid,8,ce0cec7e71114a9f,-1.463,0.347,0.0,0.3,2877,122.9,1.17,3,5,1026.3,finis,-26.96,,,0,0,,0,1,0.3222
+3,2,ID0,1,konstan,grid,12,0ef6b73b68a39735,1.824,0.448,0.0,0.3,2734,114.9,1.19,3,8,62.14,tabrakan,-48.88,,,0,0,static.wall@x-48.94,0,1,0.3265
