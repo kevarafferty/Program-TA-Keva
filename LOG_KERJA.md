@@ -763,3 +763,36 @@ Run lama `seed0_K5_b30` disimpan sebagai bukti (konfigurasi gagal), tidak dipaka
 - Opsional untuk catatan Bab IV: evaluasi `seed0_K5_b3_ddqn/bobot/bobot_terbaik.npz` di ID0 seed 0–29 (±1 jam, `--tag_kebijakan ens-seed0-ddqn`).
 - 19.20 (Claude): 15 folder uji per kondisi 22 Nov pagi (06.52–07.59, build lama 12 Nov, seed 0) dipindah ke `12_lingkungan/log_skenario/_build_lama_12nov_uji_per_kondisi/`. Alasan: `jalankan_matriks.py` menghitung seed 0 itu sebagai "sudah", padahal datanya dari build lain dan tidak boleh dicampur dengan build ditetapkan. Matriks bawaan kini: 720 episode tersisa (REG t1–t3 dan ID0 sudah lengkap di build ditetapkan).
 - Rencana malam 25 Nov (disepakati di chat): mulai matriks data monitor #28 dengan π_Dika. Data ini terpakai di semua pilihan arah #26 (perencana, pembanding, dan monitor persepsi yang tidak bergantung perencana).
+
+## 2026-11-25 (Rabu) 22.30 — evaluasi π_ens seed 0 baru (β 3 + DDQN, ep 351) di ID0 seed 0–29 (Keva menjalankan, Claude menganalisis)
+
+Run `log_skenario/20261125_211729_ID0_t1_konstan_grid_Epic_ens-seed0-ddqn`: 30 seed, hook 0, verifikasi lolos semua.
+
+| ID0 seed 0–29 | Roda | Logika Dika | Episode gagal | Akhir |
+|---|---|---|---|---|
+| π_Dika | 57,6 | 74,6 | 20,0 | finis 24, tabrakan 6 (semua x ≈ −30, setelah lubang terakhir) |
+| π_ens β 30 ep 117 | 47,5 | 56,3 | 30,0 | finis 21, tabrakan 9 |
+| **π_ens β 3 + DDQN ep 351** | **29,9 [24,7–35,0]** | 34,2 | **63,3** | finis 11, tabrakan 18, keluar jalan 1 |
+
+- **Ke-18 tabrakan sama polanya:** `static.wall` di tengah ruas (x −47 s.d. −153), pusat mobil di y 251,1–252,5, dan 40 langkah terakhir SEMUANYA aksi lurus. Mobil membawa sisa yaw dari belokan sebelumnya, lalu lurus terus dan hanyut ke kanan sampai menabrak dinding di sisi kanan jalan.
+- Dua penyebab yang tampak (dugaan kuat, belum dicek visual di editor):
+  1. **Batas kanan jalan efektif lebih sempit dari `ROAD_Y_MAX` Dika (252,55).** Dinding tersentuh saat pusat mobil baru di y ±251,1 (sisi kanan ±251,85) pada beberapa ruas; batas keluar jalan Dika tidak pernah terpicu sebelum menabrak. Ruang sisa di lajur spawn (y 250,5) hanya ±0,6 m.
+  2. **State 10-D tidak berisi yaw/heading.** `steer_n` = perintah setir saat ini (0 saat lurus) dan `pos_n` = posisi lateral; agen tidak bisa melihat bahwa ia sedang hanyut sampai posisi lateral sudah berubah. Kebijakan "hampir selalu lurus" tidak pernah mengoreksi.
+- π_Dika jarang kena karena tidak terlalu lurus (81% aksi lurus) dan sering di lajur kiri.
+- Implikasi untuk keputusan #26: masalah π_ens bukan hanya hiperparameter; lingkungan (batas jalan) dan state (tanpa heading) ikut berperan. Memperbaikinya berarti mengubah definisi state/batas jalan Dika → pembanding dengan π_Dika tidak lagi setara. Ini memperkuat opsi (a) π_Dika sebagai perencana + ensemble Q offline.
+- Posisi lateral (sampel tiap 10 langkah): π_Dika y median 249,59, p99 250,95, maks 251,50 (tidak pernah sampai dinding); π_ens DDQN median 250,68, p90 251,89, maks 252,46.
+
+## 2026-11-26 (Kamis) 18.10 — cek kualitas matriks #28 sejauh ini (Keva menjalankan sejak 25 Nov 22.21, Claude memeriksa)
+
+- 15 kondisi selesai (A1 t1–t3, A2 t1–t3, A3 t1–t3, A1/A2/A3/A5 t2 transisi, A4 t2, A5 t2) + A6 t2 berjalan (22/30). Setiap kondisi: 30 seed (0–29) tanpa duplikat, berkas langkah dan NPZ lengkap, verifikasi lubang lolos percobaan pertama di semua episode, `kamera_telat` 0. `jalankan_matriks.log`: tidak ada kegagalan atau percobaan ulang.
+- `hook_tidak_cocok`: hanya A3 t2 seed 18, 1 dari 2.816 langkah (diabaikan).
+- `cek_kualitas_run.py` (tersangka buta): A5 t2 konstan 20/30 dan A2 t3 2/30 (seed 9, 16). Bukan bug toggle: verifikasi (ClearNoon, tanpa korupsi) lolos di semua episode itu, dan pola A5 sama dengan temuan 22 Nov (blur + tetes air menurunkan deteksi dekat). Ini efek kondisi yang memang diukur.
+- Tabrakan di tengah ruas: A4 t2 10/30, A6 t2 8/22, A2 t3 5/30, berkumpul di x ≈ −57 dan −75 (dan −38 s.d. −61 di A2 t3). Pola BERBEDA dari π_ens DDQN: di sini π_Dika berbelok tajam (yaw 30–59°) lalu sudut depan-kanan menyentuh dinding di sekitar y ≈ 252. Dugaan: deteksi palsu/terganggu → manuver menghindar agresif → menabrak. Kegagalan keputusan yang dipicu gangguan persepsi = data yang sah dan berguna untuk monitor. Dinding di y ≈ 252 (di dalam ROAD_Y_MAX 252,55) terkonfirmasi lagi di dua titik x tetap.
+- Waktu per episode: A5 konstan 308–435 s (korupsi citra di CPU), A6 197–273 s, lainnya 98–155 s. Sisa 248 episode (C1–C4, D1, E1, E2, sisa A6); perkiraan selesai 27 Nov ±03.00–05.00.
+
+## 2026-11-27 (Jumat) 01.35 — matriks #28 SELESAI (π_Dika, build ditetapkan; Keva menjalankan 25 Nov 22.21–27 Nov 00.41, Claude memeriksa)
+
+- `jalankan_matriks.py --cek`: sisa 0. Log matriks tanpa kegagalan/percobaan ulang. Semua 28 kondisi bawaan: 30 seed (0–29), tanpa duplikat, berkas langkah + NPZ lengkap, verifikasi lubang lolos percobaan pertama di semua episode; `hook_tidak_cocok` total 1 langkah (A3 t2 seed 18).
+- Kondisi baru sejak 26 Nov 18.10: A6 t2 (finis 15, tabrakan 15; tengah ruas di x −57/−76 seperti A4), C1 t1 (finis 30), C2 t1 (tabrakan 10, keluar jalan 20), C2 t3 (keluar jalan 30), C3 t2 (finis 24), C4 t3 (Tesla; finis 15, tabrakan 15 tersebar x −36…−75), D1 t1 (finis 22, tabrakan 8 dekat finis), E1 t1 (finis 27), E2 t1 (keluar jalan 23, tabrakan 7).
+- C2/E2 (kecepatan tinggi) gagal sangat awal tetapi SAH: hampir semua episode mencapai lubang pertama (C2 t1 30/30, C2 t3 26/30, E2 29/30), agen berbelok (35–45% langkah) lalu melebar dan keluar di kanan (y 252,4–252,5 = ROAD_Y_MAX). Sesuai prediksi T12 (reaksi 6–8 m terlalu terlambat pada kecepatan tinggi). Kecepatan terukur di bawah target karena belok: C2 t1 16,6 km/jam (target 20), C2 t3 19,8 (target 30), E2 16,4 → laporkan kecepatan terukur. Akibatnya jumlah lintasan lubang per episode di C2 t3 kecil (x akhir median −270).
+- Belum: `analisis_skenario.py` untuk seluruh matriks (label per lintasan + tabel per kondisi); keputusan arah #26 bersama dosbing; commit.
